@@ -4,107 +4,314 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Mail Backup Viewer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg:#f5f5f0;--surface:#fff;--sb:#1e1e2e;--sb-text:#cdd6f4;
-    --sb-muted:#9399b2;--sb-active:#313244;--sb-accent:#89b4fa;
-    --border:#e0ddd6;--text:#1a1a2e;--text2:#555566;--text3:#9393a8;
-    --accent:#4f72ff;--accent-bg:#eef1ff;--hover:#f0eff8;
-    --ai:#eef1ff;--aib:#4f72ff;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+:root {
+  --bg:#0f1117;
+  --surface:#161b27;
+  --surface2:#1c2333;
+  --sb:#0d1117;
+  --sb-text:#e2e8f0;
+  --sb-muted:#64748b;
+  --sb-active:#1e293b;
+  --sb-accent:#60a5fa;
+  --border:#1e2d3d;
+  --border2:#263548;
+  --text:#e2e8f0;
+  --text2:#94a3b8;
+  --text3:#475569;
+  --accent:#3b82f6;
+  --accent2:#60a5fa;
+  --accent-bg:rgba(59,130,246,.12);
+  --hover:#1a2336;
+  --green:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --purple:#8b5cf6;
+  --radius:10px;
+  --shadow:0 4px 24px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);height:100vh;display:flex;flex-direction:column;overflow:hidden;color:var(--text);}
 
-  #topbar{display:flex;align-items:center;gap:10px;background:var(--sb);color:var(--sb-text);padding:0 16px;height:52px;flex-shrink:0;border-bottom:1px solid #313244;}
-  .logo{font-size:15px;font-weight:600;color:#cdd6f4;display:flex;align-items:center;gap:8px;white-space:nowrap;}
-  .logo svg{width:20px;height:20px;fill:var(--sb-accent);}
-  .div{width:1px;height:20px;background:#313244;margin:0 2px;}
-  #upload-btn{display:flex;align-items:center;gap:6px;background:var(--sb-accent);color:#1e1e2e;border:none;border-radius:7px;padding:6px 13px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
-  #upload-btn:hover{opacity:.88;}
-  #upload-btn svg{width:14px;height:14px;}
-  #file-input{display:none;}
-  #tsearch{display:flex;align-items:center;gap:7px;background:#313244;border:1px solid #45475a;border-radius:7px;padding:5px 11px;flex:1;max-width:320px;}
-  #tsearch svg{width:13px;height:13px;fill:var(--sb-muted);flex-shrink:0;}
-  #tsearch input{background:transparent;border:none;outline:none;color:var(--sb-text);font-size:13px;width:100%;}
-  #tsearch input::placeholder{color:var(--sb-muted);}
-  #tinfo{margin-left:auto;font-size:12px;color:var(--sb-muted);white-space:nowrap;}
+/* ── TOPBAR ── */
+#topbar{
+  display:flex;align-items:center;gap:10px;
+  background:var(--sb);color:var(--sb-text);
+  padding:0 18px;height:54px;flex-shrink:0;
+  border-bottom:1px solid var(--border);
+}
+.logo{font-size:15px;font-weight:600;color:#e2e8f0;display:flex;align-items:center;gap:9px;white-space:nowrap;letter-spacing:-.3px;}
+.logo-icon{width:28px;height:28px;background:linear-gradient(135deg,#3b82f6,#6366f1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo-icon svg{width:15px;height:15px;fill:#fff;}
+.vdiv{width:1px;height:22px;background:var(--border2);margin:0 4px;}
 
-  #main{display:flex;flex:1;overflow:hidden;}
+#upload-btn{
+  display:flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#3b82f6,#6366f1);
+  color:#fff;border:none;border-radius:8px;
+  padding:7px 14px;font-size:12.5px;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+  font-family:'DM Sans',sans-serif;
+  transition:opacity .15s,transform .1s;
+  box-shadow:0 2px 12px rgba(59,130,246,.35);
+}
+#upload-btn:hover{opacity:.88;transform:translateY(-1px);}
+#upload-btn:active{transform:translateY(0);}
+#upload-btn svg{width:13px;height:13px;}
+#file-input{display:none;}
 
-  #sidebar{width:205px;min-width:205px;background:var(--sb);display:flex;flex-direction:column;overflow-y:auto;border-right:1px solid #313244;}
-  .ss{padding:14px 12px 5px;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--sb-muted);text-transform:uppercase;}
-  .fi{display:flex;align-items:center;gap:8px;padding:7px 13px;cursor:pointer;border-radius:7px;margin:1px 5px;color:var(--sb-muted);font-size:13px;transition:background .1s,color .1s;}
-  .fi:hover{background:var(--sb-active);color:var(--sb-text);}
-  .fi.active{background:var(--sb-active);color:var(--sb-accent);font-weight:500;}
-  .fi svg{width:14px;height:14px;fill:currentColor;flex-shrink:0;}
-  .fi .ct{margin-left:auto;background:#313244;color:var(--sb-muted);font-size:11px;padding:1px 6px;border-radius:99px;}
-  .fi.active .ct{background:#4f72ff22;color:var(--sb-accent);}
+#tsearch{
+  display:flex;align-items:center;gap:7px;
+  background:var(--sb-active);border:1px solid var(--border2);
+  border-radius:8px;padding:6px 12px;flex:1;max-width:300px;
+  transition:border-color .15s;
+}
+#tsearch:focus-within{border-color:var(--accent);}
+#tsearch svg{width:13px;height:13px;fill:var(--sb-muted);flex-shrink:0;}
+#tsearch input{background:transparent;border:none;outline:none;color:var(--sb-text);font-size:13px;width:100%;font-family:'DM Sans',sans-serif;}
+#tsearch input::placeholder{color:var(--sb-muted);}
+#tinfo{margin-left:auto;font-size:11.5px;color:var(--sb-muted);white-space:nowrap;font-family:'DM Mono',monospace;}
 
-  #lp{width:295px;min-width:295px;display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--surface);}
-  #lh{padding:11px 13px 9px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-  #lh h3{font-size:14px;font-weight:600;color:var(--text);}
-  #lh span{font-size:11px;color:var(--text3);background:var(--bg);padding:2px 8px;border-radius:99px;}
-  #el{flex:1;overflow-y:auto;}
+/* ── LAYOUT ── */
+#main{display:flex;flex:1;overflow:hidden;}
 
-  .er{padding:10px 13px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;border-left:3px solid transparent;}
-  .er:hover{background:var(--hover);}
-  .er.active{background:var(--ai);border-left-color:var(--aib);}
-  .er-t{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
-  .ef{font-size:13px;color:var(--text);font-weight:500;max-width:185px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .ed{font-size:11px;color:var(--text3);white-space:nowrap;}
-  .es{font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px;}
-  .ep{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* ── SIDEBAR ── */
+#sidebar{
+  width:210px;min-width:210px;
+  background:var(--sb);display:flex;flex-direction:column;
+  overflow-y:auto;border-right:1px solid var(--border);
+}
+.ss{
+  padding:16px 14px 6px;
+  font-size:10px;font-weight:600;letter-spacing:1.2px;
+  color:var(--text3);text-transform:uppercase;
+}
+.fi{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 12px;cursor:pointer;border-radius:8px;
+  margin:1px 6px;color:var(--sb-muted);font-size:13px;
+  transition:background .12s,color .12s;
+}
+.fi:hover{background:var(--hover);color:var(--sb-text);}
+.fi.active{background:var(--accent-bg);color:var(--sb-accent);font-weight:500;}
+.fi svg{width:14px;height:14px;fill:currentColor;flex-shrink:0;}
+.fi .ct{
+  margin-left:auto;
+  background:rgba(255,255,255,.05);
+  color:var(--text3);font-size:10.5px;
+  padding:1px 7px;border-radius:99px;
+  font-family:'DM Mono',monospace;
+}
+.fi.active .ct{background:var(--accent-bg);color:var(--sb-accent);}
 
-  #dp{flex:1;display:flex;flex-direction:column;background:var(--surface);overflow:hidden;}
-  #db{flex:1;overflow-y:auto;padding:26px 30px;}
-  #ds{font-size:19px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.4;}
-  #dm{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-bottom:18px;}
-  .mr{display:flex;gap:10px;font-size:13px;padding:3px 0;}
-  .ml{color:var(--text3);min-width:48px;font-weight:500;}
-  .mv{color:var(--text);word-break:break-all;}
-  .ftag{display:inline-flex;font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;}
-  #dc{font-size:13px;line-height:1.85;color:var(--text);white-space:pre-wrap;word-break:break-word;}
+/* ── LIST PANEL ── */
+#lp{
+  width:300px;min-width:300px;
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--border);
+  background:var(--surface);
+}
+#lh{
+  padding:12px 14px 10px;
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  flex-shrink:0;
+}
+#lh h3{font-size:13.5px;font-weight:600;color:var(--text);}
+#lc{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
+#el{flex:1;overflow-y:auto;}
 
-  .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:13px;padding:30px;text-align:center;}
-  .empty svg{width:48px;height:48px;fill:#c8c8d8;}
-  .empty h2{font-size:17px;font-weight:600;color:var(--text2);}
-  .empty p{font-size:13px;color:var(--text3);line-height:1.7;max-width:250px;}
-  .ftags{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:4px;}
-  .ftag2{background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;}
+.er{
+  padding:11px 14px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  border-left:2px solid transparent;
+  transition:background .1s;
+}
+.er:hover{background:var(--hover);}
+.er.active{background:var(--accent-bg);border-left-color:var(--accent);}
+.er-t{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;gap:8px;}
+.ef{font-size:12.5px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.ed{font-size:10.5px;color:var(--text3);white-space:nowrap;font-family:'DM Mono',monospace;}
+.es{font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px;}
+.ep{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.er-badges{display:flex;gap:4px;margin-top:4px;}
+.badge{font-size:10px;font-weight:600;padding:1px 6px;border-radius:99px;}
+.badge-att{background:rgba(245,158,11,.15);color:#f59e0b;}
+.badge-html{background:rgba(99,102,241,.15);color:#818cf8;}
 
-  /* debug panel */
-  #debug{position:fixed;bottom:0;left:0;right:0;background:#1e1e2e;color:#cdd6f4;font-size:12px;font-family:monospace;padding:6px 14px;max-height:120px;overflow-y:auto;display:none;border-top:1px solid #313244;}
+/* ── DETAIL PANEL ── */
+#dp{flex:1;display:flex;flex-direction:column;background:var(--surface);overflow:hidden;}
 
-  #pb{display:none;position:fixed;top:52px;left:0;right:0;height:3px;background:#e0ddd6;z-index:99;}
-  #pf{height:100%;background:var(--accent);width:0%;transition:width .2s;border-radius:0 3px 3px 0;}
-  ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#d0cfc8;border-radius:99px;}
+/* Email detail header */
+#dh{
+  padding:18px 24px 0;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+#ds{font-size:18px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.4;letter-spacing:-.3px;}
+#dm{
+  display:flex;flex-direction:column;gap:0;
+  margin-bottom:0;
+}
+.mr{display:flex;gap:10px;font-size:12.5px;padding:5px 0;border-top:1px solid var(--border);}
+.ml{color:var(--text3);min-width:50px;font-weight:500;flex-shrink:0;}
+.mv{color:var(--text2);word-break:break-all;}
+.ftag{display:inline-flex;font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;}
+
+/* Toolbar under header */
+#dtb{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 24px;border-bottom:1px solid var(--border);
+  flex-shrink:0;background:var(--surface);
+}
+.view-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 11px;font-size:12px;font-weight:500;
+  border-radius:7px;cursor:pointer;
+  border:1px solid var(--border2);
+  background:transparent;color:var(--text2);
+  font-family:'DM Sans',sans-serif;
+  transition:background .12s,color .12s,border-color .12s;
+}
+.view-btn:hover{background:var(--hover);color:var(--text);}
+.view-btn.active{background:var(--accent-bg);color:var(--sb-accent);border-color:var(--accent);}
+.view-btn svg{width:12px;height:12px;}
+
+/* Body area */
+#db{flex:1;overflow-y:auto;padding:20px 24px;}
+
+/* HTML rendered email */
+#email-iframe-wrap{
+  border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;background:#fff;
+}
+#email-iframe{width:100%;border:none;display:block;min-height:200px;}
+
+/* Plain text email */
+#dc{
+  font-size:13px;line-height:1.9;color:var(--text2);
+  white-space:pre-wrap;word-break:break-word;
+  font-family:'DM Mono',monospace;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px 20px;
+}
+
+/* Attachments section */
+#att-section{margin-top:16px;}
+#att-title{
+  font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--text3);margin-bottom:8px;
+}
+#att-list{display:flex;flex-wrap:wrap;gap:8px;}
+.att-item{
+  display:flex;align-items:center;gap:9px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:9px 13px;cursor:pointer;
+  transition:border-color .12s,background .12s;max-width:240px;
+}
+.att-item:hover{border-color:var(--accent);background:var(--hover);}
+.att-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.att-icon svg{width:15px;height:15px;}
+.att-info{flex:1;min-width:0;}
+.att-name{font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.att-size{font-size:10.5px;color:var(--text3);font-family:'DM Mono',monospace;}
+
+/* Empty states */
+.empty{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;height:100%;gap:12px;
+  padding:30px;text-align:center;
+}
+.empty-icon{
+  width:56px;height:56px;background:var(--surface2);
+  border-radius:16px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);
+}
+.empty-icon svg{width:26px;height:26px;fill:var(--text3);}
+.empty h2{font-size:16px;font-weight:600;color:var(--text2);}
+.empty p{font-size:13px;color:var(--text3);line-height:1.7;max-width:240px;}
+.ftags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px;}
+.ftag2{
+  background:var(--accent-bg);color:var(--accent2);
+  font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;
+  font-family:'DM Mono',monospace;
+}
+.drop-hint{
+  border:2px dashed var(--border2);border-radius:12px;
+  padding:12px 20px;font-size:12px;color:var(--text3);
+  display:flex;align-items:center;gap:7px;margin-top:4px;
+}
+.drop-hint svg{width:14px;height:14px;fill:var(--text3);}
+
+/* Progress bar */
+#pb{display:none;position:fixed;top:54px;left:0;right:0;height:2px;background:var(--border);z-index:99;}
+#pf{height:100%;background:linear-gradient(90deg,#3b82f6,#6366f1);width:0%;transition:width .2s;border-radius:0 2px 2px 0;}
+
+/* Drag overlay */
+#drag-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(15,17,23,.85);z-index:999;
+  align-items:center;justify-content:center;
+  flex-direction:column;gap:14px;backdrop-filter:blur(4px);
+}
+#drag-overlay.show{display:flex;}
+#drag-overlay .dbox{
+  border:2px dashed var(--accent);border-radius:20px;
+  padding:40px 60px;text-align:center;
+}
+#drag-overlay h2{font-size:20px;font-weight:600;color:var(--sb-text);}
+#drag-overlay p{font-size:13px;color:var(--sb-muted);}
+
+/* Scrollbars */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
+
+/* Loading state */
+.loading-shimmer{
+  background:linear-gradient(90deg,var(--surface2) 25%,var(--hover) 50%,var(--surface2) 75%);
+  background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;
+}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 </style>
 </head>
 <body>
+
 <div id="pb"><div id="pf"></div></div>
+<div id="drag-overlay">
+  <div class="dbox">
+    <h2>Drop your backup folder</h2>
+    <p>Release to load your emails</p>
+  </div>
+</div>
 
 <div id="topbar">
   <div class="logo">
-    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-    Mail Backup Viewer
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+    </div>
+    MailVault
   </div>
-  <div class="div"></div>
+  <div class="vdiv"></div>
   <button id="upload-btn" onclick="document.getElementById('file-input').click()">
     <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
     Upload Backup Folder
   </button>
   <input type="file" id="file-input" webkitdirectory multiple />
-  <div class="div"></div>
+  <div class="vdiv"></div>
   <div id="tsearch">
     <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-    <input type="text" id="si" placeholder="Search emails..." oninput="doSearch()"/>
+    <input type="text" id="si" placeholder="Search emails, senders, subjects…" oninput="doSearch()"/>
   </div>
   <div id="tinfo">No backup loaded</div>
 </div>
 
 <div id="main">
+  <!-- SIDEBAR -->
   <div id="sidebar">
-    <div class="ss">Folders</div>
+    <div class="ss">Mailboxes</div>
     <div class="fi active" data-folder="__all__" onclick="switchFolder('__all__',this)">
       <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
       All Mail <span class="ct" id="ca">0</span>
@@ -112,55 +319,70 @@
     <div id="df"></div>
   </div>
 
+  <!-- LIST PANEL -->
   <div id="lp">
-    <div id="lh"><h3 id="lt">All Mail</h3><span id="lc">0 emails</span></div>
+    <div id="lh">
+      <h3 id="lt">All Mail</h3>
+      <span id="lc">0 emails</span>
+    </div>
     <div id="el">
       <div class="empty" id="ws">
-        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
         <h2>No backup loaded</h2>
-        <p>Click Upload Backup Folder above and select your webmail backup folder</p>
+        <p>Upload a backup folder or drag & drop it anywhere</p>
         <div class="ftags">
-          <span class="ftag2">.mbox</span><span class="ftag2">.eml</span>
-          <span class="ftag2">.msg</span><span class="ftag2">no extension</span>
-          <span class="ftag2">any format</span>
+          <span class="ftag2">.mbox</span>
+          <span class="ftag2">.eml</span>
+          <span class="ftag2">.msg</span>
+          <span class="ftag2">maildir</span>
+        </div>
+        <div class="drop-hint">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+          Drag & drop your folder here
         </div>
       </div>
     </div>
   </div>
 
+  <!-- DETAIL PANEL -->
   <div id="dp">
     <div id="db">
       <div class="empty" id="ed">
-        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
         <p>Select an email to read it</p>
       </div>
     </div>
   </div>
 </div>
 
-<div id="debug"></div>
-
 <script>
-// ── globals ──────────────────────────────────────────────────────────────────
+// ── GLOBALS ───────────────────────────────────────────────────────────────────
 let allEmails=[], foldersMap={}, currentFolder='__all__', searchQuery='', selectedEmail=null;
-const logs=[];
-function log(...a){const m=a.join(' ');logs.push(m);console.log(m);}
+let currentViewMode='html'; // 'html' or 'text'
 
-// ── folder icons & colors ────────────────────────────────────────────────────
+// ── FOLDER ICONS & COLORS ──────────────────────────────────────────────────────
 const FICONS={
-  inbox :`<svg viewBox="0 0 24 24"><path d="M19 3H4.99C3.89 3 3 3.9 3 5L2.99 19c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.34 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/></svg>`,
-  sent  :`<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`,
-  spam  :`<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
-  trash :`<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`,
+  inbox:`<svg viewBox="0 0 24 24"><path d="M19 3H4.99C3.89 3 3 3.9 3 5L2.99 19c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.34 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/></svg>`,
+  sent:`<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`,
+  spam:`<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
+  trash:`<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`,
   archive:`<svg viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5z"/></svg>`,
   drafts:`<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`,
   default:`<svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>`
 };
-const FCOLORS={inbox:['#d1fae5','#065f46'],sent:['#dbeafe','#1e40af'],spam:['#fee2e2','#991b1b'],trash:['#f3f4f6','#374151'],archive:['#fef3c7','#92400e'],drafts:['#ede9fe','#5b21b6'],default:['#e0e7ff','#3730a3']};
+const FCOLORS={
+  inbox:['rgba(16,185,129,.15)','#10b981'],
+  sent:['rgba(59,130,246,.15)','#60a5fa'],
+  spam:['rgba(239,68,68,.15)','#f87171'],
+  trash:['rgba(100,116,139,.15)','#94a3b8'],
+  archive:['rgba(245,158,11,.15)','#fbbf24'],
+  drafts:['rgba(139,92,246,.15)','#a78bfa'],
+  default:['rgba(59,130,246,.1)','#60a5fa']
+};
 function ficon(n){const k=n.toLowerCase();for(const[kw,v]of Object.entries(FICONS))if(k.includes(kw))return v;return FICONS.default;}
 function fcolor(n){const k=n.toLowerCase();for(const[kw,v]of Object.entries(FCOLORS))if(k.includes(kw))return v;return FCOLORS.default;}
 
-// ── folder name normalization ────────────────────────────────────────────────
+// ── FOLDER NORMALIZATION ────────────────────────────────────────────────────────
 function normFolder(raw){
   const n=(raw||'').toLowerCase().trim();
   if(n.includes('inbox')||n==='cur'||n==='new'||n==='tmp')return 'Inbox';
@@ -170,16 +392,24 @@ function normFolder(raw){
   if(n.includes('archive'))return 'Archive';
   if(n.includes('draft'))return 'Drafts';
   if(!raw||raw.trim()==='')return 'Inbox';
-  // Capitalize first letter
   return raw.charAt(0).toUpperCase()+raw.slice(1);
 }
 
-// ── text helpers ─────────────────────────────────────────────────────────────
+// ── TEXT HELPERS ──────────────────────────────────────────────────────────────
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
 function decodeQP(s){
   return s.replace(/=\r?\n/g,'').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));
 }
 function decodeB64(s){try{return atob(s.replace(/\s+/g,''));}catch{return s;}}
+function decodeB64Safe(s){
+  // Returns Uint8Array
+  const b=s.replace(/\s+/g,'');
+  const bin=atob(b);
+  const arr=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+  return arr;
+}
 function decodeRFC2047(s){
   if(!s)return '';
   return s.replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g,(_,cs,enc,data)=>{
@@ -206,181 +436,224 @@ function fmtDate(d){
   if(!d)return '';
   try{const dt=new Date(d);if(isNaN(dt))return d.slice(0,16);return dt.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}catch{return String(d).slice(0,16);}
 }
+function fmtSize(bytes){
+  if(!bytes)return '';
+  if(bytes<1024)return bytes+'B';
+  if(bytes<1024*1024)return (bytes/1024).toFixed(1)+'KB';
+  return (bytes/1024/1024).toFixed(1)+'MB';
+}
 
-// ── core email parser ─────────────────────────────────────────────────────────
-// Parses a raw RFC-2822 message block. Returns an object or null.
-function parseRFC2822(raw, folder){
-  if(!raw||raw.length<10)return null;
+// ── MIME PARSER ───────────────────────────────────────────────────────────────
+// Returns {headers, body (raw string), parts[]}
+function parseMimePart(raw){
   const lines=raw.split(/\r?\n/);
   const headers={};
-  let bi=0;
   let i=0;
-  // Skip leading "From " envelope line (mbox)
+  // skip envelope "From " line
   if(lines[0]&&lines[0].startsWith('From '))i=1;
   while(i<lines.length){
     const line=lines[i];
-    if(line.trim()===''){bi=i+1;break;}
-    // header field
+    if(line.trim()===''){i++;break;}
     const m=line.match(/^([\w-]+)\s*:\s*(.*)$/);
     if(m){
-      let key=m[1].toLowerCase();
-      let val=m[2];
+      let key=m[1].toLowerCase();let val=m[2];
       i++;
       while(i<lines.length&&lines[i]&&/^[ \t]/.test(lines[i])){val+=' '+lines[i].trim();i++;}
       if(!headers[key])headers[key]=val;
     }else{i++;}
   }
+  const body=lines.slice(i).join('\n');
+  return {headers,body};
+}
+
+function getMimeParam(headerVal,param){
+  const re=new RegExp(param+'\\s*=\\s*"?([^";\\s]+)"?','i');
+  const m=(headerVal||'').match(re);
+  return m?m[1]:null;
+}
+
+// Walk MIME tree, collecting text parts and attachments
+function walkMime(rawPart,depth){
+  const {headers,body}=parseMimePart(rawPart);
+  const ct=headers['content-type']||'text/plain';
+  const cte=(headers['content-transfer-encoding']||'').toLowerCase().trim();
+  const cd=headers['content-disposition']||'';
+  const mimeType=ct.split(';')[0].toLowerCase().trim();
+  const boundary=getMimeParam(ct,'boundary');
+  const charset=getMimeParam(ct,'charset')||'utf-8';
+  const name=getMimeParam(cd,'filename')||getMimeParam(ct,'name')||null;
+  const isAttachment=cd.toLowerCase().startsWith('attachment')||(name&&!cd.toLowerCase().startsWith('inline'));
+
+  // ── multipart ──
+  if(mimeType.startsWith('multipart/')&&boundary){
+    const sep=new RegExp('--'+escapeRegex(boundary)+'(?:--)?','g');
+    const parts=body.split(sep).slice(1);// first item is preamble
+    const result={textBody:'',htmlBody:'',attachments:[]};
+    for(const part of parts){
+      if(part.trim()===''||part.trim()==='--')continue;
+      const sub=walkMime(part,depth+1);
+      if(!result.htmlBody&&sub.htmlBody)result.htmlBody=sub.htmlBody;
+      if(!result.textBody&&sub.textBody)result.textBody=sub.textBody;
+      result.attachments.push(...sub.attachments);
+    }
+    return result;
+  }
+
+  // ── decode body ──
+  let decoded=body;
+  if(cte==='quoted-printable')decoded=decodeQP(body);
+  else if(cte==='base64'){
+    if(isAttachment||!mimeType.startsWith('text/')){
+      // keep as b64 for binary download
+      return {textBody:'',htmlBody:'',attachments:[{name:name||'attachment',mimeType,data:body.replace(/\s+/g,''),encoding:'base64',size:Math.floor(body.replace(/\s+/g,'').length*0.75)}]};
+    }
+    try{decoded=decodeURIComponent(escape(decodeB64(body)));}catch{decoded=body;}
+  }
+
+  // ── attachment (inline or named) ──
+  if(isAttachment&&name){
+    return {textBody:'',htmlBody:'',attachments:[{name,mimeType,data:decoded,encoding:cte,size:decoded.length}]};
+  }
+
+  // ── html part ──
+  if(mimeType==='text/html'){
+    return {textBody:'',htmlBody:decoded,attachments:[]};
+  }
+
+  // ── plain text ──
+  return {textBody:decoded,htmlBody:'',attachments:[]};
+}
+
+function escapeRegex(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+
+// ── MAIN EMAIL PARSER ──────────────────────────────────────────────────────────
+function parseRFC2822Full(raw, folder){
+  if(!raw||raw.length<10)return null;
+  const {headers}=parseMimePart(raw);
 
   const from    = headers['from']||'';
   const to      = headers['to']||'';
   const cc      = headers['cc']||'';
   const subject = decodeRFC2047(headers['subject']||'(No subject)');
   const date    = headers['date']||headers['delivery-date']||'';
-  const ct      = (headers['content-type']||'').toLowerCase();
-  const cte     = (headers['content-transfer-encoding']||'').toLowerCase();
+  const ct      = headers['content-type']||'text/plain';
 
-  // We need at least one of these to be a real email
   if(!from&&subject==='(No subject)'&&!date)return null;
 
-  // body
-  let body=lines.slice(bi).join('\n');
+  const walked=walkMime(raw,0);
 
-  // decode transfer encoding
-  if(cte==='quoted-printable') body=decodeQP(body);
-  else if(cte==='base64'){try{body=decodeURIComponent(escape(decodeB64(body)));}catch{}}
+  let htmlBody=walked.htmlBody||'';
+  let textBody=walked.textBody||'';
 
-  // strip html if needed
-  if(ct.includes('html'))body=stripHtml(body);
-  else body=body.replace(/\r/g,'').replace(/\n{3,}/g,'\n\n');
+  // fallback: if walkMime got nothing, parse directly
+  if(!htmlBody&&!textBody){
+    const cte=(headers['content-transfer-encoding']||'').toLowerCase().trim();
+    const lines=raw.split(/\r?\n/);
+    let bi=0;
+    if(lines[0]&&lines[0].startsWith('From '))bi=1;
+    let inHeaders=true;let bodyLines=[];
+    for(let i=bi;i<lines.length;i++){
+      if(inHeaders){if(lines[i].trim()==='')inHeaders=false;}
+      else{bodyLines.push(lines[i]);}
+    }
+    let body=bodyLines.join('\n');
+    if(cte==='quoted-printable')body=decodeQP(body);
+    else if(cte==='base64'){try{body=decodeURIComponent(escape(decodeB64(body)));}catch{}}
+    if(ct.toLowerCase().includes('html'))htmlBody=body;
+    else textBody=body;
+  }
 
-  body=body.trim().slice(0,8000);
+  const plainBody=(textBody||stripHtml(htmlBody)||'').trim().slice(0,12000);
 
-  return {from,to,cc,subject,date,body,folder};
+  return {from,to,cc,subject,date,folder,
+    htmlBody:htmlBody.trim(),
+    textBody:plainBody,
+    attachments:walked.attachments||[],
+    hasHtml:!!htmlBody.trim(),
+    hasAttachments:(walked.attachments||[]).length>0
+  };
 }
 
-// ── mbox splitter ─────────────────────────────────────────────────────────────
-// Split on "From <anything> <weekday> <month> ..." envelope lines
-// Works for all common mbox variants
+// ── MBOX SPLITTER ──────────────────────────────────────────────────────────────
 function splitMbox(text){
-  // mbox "From " line regex — very permissive
-  const re=/^From\s+\S+.*$/m;
-  // Split keeping the delimiter
-  const parts=text.split(/(?=^From\s+\S)/m);
-  return parts;
+  return text.split(/(?=^From\s+\S)/m);
 }
 
-// ── detect & parse a single file ──────────────────────────────────────────────
+// ── PARSE FILE ────────────────────────────────────────────────────────────────
 function parseFile(text, filename, folder){
   const emails=[];
   if(!text||text.length<5)return emails;
-
   const trimmed=text.trimStart();
 
-  // ── Strategy 1: classic mbox (multiple "From " envelope lines)
+  // mbox
   if(trimmed.startsWith('From ')&&text.includes('\nFrom ')){
     const parts=splitMbox(text);
-    log(`MBOX detected: ${filename} → ${parts.length} chunks`);
-    for(const part of parts){
-      const e=parseRFC2822(part,folder);
-      if(e)emails.push(e);
-    }
+    for(const part of parts){const e=parseRFC2822Full(part,folder);if(e)emails.push(e);}
     if(emails.length>0)return emails;
   }
-
-  // ── Strategy 2: single RFC-2822 email (has "From:" header near top)
+  // single eml
   if(/^(From|To|Subject|Date|MIME-Version|Content-Type)\s*:/im.test(trimmed.slice(0,2000))){
-    log(`EML detected: ${filename}`);
-    const e=parseRFC2822(text,folder);
-    if(e)emails.push(e);
+    const e=parseRFC2822Full(text,folder);if(e)emails.push(e);
     if(emails.length>0)return emails;
   }
-
-  // ── Strategy 3: Maildir format — file itself is one email (no From: header up top but has Date:)
+  // maildir no From header
   if(/^Date\s*:/im.test(trimmed.slice(0,500))){
-    log(`Maildir detected: ${filename}`);
-    const e=parseRFC2822('From: unknown\n'+text,folder);
-    if(e)emails.push(e);
+    const e=parseRFC2822Full('From: unknown\n'+text,folder);if(e)emails.push(e);
     if(emails.length>0)return emails;
   }
-
-  // ── Strategy 4: last resort — treat entire file as body with filename as subject
-  // Only if file looks text-like (not binary)
+  // fallback
   if(text.length>20&&!/[\x00-\x08\x0e-\x1f]/.test(text.slice(0,200))){
-    log(`Fallback plain text: ${filename}`);
-    emails.push({from:'',to:'',cc:'',subject:filename,date:'',body:text.slice(0,8000).trim(),folder});
+    emails.push({from:'',to:'',cc:'',subject:filename,date:'',folder,
+      htmlBody:'',textBody:text.slice(0,8000).trim(),
+      attachments:[],hasHtml:false,hasAttachments:false});
   }
-
   return emails;
 }
 
-// ── file loading ──────────────────────────────────────────────────────────────
-document.getElementById('file-input').addEventListener('change', async ev=>{
+// ── FILE LOADING ───────────────────────────────────────────────────────────────
+document.getElementById('file-input').addEventListener('change',async ev=>{
   await loadFiles(Array.from(ev.target.files));
   ev.target.value='';
 });
 
 async function loadFiles(files){
-  allEmails=[];foldersMap={};logs.length=0;
-
-  // Filter: skip obvious binaries by extension
+  allEmails=[];foldersMap={};
   const SKIP_EXT=/\.(jpg|jpeg|png|gif|bmp|webp|pdf|zip|gz|tar|rar|7z|exe|dll|so|db|sqlite|bin|dat)$/i;
   const toProcess=files.filter(f=>{
     const n=f.name.toLowerCase();
     if(SKIP_EXT.test(n))return false;
-    if(f.size===0)return false;
-    if(f.size>20*1024*1024)return false; // skip files >20MB
+    if(f.size===0||f.size>20*1024*1024)return false;
     return true;
   });
 
-  log(`Total files: ${files.length}, processing: ${toProcess.length}`);
   setProgress(5);
-
   let done=0;
   for(const f of toProcess){
-    // Determine folder from path
     const relPath=f.webkitRelativePath||f.name;
     const parts=relPath.replace(/\\/g,'/').split('/');
-    // Path structure: root/FolderName/[cur|new/]filename  OR  root/filename
     let rawFolder='Inbox';
     if(parts.length>=3){
-      // parts[0]=backup root, parts[1]=folder, rest=file (possibly with maildir cur/new/tmp)
       const candidate=parts[parts.length-2];
-      // skip maildir special dirs
-      if(['cur','new','tmp'].includes(candidate.toLowerCase())&&parts.length>=4){
-        rawFolder=parts[parts.length-3];
-      }else{
-        rawFolder=candidate;
-      }
-    }else if(parts.length===2){
-      rawFolder=parts[0];
-    }
+      if(['cur','new','tmp'].includes(candidate.toLowerCase())&&parts.length>=4)rawFolder=parts[parts.length-3];
+      else rawFolder=candidate;
+    }else if(parts.length===2)rawFolder=parts[0];
     const folder=normFolder(rawFolder);
-
     try{
       const text=await f.text();
       const parsed=parseFile(text,f.name,folder);
-      log(`  ${relPath} → ${parsed.length} emails (folder: ${folder})`);
       for(const e of parsed){
         if(!foldersMap[folder])foldersMap[folder]=[];
-        foldersMap[folder].push(e);
-        allEmails.push(e);
+        foldersMap[folder].push(e);allEmails.push(e);
       }
-    }catch(err){log(`  ERROR reading ${f.name}: ${err.message}`);}
-
-    done++;
-    setProgress(5+Math.floor(done/toProcess.length*88));
+    }catch(err){console.warn('Error reading',f.name,err);}
+    done++;setProgress(5+Math.floor(done/toProcess.length*88));
   }
 
-  // sort by date descending
   const sortFn=(a,b)=>new Date(b.date||0)-new Date(a.date||0);
   allEmails.sort(sortFn);
   for(const k of Object.keys(foldersMap))foldersMap[k].sort(sortFn);
 
-  setProgress(100);
-  setTimeout(()=>setProgress(-1),500);
-
-  log(`DONE — ${allEmails.length} emails, ${Object.keys(foldersMap).length} folders`);
-
+  setProgress(100);setTimeout(()=>setProgress(-1),500);
   document.getElementById('tinfo').textContent=`${allEmails.length} emails · ${Object.keys(foldersMap).length} folders`;
   buildSidebar();
   currentFolder='__all__';selectedEmail=null;
@@ -391,7 +664,7 @@ async function loadFiles(files){
   renderList();clearDetail();
 }
 
-// ── sidebar ───────────────────────────────────────────────────────────────────
+// ── SIDEBAR ────────────────────────────────────────────────────────────────────
 function buildSidebar(){
   document.getElementById('ca').textContent=allEmails.length;
   const df=document.getElementById('df');df.innerHTML='';
@@ -413,12 +686,12 @@ function switchFolder(folder,el){
   clearDetail();renderList();
 }
 
-// ── list ──────────────────────────────────────────────────────────────────────
+// ── LIST ───────────────────────────────────────────────────────────────────────
 function getEmails(){
   const base=currentFolder==='__all__'?allEmails:(foldersMap[currentFolder]||[]);
   if(!searchQuery)return base;
   const q=searchQuery.toLowerCase();
-  return base.filter(e=>(e.from+e.subject+e.body+e.to).toLowerCase().includes(q));
+  return base.filter(e=>(e.from+e.subject+(e.textBody||'')+e.to).toLowerCase().includes(q));
 }
 
 function renderList(){
@@ -426,15 +699,20 @@ function renderList(){
   const el=document.getElementById('el');
   document.getElementById('lc').textContent=emails.length+' email'+(emails.length!==1?'s':'');
   if(emails.length===0){
-    el.innerHTML='<div class="empty"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><p>No emails found</p></div>';
+    el.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><p>No emails found</p></div>';
     return;
   }
-  el.innerHTML=emails.map((e,i)=>`
-    <div class="er${e===selectedEmail?' active':''}" data-i="${i}">
+  el.innerHTML=emails.map((e,i)=>{
+    const badges=[];
+    if(e.hasHtml)badges.push('<span class="badge badge-html">HTML</span>');
+    if(e.hasAttachments)badges.push(`<span class="badge badge-att">📎 ${e.attachments.length}</span>`);
+    return `<div class="er${e===selectedEmail?' active':''}" data-i="${i}">
       <div class="er-t"><span class="ef">${esc(extractName(e.from)||'(Unknown)')}</span><span class="ed">${fmtDate(e.date)}</span></div>
       <div class="es">${esc(e.subject)}</div>
-      <div class="ep">${esc((e.body||'').replace(/\n/g,' ').slice(0,75))}…</div>
-    </div>`).join('');
+      <div class="ep">${esc((e.textBody||'').replace(/\n/g,' ').slice(0,80))}…</div>
+      ${badges.length?`<div class="er-badges">${badges.join('')}</div>`:''}
+    </div>`;
+  }).join('');
   el.querySelectorAll('.er').forEach((row,i)=>{row.addEventListener('click',()=>openEmail(emails[i],row));});
 }
 
@@ -443,39 +721,171 @@ function doSearch(){
   selectedEmail=null;clearDetail();renderList();
 }
 
-// ── detail ────────────────────────────────────────────────────────────────────
-function openEmail(e,row){
+// ── DETAIL VIEW ────────────────────────────────────────────────────────────────
+function openEmail(e, row){
   selectedEmail=e;
   document.querySelectorAll('.er').forEach(r=>r.classList.remove('active'));
   row.classList.add('active');
+
+  currentViewMode=e.hasHtml?'html':'text';
+  renderDetail(e);
+}
+
+function renderDetail(e){
   const[bg,tc]=fcolor(e.folder);
-  document.getElementById('db').innerHTML=`
-    <div id="ds">${esc(e.subject)}</div>
-    <div id="dm">
-      <div class="mr"><span class="ml">From</span><span class="mv">${esc(e.from||'—')}</span></div>
-      <div class="mr"><span class="ml">To</span><span class="mv">${esc(e.to||'—')}</span></div>
-      ${e.cc?`<div class="mr"><span class="ml">CC</span><span class="mv">${esc(e.cc)}</span></div>`:''}
-      <div class="mr"><span class="ml">Date</span><span class="mv">${esc(e.date||'—')}</span></div>
-      <div class="mr"><span class="ml">Folder</span><span class="mv"><span class="ftag" style="background:${bg};color:${tc}">${esc(e.folder)}</span></span></div>
+
+  // Build attachments HTML
+  let attHtml='';
+  if(e.attachments&&e.attachments.length>0){
+    const items=e.attachments.map((a,i)=>{
+      const {icon,color}=attIcon(a.mimeType||'');
+      return `<div class="att-item" onclick="downloadAtt(${allEmails.indexOf(selectedEmail)},${i})">
+        <div class="att-icon" style="background:${color}">${icon}</div>
+        <div class="att-info">
+          <div class="att-name">${esc(a.name||'attachment')}</div>
+          <div class="att-size">${fmtSize(a.size)}</div>
+        </div>
+      </div>`;
+    }).join('');
+    attHtml=`<div id="att-section">
+      <div class="att-title">ATTACHMENTS (${e.attachments.length})</div>
+      <div id="att-list">${items}</div>
+    </div>`;
+  }
+
+  // Toolbar buttons
+  const htmlBtn=e.hasHtml?`<button class="view-btn${currentViewMode==='html'?' active':''}" onclick="setView('html')">
+    <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+    HTML View</button>`:'';
+  const textBtn=`<button class="view-btn${currentViewMode==='text'?' active':''}" onclick="setView('text')">
+    <svg viewBox="0 0 24 24"><path d="M2.5 4v3h5v12h3V7h5V4h-13zm19 5h-9v3h3v7h3v-7h3V9z"/></svg>
+    Plain Text</button>`;
+
+  let bodyHtml='';
+  if(currentViewMode==='html'&&e.hasHtml){
+    bodyHtml=`<div id="email-iframe-wrap"><iframe id="email-iframe" sandbox="allow-same-origin" scrolling="auto"></iframe></div>`;
+  }else{
+    bodyHtml=`<div id="dc">${esc(e.textBody||'(No message body)')}</div>`;
+  }
+
+  document.getElementById('dp').innerHTML=`
+    <div id="dh">
+      <div id="ds">${esc(e.subject)}</div>
+      <div id="dm">
+        <div class="mr"><span class="ml">From</span><span class="mv">${esc(e.from||'—')}</span></div>
+        <div class="mr"><span class="ml">To</span><span class="mv">${esc(e.to||'—')}</span></div>
+        ${e.cc?`<div class="mr"><span class="ml">CC</span><span class="mv">${esc(e.cc)}</span></div>`:''}
+        <div class="mr"><span class="ml">Date</span><span class="mv">${esc(e.date||'—')}</span></div>
+        <div class="mr"><span class="ml">Folder</span><span class="mv"><span class="ftag" style="background:${bg};color:${tc}">${esc(e.folder)}</span></span></div>
+      </div>
     </div>
-    <div id="dc">${esc(e.body||'(No message body)')}</div>`;
+    ${(htmlBtn||textBtn)?`<div id="dtb">${htmlBtn}${textBtn}</div>`:''}
+    <div id="db">
+      ${bodyHtml}
+      ${attHtml}
+    </div>`;
+
+  // Load HTML into iframe after DOM settles
+  if(currentViewMode==='html'&&e.hasHtml){
+    requestAnimationFrame(()=>{
+      const iframe=document.getElementById('email-iframe');
+      if(!iframe)return;
+      const doc=iframe.contentDocument||iframe.contentWindow.document;
+      doc.open();
+      // Inject a base style for better rendering + block external images if desired
+      const safeHtml=`<!DOCTYPE html><html><head>
+        <meta charset="utf-8"/>
+        <style>
+          body{font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#222;margin:16px;word-break:break-word;}
+          img{max-width:100%!important;height:auto!important;}
+          a{color:#2563eb;}
+          table{border-collapse:collapse;}
+        </style>
+      </head><body>${e.htmlBody}</body></html>`;
+      doc.write(safeHtml);
+      doc.close();
+      // Auto-resize iframe
+      autoResizeIframe(iframe);
+    });
+  }
+}
+
+function autoResizeIframe(iframe){
+  const resize=()=>{
+    try{
+      const h=iframe.contentDocument.body.scrollHeight;
+      iframe.style.height=(Math.min(h+20,4000))+'px';
+    }catch{}
+  };
+  iframe.onload=resize;
+  setTimeout(resize,300);
+  setTimeout(resize,800);
+}
+
+function setView(mode){
+  if(!selectedEmail)return;
+  currentViewMode=mode;
+  renderDetail(selectedEmail);
+}
+
+// ── ATTACHMENT DOWNLOAD ────────────────────────────────────────────────────────
+function downloadAtt(emailIdx, attIdx){
+  const email=allEmails[emailIdx];
+  if(!email)return;
+  const att=email.attachments[attIdx];
+  if(!att)return;
+
+  let blob;
+  try{
+    if(att.encoding==='base64'||att.data.replace(/\s/g,'').match(/^[A-Za-z0-9+/=]+$/)){
+      const bytes=decodeB64Safe(att.data);
+      blob=new Blob([bytes],{type:att.mimeType||'application/octet-stream'});
+    }else{
+      blob=new Blob([att.data],{type:att.mimeType||'text/plain'});
+    }
+  }catch{
+    blob=new Blob([att.data],{type:'application/octet-stream'});
+  }
+
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=att.name||'attachment';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+
+// ── ATTACHMENT ICON HELPER ─────────────────────────────────────────────────────
+function attIcon(mime){
+  if(mime.includes('pdf'))return{icon:`<svg viewBox="0 0 24 24" fill="#ef4444" width="16" height="16"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5z"/></svg>`,color:'rgba(239,68,68,.15)'};
+  if(mime.includes('image'))return{icon:`<svg viewBox="0 0 24 24" fill="#8b5cf6" width="16" height="16"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`,color:'rgba(139,92,246,.15)'};
+  if(mime.includes('word')||mime.includes('document'))return{icon:`<svg viewBox="0 0 24 24" fill="#3b82f6" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,color:'rgba(59,130,246,.15)'};
+  if(mime.includes('sheet')||mime.includes('excel')||mime.includes('csv'))return{icon:`<svg viewBox="0 0 24 24" fill="#10b981" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,color:'rgba(16,185,129,.15)'};
+  if(mime.includes('zip')||mime.includes('archive')||mime.includes('compress'))return{icon:`<svg viewBox="0 0 24 24" fill="#f59e0b" width="16" height="16"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.54 15.46 0 12.36 0c-1.5 0-2.85.57-3.87 1.5L7 3H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>`,color:'rgba(245,158,11,.15)'};
+  return{icon:`<svg viewBox="0 0 24 24" fill="#64748b" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`,color:'rgba(100,116,139,.15)'};
 }
 
 function clearDetail(){
-  document.getElementById('db').innerHTML='<div class="empty" id="ed"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><p>Select an email to read it</p></div>';
+  document.getElementById('dp').innerHTML=`<div id="db"><div class="empty" id="ed">
+    <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+    <p>Select an email to read it</p>
+  </div></div>`;
 }
 
-// ── progress ──────────────────────────────────────────────────────────────────
+// ── PROGRESS ───────────────────────────────────────────────────────────────────
 function setProgress(pct){
   const pb=document.getElementById('pb'),pf=document.getElementById('pf');
   if(pct<0){pb.style.display='none';pf.style.width='0%';}
   else{pb.style.display='block';pf.style.width=pct+'%';}
 }
 
-// ── drag & drop ───────────────────────────────────────────────────────────────
+// ── DRAG & DROP ────────────────────────────────────────────────────────────────
+let dragCounter=0;
+document.body.addEventListener('dragenter',e=>{e.preventDefault();dragCounter++;document.getElementById('drag-overlay').classList.add('show');});
+document.body.addEventListener('dragleave',e=>{e.preventDefault();dragCounter--;if(dragCounter<=0){dragCounter=0;document.getElementById('drag-overlay').classList.remove('show');}});
 document.body.addEventListener('dragover',e=>e.preventDefault());
 document.body.addEventListener('drop',async e=>{
-  e.preventDefault();
+  e.preventDefault();dragCounter=0;document.getElementById('drag-overlay').classList.remove('show');
   const files=[];
   async function readEntry(entry,path){
     if(entry.isFile){
@@ -484,9 +894,7 @@ document.body.addEventListener('drop',async e=>{
         files.push(f);res();
       }));
     }else if(entry.isDirectory){
-      const reader=entry.createReader();
-      let allEntries=[];
-      // createReader only returns up to 100 at a time — loop
+      const reader=entry.createReader();let allEntries=[];
       await new Promise(res=>{
         function readBatch(){reader.readEntries(async entries=>{if(!entries.length){res();}else{allEntries=allEntries.concat(Array.from(entries));readBatch();}});}
         readBatch();
