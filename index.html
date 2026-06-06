@@ -3,313 +3,427 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Mail Backup Viewer</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<title>MailVault — Backup Viewer</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg:#0f1117;
-  --surface:#161b27;
-  --surface2:#1c2333;
-  --sb:#0d1117;
-  --sb-text:#e2e8f0;
-  --sb-muted:#64748b;
-  --sb-active:#1e293b;
-  --sb-accent:#60a5fa;
-  --border:#1e2d3d;
-  --border2:#263548;
-  --text:#e2e8f0;
-  --text2:#94a3b8;
-  --text3:#475569;
-  --accent:#3b82f6;
-  --accent2:#60a5fa;
-  --accent-bg:rgba(59,130,246,.12);
-  --hover:#1a2336;
-  --green:#10b981;
-  --amber:#f59e0b;
-  --red:#ef4444;
-  --purple:#8b5cf6;
+  --bg:#f8f9fb;
+  --surface:#ffffff;
+  --surface2:#f1f3f7;
+  --sb:#1a1f2e;
+  --sb2:#232a3b;
+  --sb-text:#e8edf5;
+  --sb-muted:#6b7a99;
+  --sb-hover:#2a3347;
+  --sb-active:#2d3750;
+  --sb-accent:#4f8ef7;
+  --border:#e4e8f0;
+  --border2:#d0d7e3;
+  --text:#111827;
+  --text2:#374151;
+  --text3:#6b7280;
+  --text4:#9ca3af;
+  --accent:#2563eb;
+  --accent-light:#eff4ff;
+  --accent-border:#bfcffd;
+  --green:#059669;
+  --green-bg:#ecfdf5;
+  --amber:#d97706;
+  --amber-bg:#fffbeb;
+  --red:#dc2626;
+  --red-bg:#fef2f2;
+  --purple:#7c3aed;
+  --purple-bg:#f5f3ff;
   --radius:10px;
-  --shadow:0 4px 24px rgba(0,0,0,.4);
+  --radius-sm:7px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+  --shadow:0 4px 16px rgba(0,0,0,.1);
+  --shadow-lg:0 10px 40px rgba(0,0,0,.14);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);height:100vh;display:flex;flex-direction:column;overflow:hidden;color:var(--text);}
+body{
+  font-family:'Geist',system-ui,sans-serif;
+  background:var(--bg);height:100vh;
+  display:flex;flex-direction:column;overflow:hidden;
+  color:var(--text);
+}
 
-/* ── TOPBAR ── */
+/* ─── TOPBAR ─── */
 #topbar{
   display:flex;align-items:center;gap:10px;
   background:var(--sb);color:var(--sb-text);
-  padding:0 18px;height:54px;flex-shrink:0;
-  border-bottom:1px solid var(--border);
+  padding:0 16px;height:52px;flex-shrink:0;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  position:relative;z-index:10;
 }
-.logo{font-size:15px;font-weight:600;color:#e2e8f0;display:flex;align-items:center;gap:9px;white-space:nowrap;letter-spacing:-.3px;}
-.logo-icon{width:28px;height:28px;background:linear-gradient(135deg,#3b82f6,#6366f1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.logo-icon svg{width:15px;height:15px;fill:#fff;}
-.vdiv{width:1px;height:22px;background:var(--border2);margin:0 4px;}
+.logo{
+  display:flex;align-items:center;gap:9px;
+  font-size:15px;font-weight:700;color:#fff;
+  white-space:nowrap;letter-spacing:-.4px;
+  text-decoration:none;
+}
+.logo-mark{
+  width:28px;height:28px;
+  background:linear-gradient(135deg,#4f8ef7 0%,#6366f1 100%);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(79,142,247,.4);flex-shrink:0;
+}
+.logo-mark svg{width:15px;height:15px;fill:#fff;}
+.vd{width:1px;height:20px;background:rgba(255,255,255,.1);margin:0 4px;}
 
-#upload-btn{
+/* topbar buttons */
+.tb-btn{
   display:flex;align-items:center;gap:6px;
-  background:linear-gradient(135deg,#3b82f6,#6366f1);
-  color:#fff;border:none;border-radius:8px;
-  padding:7px 14px;font-size:12.5px;font-weight:600;
-  cursor:pointer;white-space:nowrap;
-  font-family:'DM Sans',sans-serif;
-  transition:opacity .15s,transform .1s;
-  box-shadow:0 2px 12px rgba(59,130,246,.35);
+  padding:6px 13px;font-size:12.5px;font-weight:500;
+  border-radius:var(--radius-sm);cursor:pointer;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.07);color:var(--sb-text);
+  font-family:'Geist',sans-serif;
+  transition:background .14s,border-color .14s;white-space:nowrap;
 }
-#upload-btn:hover{opacity:.88;transform:translateY(-1px);}
-#upload-btn:active{transform:translateY(0);}
-#upload-btn svg{width:13px;height:13px;}
+.tb-btn:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.22);}
+.tb-btn svg{width:13px;height:13px;fill:currentColor;flex-shrink:0;}
+.tb-btn.primary{
+  background:linear-gradient(135deg,#3b82f6,#4f46e5);
+  border-color:transparent;color:#fff;
+  box-shadow:0 2px 10px rgba(59,130,246,.4);
+}
+.tb-btn.primary:hover{opacity:.9;}
+.tb-btn.danger{background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.25);color:#f87171;}
+.tb-btn.danger:hover{background:rgba(220,38,38,.2);color:#fca5a5;}
 #file-input{display:none;}
 
+/* search */
 #tsearch{
   display:flex;align-items:center;gap:7px;
-  background:var(--sb-active);border:1px solid var(--border2);
-  border-radius:8px;padding:6px 12px;flex:1;max-width:300px;
-  transition:border-color .15s;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--radius-sm);padding:6px 12px;flex:1;max-width:280px;
+  transition:border-color .15s,background .15s;
 }
-#tsearch:focus-within{border-color:var(--accent);}
+#tsearch:focus-within{border-color:rgba(79,142,247,.6);background:rgba(255,255,255,.12);}
 #tsearch svg{width:13px;height:13px;fill:var(--sb-muted);flex-shrink:0;}
-#tsearch input{background:transparent;border:none;outline:none;color:var(--sb-text);font-size:13px;width:100%;font-family:'DM Sans',sans-serif;}
+#tsearch input{background:transparent;border:none;outline:none;color:var(--sb-text);font-size:13px;width:100%;font-family:'Geist',sans-serif;}
 #tsearch input::placeholder{color:var(--sb-muted);}
-#tinfo{margin-left:auto;font-size:11.5px;color:var(--sb-muted);white-space:nowrap;font-family:'DM Mono',monospace;}
+#tinfo{
+  margin-left:auto;font-size:11.5px;color:var(--sb-muted);
+  white-space:nowrap;font-family:'Geist Mono',monospace;
+  background:rgba(255,255,255,.05);padding:4px 10px;
+  border-radius:99px;border:1px solid rgba(255,255,255,.08);
+}
 
-/* ── LAYOUT ── */
+/* ─── LAYOUT ─── */
 #main{display:flex;flex:1;overflow:hidden;}
 
-/* ── SIDEBAR ── */
+/* ─── SIDEBAR ─── */
 #sidebar{
-  width:210px;min-width:210px;
-  background:var(--sb);display:flex;flex-direction:column;
-  overflow-y:auto;border-right:1px solid var(--border);
+  width:214px;min-width:214px;
+  background:var(--sb);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+  border-right:1px solid rgba(255,255,255,.05);
+  flex-shrink:0;
 }
 .ss{
-  padding:16px 14px 6px;
-  font-size:10px;font-weight:600;letter-spacing:1.2px;
-  color:var(--text3);text-transform:uppercase;
+  padding:14px 14px 5px;
+  font-size:10px;font-weight:600;letter-spacing:1.1px;
+  color:var(--sb-muted);text-transform:uppercase;
 }
 .fi{
   display:flex;align-items:center;gap:8px;
-  padding:7px 12px;cursor:pointer;border-radius:8px;
+  padding:7px 11px;cursor:pointer;border-radius:var(--radius-sm);
   margin:1px 6px;color:var(--sb-muted);font-size:13px;
-  transition:background .12s,color .12s;
+  transition:background .12s,color .12s;font-weight:400;
 }
-.fi:hover{background:var(--hover);color:var(--sb-text);}
-.fi.active{background:var(--accent-bg);color:var(--sb-accent);font-weight:500;}
+.fi:hover{background:var(--sb-hover);color:var(--sb-text);}
+.fi.active{background:var(--sb-active);color:var(--sb-accent);font-weight:500;}
 .fi svg{width:14px;height:14px;fill:currentColor;flex-shrink:0;}
 .fi .ct{
   margin-left:auto;
-  background:rgba(255,255,255,.05);
-  color:var(--text3);font-size:10.5px;
+  background:rgba(255,255,255,.07);
+  color:var(--sb-muted);font-size:10.5px;
   padding:1px 7px;border-radius:99px;
-  font-family:'DM Mono',monospace;
+  font-family:'Geist Mono',monospace;
 }
-.fi.active .ct{background:var(--accent-bg);color:var(--sb-accent);}
+.fi.active .ct{background:rgba(79,142,247,.15);color:var(--sb-accent);}
+#sb-bottom{padding:12px 8px;border-top:1px solid rgba(255,255,255,.05);margin-top:auto;}
 
-/* ── LIST PANEL ── */
+/* ─── LIST PANEL ─── */
 #lp{
-  width:300px;min-width:300px;
+  width:296px;min-width:296px;flex-shrink:0;
   display:flex;flex-direction:column;
   border-right:1px solid var(--border);
   background:var(--surface);
 }
 #lh{
-  padding:12px 14px 10px;
-  border-bottom:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;
-  flex-shrink:0;
-}
-#lh h3{font-size:13.5px;font-weight:600;color:var(--text);}
-#lc{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
-#el{flex:1;overflow-y:auto;}
-
-.er{
   padding:11px 14px;
   border-bottom:1px solid var(--border);
-  cursor:pointer;
-  border-left:2px solid transparent;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;background:var(--surface);
+}
+#lh-left{display:flex;flex-direction:column;gap:1px;}
+#lh h3{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.3px;}
+#lc{font-size:11px;color:var(--text4);font-family:'Geist Mono',monospace;}
+#el{flex:1;overflow-y:auto;}
+
+/* email row */
+.er{
+  padding:10px 14px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;border-left:2px solid transparent;
   transition:background .1s;
 }
-.er:hover{background:var(--hover);}
-.er.active{background:var(--accent-bg);border-left-color:var(--accent);}
-.er-t{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;gap:8px;}
-.ef{font-size:12.5px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
-.ed{font-size:10.5px;color:var(--text3);white-space:nowrap;font-family:'DM Mono',monospace;}
-.es{font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px;}
-.ep{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.er-badges{display:flex;gap:4px;margin-top:4px;}
-.badge{font-size:10px;font-weight:600;padding:1px 6px;border-radius:99px;}
-.badge-att{background:rgba(245,158,11,.15);color:#f59e0b;}
-.badge-html{background:rgba(99,102,241,.15);color:#818cf8;}
+.er:hover{background:#f5f7fc;}
+.er.active{background:var(--accent-light);border-left-color:var(--accent);}
+.er.unread .ef{font-weight:600;}
+.er-t{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px;gap:6px;}
+.ef{font-size:12.5px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
+.ed{font-size:10px;color:var(--text4);white-space:nowrap;font-family:'Geist Mono',monospace;flex-shrink:0;}
+.es{font-size:11.5px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px;}
+.ep{font-size:11px;color:var(--text4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.er-badges{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;}
+.badge{font-size:10px;font-weight:600;padding:1px 6px;border-radius:99px;font-family:'Geist Mono',monospace;}
+.badge-att{background:var(--amber-bg);color:var(--amber);}
+.badge-html{background:var(--purple-bg);color:var(--purple);}
 
-/* ── DETAIL PANEL ── */
-#dp{flex:1;display:flex;flex-direction:column;background:var(--surface);overflow:hidden;}
+/* ─── DETAIL PANEL ─── */
+#dp{
+  flex:1;display:flex;flex-direction:column;
+  background:var(--surface);overflow:hidden;
+}
 
-/* Email detail header */
+/* email header card */
 #dh{
-  padding:18px 24px 0;
-  border-bottom:1px solid var(--border);
   flex-shrink:0;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:20px 28px 0;
 }
-#ds{font-size:18px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.4;letter-spacing:-.3px;}
-#dm{
-  display:flex;flex-direction:column;gap:0;
-  margin-bottom:0;
+#ds{
+  font-size:19px;font-weight:700;color:var(--text);
+  margin-bottom:14px;line-height:1.4;letter-spacing:-.4px;
 }
-.mr{display:flex;gap:10px;font-size:12.5px;padding:5px 0;border-top:1px solid var(--border);}
-.ml{color:var(--text3);min-width:50px;font-weight:500;flex-shrink:0;}
-.mv{color:var(--text2);word-break:break-all;}
-.ftag{display:inline-flex;font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;}
 
-/* Toolbar under header */
+/* metadata grid */
+#dm{
+  display:grid;grid-template-columns:auto 1fr;
+  gap:0;background:var(--surface2);
+  border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;margin-bottom:14px;
+}
+.mr{
+  display:contents;
+}
+.ml{
+  font-size:11.5px;font-weight:600;color:var(--text3);
+  padding:8px 14px;border-bottom:1px solid var(--border);
+  background:var(--surface2);letter-spacing:.2px;text-transform:uppercase;
+  display:flex;align-items:center;
+}
+.mv{
+  font-size:13px;color:var(--text);word-break:break-all;
+  padding:8px 14px;border-bottom:1px solid var(--border);
+  background:var(--surface);line-height:1.5;
+}
+.mr:last-child .ml,
+.mr:last-child .mv{border-bottom:none;}
+
+/* from/to special */
+.mv-from{font-weight:600;color:var(--text);}
+.mv-email{font-weight:400;color:var(--text3);font-family:'Geist Mono',monospace;font-size:12px;margin-left:4px;}
+
+.ftag{
+  display:inline-flex;font-size:11px;font-weight:600;
+  padding:2px 9px;border-radius:99px;
+}
+
+/* toolbar */
 #dtb{
   display:flex;align-items:center;gap:6px;
-  padding:8px 24px;border-bottom:1px solid var(--border);
-  flex-shrink:0;background:var(--surface);
+  padding:8px 28px;border-bottom:1px solid var(--border);
+  flex-shrink:0;background:var(--bg);
 }
 .view-btn{
   display:flex;align-items:center;gap:5px;
   padding:5px 11px;font-size:12px;font-weight:500;
-  border-radius:7px;cursor:pointer;
+  border-radius:var(--radius-sm);cursor:pointer;
   border:1px solid var(--border2);
-  background:transparent;color:var(--text2);
-  font-family:'DM Sans',sans-serif;
-  transition:background .12s,color .12s,border-color .12s;
+  background:var(--surface);color:var(--text3);
+  font-family:'Geist',sans-serif;
+  transition:all .12s;
 }
-.view-btn:hover{background:var(--hover);color:var(--text);}
-.view-btn.active{background:var(--accent-bg);color:var(--sb-accent);border-color:var(--accent);}
-.view-btn svg{width:12px;height:12px;}
+.view-btn:hover{background:var(--surface2);color:var(--text);}
+.view-btn.active{background:var(--accent-light);color:var(--accent);border-color:var(--accent-border);font-weight:600;}
+.view-btn svg{width:12px;height:12px;fill:currentColor;}
 
-/* Body area */
-#db{flex:1;overflow-y:auto;padding:20px 24px;}
+/* body area */
+#db{flex:1;overflow-y:auto;padding:20px 28px 28px;}
 
-/* HTML rendered email */
+/* HTML iframe */
 #email-iframe-wrap{
   border:1px solid var(--border);border-radius:var(--radius);
   overflow:hidden;background:#fff;
+  box-shadow:var(--shadow-sm);
 }
-#email-iframe{width:100%;border:none;display:block;min-height:200px;}
+#email-iframe{width:100%;border:none;display:block;min-height:100px;}
 
-/* Plain text email */
+/* plain text */
 #dc{
-  font-size:13px;line-height:1.9;color:var(--text2);
+  font-size:12.5px;line-height:1.85;color:var(--text2);
   white-space:pre-wrap;word-break:break-word;
-  font-family:'DM Mono',monospace;
+  font-family:'Geist Mono',monospace;
   background:var(--surface2);border:1px solid var(--border);
   border-radius:var(--radius);padding:18px 20px;
 }
 
-/* Attachments section */
+/* received chain */
+#received-section{
+  margin-bottom:14px;
+}
+.received-toggle{
+  display:flex;align-items:center;gap:6px;
+  font-size:11.5px;font-weight:600;color:var(--text3);
+  cursor:pointer;padding:6px 0;user-select:none;
+  letter-spacing:.2px;
+}
+.received-toggle:hover{color:var(--text2);}
+.received-toggle svg{width:12px;height:12px;fill:currentColor;transition:transform .2s;}
+.received-toggle.open svg{transform:rotate(90deg);}
+#received-list{
+  display:none;background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:10px 14px;margin-top:4px;
+  font-size:11.5px;font-family:'Geist Mono',monospace;color:var(--text3);
+  line-height:1.8;
+}
+#received-list.show{display:block;}
+
+/* attachments */
 #att-section{margin-top:16px;}
 #att-title{
-  font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;
-  color:var(--text3);margin-bottom:8px;
+  font-size:11px;font-weight:600;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--text3);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
 }
 #att-list{display:flex;flex-wrap:wrap;gap:8px;}
 .att-item{
-  display:flex;align-items:center;gap:9px;
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:8px;padding:9px 13px;cursor:pointer;
-  transition:border-color .12s,background .12s;max-width:240px;
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:9px 14px;
+  cursor:pointer;transition:border-color .12s,box-shadow .12s;
+  max-width:260px;min-width:160px;
 }
-.att-item:hover{border-color:var(--accent);background:var(--hover);}
-.att-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.att-icon svg{width:15px;height:15px;}
+.att-item:hover{border-color:var(--accent-border);box-shadow:var(--shadow-sm);}
+.att-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.att-icon svg{width:16px;height:16px;}
 .att-info{flex:1;min-width:0;}
 .att-name{font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.att-size{font-size:10.5px;color:var(--text3);font-family:'DM Mono',monospace;}
+.att-meta{font-size:10.5px;color:var(--text4);font-family:'Geist Mono',monospace;margin-top:1px;}
+.att-dl{
+  width:26px;height:26px;border-radius:6px;
+  background:var(--accent-light);border:1px solid var(--accent-border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.att-dl svg{width:12px;height:12px;fill:var(--accent);}
 
-/* Empty states */
+/* empty states */
 .empty{
   display:flex;flex-direction:column;align-items:center;
   justify-content:center;height:100%;gap:12px;
   padding:30px;text-align:center;
 }
 .empty-icon{
-  width:56px;height:56px;background:var(--surface2);
-  border-radius:16px;display:flex;align-items:center;justify-content:center;
+  width:60px;height:60px;background:var(--surface2);
+  border-radius:18px;display:flex;align-items:center;justify-content:center;
   border:1px solid var(--border);
 }
-.empty-icon svg{width:26px;height:26px;fill:var(--text3);}
+.empty-icon svg{width:28px;height:28px;fill:var(--text4);}
 .empty h2{font-size:16px;font-weight:600;color:var(--text2);}
 .empty p{font-size:13px;color:var(--text3);line-height:1.7;max-width:240px;}
-.ftags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px;}
+.ftags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:2px;}
 .ftag2{
-  background:var(--accent-bg);color:var(--accent2);
+  background:var(--accent-light);color:var(--accent);
   font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;
-  font-family:'DM Mono',monospace;
+  font-family:'Geist Mono',monospace;border:1px solid var(--accent-border);
 }
 .drop-hint{
-  border:2px dashed var(--border2);border-radius:12px;
-  padding:12px 20px;font-size:12px;color:var(--text3);
+  border:1.5px dashed var(--border2);border-radius:10px;
+  padding:10px 18px;font-size:12px;color:var(--text4);
   display:flex;align-items:center;gap:7px;margin-top:4px;
+  background:var(--surface2);
 }
-.drop-hint svg{width:14px;height:14px;fill:var(--text3);}
+.drop-hint svg{width:13px;height:13px;fill:var(--text4);}
 
-/* Progress bar */
-#pb{display:none;position:fixed;top:54px;left:0;right:0;height:2px;background:var(--border);z-index:99;}
-#pf{height:100%;background:linear-gradient(90deg,#3b82f6,#6366f1);width:0%;transition:width .2s;border-radius:0 2px 2px 0;}
+/* progress */
+#pb{display:none;position:fixed;top:52px;left:0;right:0;height:2px;background:var(--border);z-index:99;}
+#pf{height:100%;background:linear-gradient(90deg,#3b82f6,#6366f1);width:0%;transition:width .18s;border-radius:0 2px 2px 0;}
 
-/* Drag overlay */
+/* drag overlay */
 #drag-overlay{
   display:none;position:fixed;inset:0;
-  background:rgba(15,17,23,.85);z-index:999;
+  background:rgba(255,255,255,.85);z-index:999;
   align-items:center;justify-content:center;
-  flex-direction:column;gap:14px;backdrop-filter:blur(4px);
+  backdrop-filter:blur(6px);
 }
 #drag-overlay.show{display:flex;}
-#drag-overlay .dbox{
+.dbox{
   border:2px dashed var(--accent);border-radius:20px;
-  padding:40px 60px;text-align:center;
+  padding:48px 72px;text-align:center;
+  background:var(--surface);box-shadow:var(--shadow-lg);
 }
-#drag-overlay h2{font-size:20px;font-weight:600;color:var(--sb-text);}
-#drag-overlay p{font-size:13px;color:var(--sb-muted);}
+.dbox svg{width:40px;height:40px;fill:var(--accent);margin-bottom:14px;}
+.dbox h2{font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.dbox p{font-size:13px;color:var(--text3);}
 
-/* Scrollbars */
-::-webkit-scrollbar{width:5px;}
+/* virtual scroll notice */
+#scroll-notice{
+  text-align:center;font-size:11.5px;color:var(--text4);
+  padding:12px;font-family:'Geist Mono',monospace;
+  border-top:1px solid var(--border);
+}
+
+::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
-
-/* Loading state */
-.loading-shimmer{
-  background:linear-gradient(90deg,var(--surface2) 25%,var(--hover) 50%,var(--surface2) 75%);
-  background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;
-}
-@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+::-webkit-scrollbar-thumb:hover{background:#b0bac9;}
 </style>
 </head>
 <body>
 
 <div id="pb"><div id="pf"></div></div>
+
 <div id="drag-overlay">
   <div class="dbox">
+    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
     <h2>Drop your backup folder</h2>
-    <p>Release to load your emails</p>
+    <p>Release to load all emails</p>
   </div>
 </div>
 
 <div id="topbar">
   <div class="logo">
-    <div class="logo-icon">
+    <div class="logo-mark">
       <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
     </div>
     MailVault
   </div>
-  <div class="vdiv"></div>
-  <button id="upload-btn" onclick="document.getElementById('file-input').click()">
+  <div class="vd"></div>
+  <button class="tb-btn primary" onclick="document.getElementById('file-input').click()">
     <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
-    Upload Backup Folder
+    Upload Folder
   </button>
-  <input type="file" id="file-input" webkitdirectory multiple />
-  <div class="vdiv"></div>
+  <button class="tb-btn danger" id="clear-btn" onclick="clearAll()" style="display:none">
+    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+    Clear
+  </button>
+  <input type="file" id="file-input" webkitdirectory multiple/>
+  <div class="vd"></div>
   <div id="tsearch">
     <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-    <input type="text" id="si" placeholder="Search emails, senders, subjects…" oninput="doSearch()"/>
+    <input type="text" id="si" placeholder="Search emails…" oninput="doSearch()"/>
   </div>
   <div id="tinfo">No backup loaded</div>
 </div>
 
 <div id="main">
-  <!-- SIDEBAR -->
   <div id="sidebar">
     <div class="ss">Mailboxes</div>
     <div class="fi active" data-folder="__all__" onclick="switchFolder('__all__',this)">
@@ -317,24 +431,27 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);height:100v
       All Mail <span class="ct" id="ca">0</span>
     </div>
     <div id="df"></div>
+    <div id="sb-bottom"></div>
   </div>
 
-  <!-- LIST PANEL -->
   <div id="lp">
     <div id="lh">
-      <h3 id="lt">All Mail</h3>
-      <span id="lc">0 emails</span>
+      <div id="lh-left">
+        <h3 id="lt">All Mail</h3>
+        <span id="lc">0 emails</span>
+      </div>
     </div>
     <div id="el">
       <div class="empty" id="ws">
         <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
         <h2>No backup loaded</h2>
-        <p>Upload a backup folder or drag & drop it anywhere</p>
+        <p>Upload a folder or drag & drop it anywhere on this page</p>
         <div class="ftags">
           <span class="ftag2">.mbox</span>
           <span class="ftag2">.eml</span>
           <span class="ftag2">.msg</span>
           <span class="ftag2">maildir</span>
+          <span class="ftag2">any format</span>
         </div>
         <div class="drop-hint">
           <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
@@ -344,7 +461,6 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);height:100v
     </div>
   </div>
 
-  <!-- DETAIL PANEL -->
   <div id="dp">
     <div id="db">
       <div class="empty" id="ed">
@@ -356,59 +472,24 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);height:100v
 </div>
 
 <script>
-// ── GLOBALS ───────────────────────────────────────────────────────────────────
+// ─── STATE ─────────────────────────────────────────────────────────────────────
 let allEmails=[], foldersMap={}, currentFolder='__all__', searchQuery='', selectedEmail=null;
-let currentViewMode='html'; // 'html' or 'text'
+let currentViewMode='html';
+// Virtual scroll state
+const PAGE=80;
+let renderedCount=0;
+let currentList=[];
 
-// ── FOLDER ICONS & COLORS ──────────────────────────────────────────────────────
-const FICONS={
-  inbox:`<svg viewBox="0 0 24 24"><path d="M19 3H4.99C3.89 3 3 3.9 3 5L2.99 19c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.34 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/></svg>`,
-  sent:`<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`,
-  spam:`<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
-  trash:`<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`,
-  archive:`<svg viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5z"/></svg>`,
-  drafts:`<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`,
-  default:`<svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>`
-};
-const FCOLORS={
-  inbox:['rgba(16,185,129,.15)','#10b981'],
-  sent:['rgba(59,130,246,.15)','#60a5fa'],
-  spam:['rgba(239,68,68,.15)','#f87171'],
-  trash:['rgba(100,116,139,.15)','#94a3b8'],
-  archive:['rgba(245,158,11,.15)','#fbbf24'],
-  drafts:['rgba(139,92,246,.15)','#a78bfa'],
-  default:['rgba(59,130,246,.1)','#60a5fa']
-};
-function ficon(n){const k=n.toLowerCase();for(const[kw,v]of Object.entries(FICONS))if(k.includes(kw))return v;return FICONS.default;}
-function fcolor(n){const k=n.toLowerCase();for(const[kw,v]of Object.entries(FCOLORS))if(k.includes(kw))return v;return FCOLORS.default;}
-
-// ── FOLDER NORMALIZATION ────────────────────────────────────────────────────────
-function normFolder(raw){
-  const n=(raw||'').toLowerCase().trim();
-  if(n.includes('inbox')||n==='cur'||n==='new'||n==='tmp')return 'Inbox';
-  if(n.includes('sent'))return 'Sent';
-  if(n.includes('spam')||n.includes('junk'))return 'Spam';
-  if(n.includes('trash')||n.includes('delet'))return 'Trash';
-  if(n.includes('archive'))return 'Archive';
-  if(n.includes('draft'))return 'Drafts';
-  if(!raw||raw.trim()==='')return 'Inbox';
-  return raw.charAt(0).toUpperCase()+raw.slice(1);
-}
-
-// ── TEXT HELPERS ──────────────────────────────────────────────────────────────
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-function decodeQP(s){
-  return s.replace(/=\r?\n/g,'').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));
-}
+function decodeQP(s){return s.replace(/=\r?\n/g,'').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));}
 function decodeB64(s){try{return atob(s.replace(/\s+/g,''));}catch{return s;}}
-function decodeB64Safe(s){
-  // Returns Uint8Array
+function decodeB64Bytes(s){
   const b=s.replace(/\s+/g,'');
-  const bin=atob(b);
-  const arr=new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
-  return arr;
+  try{
+    const bin=atob(b);const arr=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return arr;
+  }catch{return new Uint8Array(0);}
 }
 function decodeRFC2047(s){
   if(!s)return '';
@@ -430,65 +511,86 @@ function stripHtml(s){
 function extractName(from){
   if(!from)return 'Unknown';
   const m=from.match(/^"?([^"<]+?)"?\s*</);if(m)return m[1].trim();
-  const m2=from.match(/([^@<\s]+)@/);return m2?m2[1]:from;
+  const m2=from.match(/([^@<\s]+)@/);return m2?m2[1]:from.slice(0,30);
+}
+function extractEmail(from){
+  const m=(from||'').match(/<([^>]+)>/);if(m)return m[1];
+  if(from&&from.includes('@'))return from.trim();return '';
 }
 function fmtDate(d){
   if(!d)return '';
   try{const dt=new Date(d);if(isNaN(dt))return d.slice(0,16);return dt.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}catch{return String(d).slice(0,16);}
 }
-function fmtSize(bytes){
-  if(!bytes)return '';
-  if(bytes<1024)return bytes+'B';
-  if(bytes<1024*1024)return (bytes/1024).toFixed(1)+'KB';
-  return (bytes/1024/1024).toFixed(1)+'MB';
+function fmtDateFull(d){
+  if(!d)return '—';
+  try{const dt=new Date(d);if(isNaN(dt))return d;return dt.toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch{return String(d);}
+}
+function fmtSize(b){if(!b||b<0)return '';if(b<1024)return b+'B';if(b<1048576)return(b/1024).toFixed(1)+'KB';return(b/1048576).toFixed(1)+'MB';}
+function escReg(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+
+// ─── FOLDER HELPERS ────────────────────────────────────────────────────────────
+const FICONS={
+  inbox:`<svg viewBox="0 0 24 24"><path d="M19 3H4.99C3.89 3 3 3.9 3 5L2.99 19c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.34 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/></svg>`,
+  sent:`<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`,
+  spam:`<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
+  trash:`<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`,
+  archive:`<svg viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27z"/></svg>`,
+  drafts:`<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`,
+  default:`<svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>`
+};
+const FCOLORS={
+  inbox:['#ecfdf5','#059669'],sent:['#eff6ff','#2563eb'],spam:['#fef2f2','#dc2626'],
+  trash:['#f9fafb','#6b7280'],archive:['#fffbeb','#d97706'],drafts:['#f5f3ff','#7c3aed'],
+  default:['#eff4ff','#4f46e5']
+};
+function ficon(n){const k=n.toLowerCase();for(const[kw,v]of Object.entries(FICONS))if(k.includes(kw))return v;return FICONS.default;}
+function fcolor(n){const k=n.toLowerCase();for(const[kw,v]of Object.entries(FCOLORS))if(k.includes(kw))return v;return FCOLORS.default;}
+function normFolder(raw){
+  const n=(raw||'').toLowerCase().trim();
+  if(n.includes('inbox')||n==='cur'||n==='new'||n==='tmp')return 'Inbox';
+  if(n.includes('sent'))return 'Sent';
+  if(n.includes('spam')||n.includes('junk'))return 'Spam';
+  if(n.includes('trash')||n.includes('delet'))return 'Trash';
+  if(n.includes('archive'))return 'Archive';
+  if(n.includes('draft'))return 'Drafts';
+  if(!raw||raw.trim()==='')return 'Inbox';
+  return raw.charAt(0).toUpperCase()+raw.slice(1);
 }
 
-// ── MIME PARSER ───────────────────────────────────────────────────────────────
-// Returns {headers, body (raw string), parts[]}
+// ─── MIME PARSER ───────────────────────────────────────────────────────────────
 function parseMimePart(raw){
   const lines=raw.split(/\r?\n/);
   const headers={};
   let i=0;
-  // skip envelope "From " line
   if(lines[0]&&lines[0].startsWith('From '))i=1;
   while(i<lines.length){
     const line=lines[i];
     if(line.trim()===''){i++;break;}
     const m=line.match(/^([\w-]+)\s*:\s*(.*)$/);
     if(m){
-      let key=m[1].toLowerCase();let val=m[2];
-      i++;
+      let key=m[1].toLowerCase(),val=m[2];i++;
       while(i<lines.length&&lines[i]&&/^[ \t]/.test(lines[i])){val+=' '+lines[i].trim();i++;}
       if(!headers[key])headers[key]=val;
     }else{i++;}
   }
-  const body=lines.slice(i).join('\n');
-  return {headers,body};
+  return{headers,body:lines.slice(i).join('\n')};
 }
+function getMimeParam(h,p){const re=new RegExp(p+'\\s*=\\s*"?([^";\\s]+)"?','i');const m=(h||'').match(re);return m?m[1]:null;}
 
-function getMimeParam(headerVal,param){
-  const re=new RegExp(param+'\\s*=\\s*"?([^";\\s]+)"?','i');
-  const m=(headerVal||'').match(re);
-  return m?m[1]:null;
-}
-
-// Walk MIME tree, collecting text parts and attachments
-function walkMime(rawPart,depth){
-  const {headers,body}=parseMimePart(rawPart);
+function walkMime(raw,depth){
+  const{headers,body}=parseMimePart(raw);
   const ct=headers['content-type']||'text/plain';
   const cte=(headers['content-transfer-encoding']||'').toLowerCase().trim();
   const cd=headers['content-disposition']||'';
   const mimeType=ct.split(';')[0].toLowerCase().trim();
   const boundary=getMimeParam(ct,'boundary');
-  const charset=getMimeParam(ct,'charset')||'utf-8';
   const name=getMimeParam(cd,'filename')||getMimeParam(ct,'name')||null;
-  const isAttachment=cd.toLowerCase().startsWith('attachment')||(name&&!cd.toLowerCase().startsWith('inline'));
+  const isAtt=cd.toLowerCase().startsWith('attachment')||(name&&!cd.toLowerCase().startsWith('inline'));
 
-  // ── multipart ──
   if(mimeType.startsWith('multipart/')&&boundary){
-    const sep=new RegExp('--'+escapeRegex(boundary)+'(?:--)?','g');
-    const parts=body.split(sep).slice(1);// first item is preamble
-    const result={textBody:'',htmlBody:'',attachments:[]};
+    const sep=new RegExp('--'+escReg(boundary)+'(?:--)?','g');
+    const parts=body.split(sep).slice(1);
+    const result={textBody:'',htmlBody:'',attachments:[],received:[]};
     for(const part of parts){
       if(part.trim()===''||part.trim()==='--')continue;
       const sub=walkMime(part,depth+1);
@@ -499,63 +601,67 @@ function walkMime(rawPart,depth){
     return result;
   }
 
-  // ── decode body ──
   let decoded=body;
   if(cte==='quoted-printable')decoded=decodeQP(body);
   else if(cte==='base64'){
-    if(isAttachment||!mimeType.startsWith('text/')){
-      // keep as b64 for binary download
-      return {textBody:'',htmlBody:'',attachments:[{name:name||'attachment',mimeType,data:body.replace(/\s+/g,''),encoding:'base64',size:Math.floor(body.replace(/\s+/g,'').length*0.75)}]};
+    if(isAtt||!mimeType.startsWith('text/')){
+      const rawB64=body.replace(/\s+/g,'');
+      return{textBody:'',htmlBody:'',attachments:[{
+        name:name||'attachment',mimeType,
+        data:rawB64,encoding:'base64',
+        size:Math.floor(rawB64.length*0.75)
+      }],received:[]};
     }
     try{decoded=decodeURIComponent(escape(decodeB64(body)));}catch{decoded=body;}
   }
 
-  // ── attachment (inline or named) ──
-  if(isAttachment&&name){
-    return {textBody:'',htmlBody:'',attachments:[{name,mimeType,data:decoded,encoding:cte,size:decoded.length}]};
+  if(isAtt&&name){
+    return{textBody:'',htmlBody:'',attachments:[{name,mimeType,data:decoded,encoding:cte,size:decoded.length}],received:[]};
   }
-
-  // ── html part ──
-  if(mimeType==='text/html'){
-    return {textBody:'',htmlBody:decoded,attachments:[]};
-  }
-
-  // ── plain text ──
-  return {textBody:decoded,htmlBody:'',attachments:[]};
+  if(mimeType==='text/html')return{textBody:'',htmlBody:decoded,attachments:[],received:[]};
+  return{textBody:decoded,htmlBody:'',attachments:[],received:[]};
 }
 
-function escapeRegex(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
-
-// ── MAIN EMAIL PARSER ──────────────────────────────────────────────────────────
-function parseRFC2822Full(raw, folder){
+// ─── FULL EMAIL PARSER ────────────────────────────────────────────────────────
+function parseRFC2822Full(raw,folder){
   if(!raw||raw.length<10)return null;
-  const {headers}=parseMimePart(raw);
+  const{headers}=parseMimePart(raw);
 
-  const from    = headers['from']||'';
-  const to      = headers['to']||'';
-  const cc      = headers['cc']||'';
-  const subject = decodeRFC2047(headers['subject']||'(No subject)');
-  const date    = headers['date']||headers['delivery-date']||'';
-  const ct      = headers['content-type']||'text/plain';
+  const from    =decodeRFC2047(headers['from']||'');
+  const to      =decodeRFC2047(headers['to']||'');
+  const cc      =decodeRFC2047(headers['cc']||'');
+  const replyTo =decodeRFC2047(headers['reply-to']||'');
+  const subject =decodeRFC2047(headers['subject']||'(No subject)');
+  const date    =headers['date']||headers['delivery-date']||'';
+  const msgId   =headers['message-id']||'';
+  const ct      =headers['content-type']||'text/plain';
+
+  // Collect all Received: headers (routing chain)
+  const receivedHeaders=[];
+  const rawLines=raw.split(/\r?\n/);
+  let i=rawLines[0]&&rawLines[0].startsWith('From ')?1:0;
+  while(i<rawLines.length){
+    if(rawLines[i].trim()==='')break;
+    const m=rawLines[i].match(/^([\w-]+)\s*:\s*(.*)$/);
+    if(m&&m[1].toLowerCase()==='received'){
+      let val=m[2];i++;
+      while(i<rawLines.length&&rawLines[i]&&/^[ \t]/.test(rawLines[i])){val+=' '+rawLines[i].trim();i++;}
+      receivedHeaders.push(val.trim());
+    }else{i++;}
+  }
 
   if(!from&&subject==='(No subject)'&&!date)return null;
 
   const walked=walkMime(raw,0);
-
   let htmlBody=walked.htmlBody||'';
   let textBody=walked.textBody||'';
 
-  // fallback: if walkMime got nothing, parse directly
   if(!htmlBody&&!textBody){
     const cte=(headers['content-transfer-encoding']||'').toLowerCase().trim();
     const lines=raw.split(/\r?\n/);
-    let bi=0;
-    if(lines[0]&&lines[0].startsWith('From '))bi=1;
-    let inHeaders=true;let bodyLines=[];
-    for(let i=bi;i<lines.length;i++){
-      if(inHeaders){if(lines[i].trim()==='')inHeaders=false;}
-      else{bodyLines.push(lines[i]);}
-    }
+    let bi=lines[0]&&lines[0].startsWith('From ')?1:0;
+    let inH=true;const bodyLines=[];
+    for(let j=bi;j<lines.length;j++){if(inH){if(lines[j].trim()==='')inH=false;}else{bodyLines.push(lines[j]);}}
     let body=bodyLines.join('\n');
     if(cte==='quoted-printable')body=decodeQP(body);
     else if(cte==='base64'){try{body=decodeURIComponent(escape(decodeB64(body)));}catch{}}
@@ -563,100 +669,127 @@ function parseRFC2822Full(raw, folder){
     else textBody=body;
   }
 
-  const plainBody=(textBody||stripHtml(htmlBody)||'').trim().slice(0,12000);
+  const plainBody=(textBody||stripHtml(htmlBody)||'').trim();
 
-  return {from,to,cc,subject,date,folder,
+  return{
+    from,to,cc,replyTo,subject,date,msgId,folder,
     htmlBody:htmlBody.trim(),
     textBody:plainBody,
     attachments:walked.attachments||[],
+    receivedHeaders,
     hasHtml:!!htmlBody.trim(),
     hasAttachments:(walked.attachments||[]).length>0
   };
 }
 
-// ── MBOX SPLITTER ──────────────────────────────────────────────────────────────
-function splitMbox(text){
-  return text.split(/(?=^From\s+\S)/m);
-}
+function splitMbox(text){return text.split(/(?=^From\s+\S)/m);}
 
-// ── PARSE FILE ────────────────────────────────────────────────────────────────
-function parseFile(text, filename, folder){
+function parseFile(text,filename,folder){
   const emails=[];
   if(!text||text.length<5)return emails;
   const trimmed=text.trimStart();
-
-  // mbox
   if(trimmed.startsWith('From ')&&text.includes('\nFrom ')){
     const parts=splitMbox(text);
     for(const part of parts){const e=parseRFC2822Full(part,folder);if(e)emails.push(e);}
     if(emails.length>0)return emails;
   }
-  // single eml
   if(/^(From|To|Subject|Date|MIME-Version|Content-Type)\s*:/im.test(trimmed.slice(0,2000))){
     const e=parseRFC2822Full(text,folder);if(e)emails.push(e);
     if(emails.length>0)return emails;
   }
-  // maildir no From header
   if(/^Date\s*:/im.test(trimmed.slice(0,500))){
     const e=parseRFC2822Full('From: unknown\n'+text,folder);if(e)emails.push(e);
     if(emails.length>0)return emails;
   }
-  // fallback
   if(text.length>20&&!/[\x00-\x08\x0e-\x1f]/.test(text.slice(0,200))){
-    emails.push({from:'',to:'',cc:'',subject:filename,date:'',folder,
-      htmlBody:'',textBody:text.slice(0,8000).trim(),
+    emails.push({from:'',to:'',cc:'',replyTo:'',subject:filename,date:'',folder,
+      htmlBody:'',textBody:text.slice(0,12000).trim(),receivedHeaders:[],
       attachments:[],hasHtml:false,hasAttachments:false});
   }
   return emails;
 }
 
-// ── FILE LOADING ───────────────────────────────────────────────────────────────
+// ─── CLEAR ALL ────────────────────────────────────────────────────────────────
+function clearAll(){
+  allEmails=[];foldersMap={};currentFolder='__all__';
+  searchQuery='';selectedEmail=null;renderedCount=0;currentList=[];
+  document.getElementById('si').value='';
+  document.getElementById('tinfo').textContent='No backup loaded';
+  document.getElementById('ca').textContent='0';
+  document.getElementById('df').innerHTML='';
+  document.getElementById('lt').textContent='All Mail';
+  document.getElementById('lc').textContent='0 emails';
+  document.getElementById('el').innerHTML=`<div class="empty" id="ws">
+    <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+    <h2>No backup loaded</h2>
+    <p>Upload a folder or drag & drop it anywhere on this page</p>
+    <div class="ftags"><span class="ftag2">.mbox</span><span class="ftag2">.eml</span><span class="ftag2">.msg</span><span class="ftag2">maildir</span></div>
+  </div>`;
+  clearDetail();
+  document.getElementById('clear-btn').style.display='none';
+  document.querySelectorAll('.fi').forEach(f=>f.classList.remove('active'));
+  document.querySelector('.fi[data-folder="__all__"]').classList.add('active');
+}
+
+// ─── FILE LOADING ──────────────────────────────────────────────────────────────
 document.getElementById('file-input').addEventListener('change',async ev=>{
   await loadFiles(Array.from(ev.target.files));
-  ev.target.value='';
+  ev.target.value=''; // CRITICAL: reset so same folder can be re-uploaded
 });
 
 async function loadFiles(files){
-  allEmails=[];foldersMap={};
+  // Full reset before loading new backup
+  allEmails=[];foldersMap={};selectedEmail=null;renderedCount=0;currentList=[];
+
   const SKIP_EXT=/\.(jpg|jpeg|png|gif|bmp|webp|pdf|zip|gz|tar|rar|7z|exe|dll|so|db|sqlite|bin|dat)$/i;
   const toProcess=files.filter(f=>{
     const n=f.name.toLowerCase();
     if(SKIP_EXT.test(n))return false;
-    if(f.size===0||f.size>20*1024*1024)return false;
+    if(f.size===0)return false;
+    // Removed 20MB limit — process all files
+    if(f.size>150*1024*1024)return false; // only skip truly huge single files
     return true;
   });
 
   setProgress(5);
   let done=0;
-  for(const f of toProcess){
-    const relPath=f.webkitRelativePath||f.name;
-    const parts=relPath.replace(/\\/g,'/').split('/');
-    let rawFolder='Inbox';
-    if(parts.length>=3){
-      const candidate=parts[parts.length-2];
-      if(['cur','new','tmp'].includes(candidate.toLowerCase())&&parts.length>=4)rawFolder=parts[parts.length-3];
-      else rawFolder=candidate;
-    }else if(parts.length===2)rawFolder=parts[0];
-    const folder=normFolder(rawFolder);
-    try{
-      const text=await f.text();
-      const parsed=parseFile(text,f.name,folder);
-      for(const e of parsed){
-        if(!foldersMap[folder])foldersMap[folder]=[];
-        foldersMap[folder].push(e);allEmails.push(e);
-      }
-    }catch(err){console.warn('Error reading',f.name,err);}
-    done++;setProgress(5+Math.floor(done/toProcess.length*88));
+  const BATCH=50; // process in batches to keep UI responsive
+  for(let b=0;b<toProcess.length;b+=BATCH){
+    const batch=toProcess.slice(b,b+BATCH);
+    for(const f of batch){
+      const relPath=f.webkitRelativePath||f.name;
+      const parts=relPath.replace(/\\/g,'/').split('/');
+      let rawFolder='Inbox';
+      if(parts.length>=3){
+        const candidate=parts[parts.length-2];
+        if(['cur','new','tmp'].includes(candidate.toLowerCase())&&parts.length>=4)rawFolder=parts[parts.length-3];
+        else rawFolder=candidate;
+      }else if(parts.length===2)rawFolder=parts[0];
+      const folder=normFolder(rawFolder);
+      try{
+        const text=await f.text();
+        const parsed=parseFile(text,f.name,folder);
+        for(const e of parsed){
+          if(!foldersMap[folder])foldersMap[folder]=[];
+          foldersMap[folder].push(e);allEmails.push(e);
+        }
+      }catch(err){console.warn('Error:',f.name,err);}
+      done++;
+    }
+    setProgress(5+Math.floor(done/toProcess.length*88));
+    await new Promise(r=>setTimeout(r,0)); // yield to browser
   }
 
   const sortFn=(a,b)=>new Date(b.date||0)-new Date(a.date||0);
   allEmails.sort(sortFn);
   for(const k of Object.keys(foldersMap))foldersMap[k].sort(sortFn);
 
-  setProgress(100);setTimeout(()=>setProgress(-1),500);
-  document.getElementById('tinfo').textContent=`${allEmails.length} emails · ${Object.keys(foldersMap).length} folders`;
+  setProgress(100);setTimeout(()=>setProgress(-1),400);
+
+  document.getElementById('tinfo').textContent=`${allEmails.length.toLocaleString()} emails · ${Object.keys(foldersMap).length} folders`;
+  document.getElementById('clear-btn').style.display='flex';
   buildSidebar();
-  currentFolder='__all__';selectedEmail=null;
+  currentFolder='__all__';
   document.querySelectorAll('.fi').forEach(f=>f.classList.remove('active'));
   document.querySelector('.fi[data-folder="__all__"]').classList.add('active');
   document.getElementById('lt').textContent='All Mail';
@@ -664,16 +797,16 @@ async function loadFiles(files){
   renderList();clearDetail();
 }
 
-// ── SIDEBAR ────────────────────────────────────────────────────────────────────
+// ─── SIDEBAR ───────────────────────────────────────────────────────────────────
 function buildSidebar(){
-  document.getElementById('ca').textContent=allEmails.length;
+  document.getElementById('ca').textContent=allEmails.length.toLocaleString();
   const df=document.getElementById('df');df.innerHTML='';
   const order=['Inbox','Sent','Drafts','Archive','Spam','Trash'];
   const sorted=[...order.filter(o=>foldersMap[o]),...Object.keys(foldersMap).filter(k=>!order.includes(k)).sort()];
   if(sorted.length){const s=document.createElement('div');s.className='ss';s.textContent='By Folder';df.appendChild(s);}
   for(const name of sorted){
     const d=document.createElement('div');d.className='fi';d.dataset.folder=name;
-    d.innerHTML=ficon(name)+` ${esc(name)} <span class="ct">${foldersMap[name].length}</span>`;
+    d.innerHTML=ficon(name)+` ${esc(name)} <span class="ct">${foldersMap[name].length.toLocaleString()}</span>`;
     d.addEventListener('click',()=>switchFolder(name,d));df.appendChild(d);
   }
 }
@@ -686,34 +819,57 @@ function switchFolder(folder,el){
   clearDetail();renderList();
 }
 
-// ── LIST ───────────────────────────────────────────────────────────────────────
+// ─── LIST RENDERING (paginated / infinite scroll) ──────────────────────────────
 function getEmails(){
   const base=currentFolder==='__all__'?allEmails:(foldersMap[currentFolder]||[]);
   if(!searchQuery)return base;
   const q=searchQuery.toLowerCase();
-  return base.filter(e=>(e.from+e.subject+(e.textBody||'')+e.to).toLowerCase().includes(q));
+  return base.filter(e=>(e.from+e.subject+(e.textBody||'').slice(0,500)+e.to).toLowerCase().includes(q));
 }
 
 function renderList(){
-  const emails=getEmails();
+  currentList=getEmails();
+  renderedCount=0;
   const el=document.getElementById('el');
-  document.getElementById('lc').textContent=emails.length+' email'+(emails.length!==1?'s':'');
-  if(emails.length===0){
+  document.getElementById('lc').textContent=currentList.length.toLocaleString()+' email'+(currentList.length!==1?'s':'');
+  if(currentList.length===0){
     el.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><p>No emails found</p></div>';
     return;
   }
-  el.innerHTML=emails.map((e,i)=>{
+  el.innerHTML='';
+  appendRows(el, Math.min(PAGE, currentList.length));
+
+  // Infinite scroll
+  el.onscroll=function(){
+    if(el.scrollTop+el.clientHeight>=el.scrollHeight-50){
+      if(renderedCount<currentList.length)appendRows(el,Math.min(PAGE,currentList.length-renderedCount));
+    }
+  };
+}
+
+function appendRows(el, count){
+  const frag=document.createDocumentFragment();
+  for(let i=renderedCount;i<renderedCount+count;i++){
+    const e=currentList[i];
+    const div=document.createElement('div');
+    div.className='er';
     const badges=[];
     if(e.hasHtml)badges.push('<span class="badge badge-html">HTML</span>');
     if(e.hasAttachments)badges.push(`<span class="badge badge-att">📎 ${e.attachments.length}</span>`);
-    return `<div class="er${e===selectedEmail?' active':''}" data-i="${i}">
-      <div class="er-t"><span class="ef">${esc(extractName(e.from)||'(Unknown)')}</span><span class="ed">${fmtDate(e.date)}</span></div>
+    div.innerHTML=`
+      <div class="er-t">
+        <span class="ef">${esc(extractName(e.from)||'(Unknown)')}</span>
+        <span class="ed">${fmtDate(e.date)}</span>
+      </div>
       <div class="es">${esc(e.subject)}</div>
-      <div class="ep">${esc((e.textBody||'').replace(/\n/g,' ').slice(0,80))}…</div>
-      ${badges.length?`<div class="er-badges">${badges.join('')}</div>`:''}
-    </div>`;
-  }).join('');
-  el.querySelectorAll('.er').forEach((row,i)=>{row.addEventListener('click',()=>openEmail(emails[i],row));});
+      <div class="ep">${esc((e.textBody||'').replace(/\n/g,' ').slice(0,90))}</div>
+      ${badges.length?`<div class="er-badges">${badges.join('')}</div>`:''}`;
+    if(e===selectedEmail)div.classList.add('active');
+    div.addEventListener('click',(function(email,row){return()=>openEmail(email,row);})(e,div));
+    frag.appendChild(div);
+  }
+  el.appendChild(frag);
+  renderedCount+=count;
 }
 
 function doSearch(){
@@ -721,12 +877,11 @@ function doSearch(){
   selectedEmail=null;clearDetail();renderList();
 }
 
-// ── DETAIL VIEW ────────────────────────────────────────────────────────────────
-function openEmail(e, row){
+// ─── DETAIL ────────────────────────────────────────────────────────────────────
+function openEmail(e,row){
   selectedEmail=e;
   document.querySelectorAll('.er').forEach(r=>r.classList.remove('active'));
   row.classList.add('active');
-
   currentViewMode=e.hasHtml?'html':'text';
   renderDetail(e);
 }
@@ -734,50 +889,92 @@ function openEmail(e, row){
 function renderDetail(e){
   const[bg,tc]=fcolor(e.folder);
 
-  // Build attachments HTML
+  // Parse from/to names+emails
+  function formatAddr(raw){
+    if(!raw)return '<span style="color:var(--text4)">—</span>';
+    const name=extractName(raw);
+    const email=extractEmail(raw);
+    if(email&&name&&name!==email){
+      return `<span class="mv-from">${esc(name)}</span><span class="mv-email">&lt;${esc(email)}&gt;</span>`;
+    }
+    return `<span class="mv-from">${esc(raw)}</span>`;
+  }
+
+  // Multiple recipients
+  function formatAddrList(raw){
+    if(!raw)return '<span style="color:var(--text4)">—</span>';
+    const addrs=raw.split(/,(?=\s*[^,<>]+(?:<|$))/);
+    if(addrs.length<=1)return formatAddr(raw);
+    return addrs.map(a=>formatAddr(a.trim())).join('<span style="color:var(--text4)"> · </span>');
+  }
+
+  // Received headers section
+  let receivedHtml='';
+  if(e.receivedHeaders&&e.receivedHeaders.length>0){
+    const lines=e.receivedHeaders.map(r=>`<div style="margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border)">${esc(r)}</div>`).join('');
+    receivedHtml=`<div id="received-section">
+      <div class="received-toggle" onclick="toggleReceived(this)">
+        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        Routing chain (${e.receivedHeaders.length} hop${e.receivedHeaders.length>1?'s':''})
+      </div>
+      <div id="received-list">${lines}</div>
+    </div>`;
+  }
+
+  // Attachments
   let attHtml='';
   if(e.attachments&&e.attachments.length>0){
+    const globalIdx=allEmails.indexOf(e);
     const items=e.attachments.map((a,i)=>{
-      const {icon,color}=attIcon(a.mimeType||'');
-      return `<div class="att-item" onclick="downloadAtt(${allEmails.indexOf(selectedEmail)},${i})">
+      const{icon,color}=attIcon(a.mimeType||'');
+      return `<div class="att-item" onclick="downloadAtt(${globalIdx},${i})">
         <div class="att-icon" style="background:${color}">${icon}</div>
         <div class="att-info">
           <div class="att-name">${esc(a.name||'attachment')}</div>
-          <div class="att-size">${fmtSize(a.size)}</div>
+          <div class="att-meta">${esc(a.mimeType||'file')} ${a.size?'· '+fmtSize(a.size):''}</div>
         </div>
+        <div class="att-dl"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></div>
       </div>`;
     }).join('');
     attHtml=`<div id="att-section">
-      <div class="att-title">ATTACHMENTS (${e.attachments.length})</div>
+      <div id="att-title">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="var(--text3)"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/></svg>
+        Attachments (${e.attachments.length})
+      </div>
       <div id="att-list">${items}</div>
     </div>`;
   }
 
-  // Toolbar buttons
+  // View toolbar
   const htmlBtn=e.hasHtml?`<button class="view-btn${currentViewMode==='html'?' active':''}" onclick="setView('html')">
     <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
-    HTML View</button>`:'';
+    Rendered HTML</button>`:'';
   const textBtn=`<button class="view-btn${currentViewMode==='text'?' active':''}" onclick="setView('text')">
     <svg viewBox="0 0 24 24"><path d="M2.5 4v3h5v12h3V7h5V4h-13zm19 5h-9v3h3v7h3v-7h3V9z"/></svg>
     Plain Text</button>`;
 
   let bodyHtml='';
   if(currentViewMode==='html'&&e.hasHtml){
-    bodyHtml=`<div id="email-iframe-wrap"><iframe id="email-iframe" sandbox="allow-same-origin" scrolling="auto"></iframe></div>`;
+    bodyHtml=`<div id="email-iframe-wrap"><iframe id="email-iframe" sandbox="allow-same-origin" scrolling="auto" frameborder="0"></iframe></div>`;
   }else{
     bodyHtml=`<div id="dc">${esc(e.textBody||'(No message body)')}</div>`;
   }
 
+  // Build metadata rows  
+  const metaRows=[];
+  metaRows.push(`<div class="mr"><span class="ml">From</span><span class="mv">${formatAddr(e.from)}</span></div>`);
+  metaRows.push(`<div class="mr"><span class="ml">To</span><span class="mv">${formatAddrList(e.to)}</span></div>`);
+  if(e.cc)metaRows.push(`<div class="mr"><span class="ml">CC</span><span class="mv">${formatAddrList(e.cc)}</span></div>`);
+  if(e.replyTo&&e.replyTo!==e.from)metaRows.push(`<div class="mr"><span class="ml">Reply-To</span><span class="mv">${formatAddr(e.replyTo)}</span></div>`);
+  metaRows.push(`<div class="mr"><span class="ml">Date</span><span class="mv" style="font-family:'Geist Mono',monospace;font-size:12px">${fmtDateFull(e.date)}</span></div>`);
+  metaRows.push(`<div class="mr"><span class="ml">Folder</span><span class="mv"><span class="ftag" style="background:${bg};color:${tc}">${esc(e.folder)}</span></span></div>`);
+  if(e.msgId)metaRows.push(`<div class="mr"><span class="ml">Msg-ID</span><span class="mv" style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--text3)">${esc(e.msgId)}</span></div>`);
+
   document.getElementById('dp').innerHTML=`
     <div id="dh">
       <div id="ds">${esc(e.subject)}</div>
-      <div id="dm">
-        <div class="mr"><span class="ml">From</span><span class="mv">${esc(e.from||'—')}</span></div>
-        <div class="mr"><span class="ml">To</span><span class="mv">${esc(e.to||'—')}</span></div>
-        ${e.cc?`<div class="mr"><span class="ml">CC</span><span class="mv">${esc(e.cc)}</span></div>`:''}
-        <div class="mr"><span class="ml">Date</span><span class="mv">${esc(e.date||'—')}</span></div>
-        <div class="mr"><span class="ml">Folder</span><span class="mv"><span class="ftag" style="background:${bg};color:${tc}">${esc(e.folder)}</span></span></div>
-      </div>
+      <div id="dm">${metaRows.join('')}</div>
+      ${receivedHtml}
     </div>
     ${(htmlBtn||textBtn)?`<div id="dtb">${htmlBtn}${textBtn}</div>`:''}
     <div id="db">
@@ -785,26 +982,25 @@ function renderDetail(e){
       ${attHtml}
     </div>`;
 
-  // Load HTML into iframe after DOM settles
   if(currentViewMode==='html'&&e.hasHtml){
     requestAnimationFrame(()=>{
       const iframe=document.getElementById('email-iframe');
       if(!iframe)return;
       const doc=iframe.contentDocument||iframe.contentWindow.document;
       doc.open();
-      // Inject a base style for better rendering + block external images if desired
-      const safeHtml=`<!DOCTYPE html><html><head>
-        <meta charset="utf-8"/>
+      doc.write(`<!DOCTYPE html><html><head><meta charset="utf-8"/>
         <style>
-          body{font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#222;margin:16px;word-break:break-word;}
+          *{box-sizing:border-box;}
+          body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.65;color:#1a1a1a;margin:0;padding:16px 20px;word-break:break-word;}
           img{max-width:100%!important;height:auto!important;}
-          a{color:#2563eb;}
-          table{border-collapse:collapse;}
+          a{color:#1d4ed8;}
+          table{border-collapse:collapse;max-width:100%;}
+          td,th{padding:4px 8px;}
+          pre,code{font-family:monospace;font-size:12px;background:#f5f5f5;border-radius:4px;padding:2px 4px;}
+          blockquote{border-left:3px solid #d0d0d0;margin:8px 0;padding-left:12px;color:#555;}
         </style>
-      </head><body>${e.htmlBody}</body></html>`;
-      doc.write(safeHtml);
+      </head><body>${e.htmlBody}</body></html>`);
       doc.close();
-      // Auto-resize iframe
       autoResizeIframe(iframe);
     });
   }
@@ -814,12 +1010,11 @@ function autoResizeIframe(iframe){
   const resize=()=>{
     try{
       const h=iframe.contentDocument.body.scrollHeight;
-      iframe.style.height=(Math.min(h+20,4000))+'px';
+      iframe.style.height=Math.min(Math.max(h+32,150),6000)+'px';
     }catch{}
   };
   iframe.onload=resize;
-  setTimeout(resize,300);
-  setTimeout(resize,800);
+  setTimeout(resize,200);setTimeout(resize,800);
 }
 
 function setView(mode){
@@ -828,41 +1023,39 @@ function setView(mode){
   renderDetail(selectedEmail);
 }
 
-// ── ATTACHMENT DOWNLOAD ────────────────────────────────────────────────────────
-function downloadAtt(emailIdx, attIdx){
-  const email=allEmails[emailIdx];
-  if(!email)return;
-  const att=email.attachments[attIdx];
-  if(!att)return;
+function toggleReceived(el){
+  el.classList.toggle('open');
+  const list=document.getElementById('received-list');
+  if(list)list.classList.toggle('show');
+}
 
+// ─── ATTACHMENT DOWNLOAD ───────────────────────────────────────────────────────
+function downloadAtt(emailIdx,attIdx){
+  const email=allEmails[emailIdx];if(!email)return;
+  const att=email.attachments[attIdx];if(!att)return;
   let blob;
   try{
-    if(att.encoding==='base64'||att.data.replace(/\s/g,'').match(/^[A-Za-z0-9+/=]+$/)){
-      const bytes=decodeB64Safe(att.data);
-      blob=new Blob([bytes],{type:att.mimeType||'application/octet-stream'});
+    if(att.encoding==='base64'||/^[A-Za-z0-9+/\s=]+$/.test(att.data.slice(0,100))){
+      blob=new Blob([decodeB64Bytes(att.data)],{type:att.mimeType||'application/octet-stream'});
     }else{
       blob=new Blob([att.data],{type:att.mimeType||'text/plain'});
     }
-  }catch{
-    blob=new Blob([att.data],{type:'application/octet-stream'});
-  }
-
+  }catch{blob=new Blob([att.data],{type:'application/octet-stream'});}
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=att.name||'attachment';
+  const a=document.createElement('a');a.href=url;a.download=att.name||'attachment';
   document.body.appendChild(a);a.click();
   document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(url),2000);
 }
 
-// ── ATTACHMENT ICON HELPER ─────────────────────────────────────────────────────
 function attIcon(mime){
-  if(mime.includes('pdf'))return{icon:`<svg viewBox="0 0 24 24" fill="#ef4444" width="16" height="16"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5z"/></svg>`,color:'rgba(239,68,68,.15)'};
-  if(mime.includes('image'))return{icon:`<svg viewBox="0 0 24 24" fill="#8b5cf6" width="16" height="16"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`,color:'rgba(139,92,246,.15)'};
-  if(mime.includes('word')||mime.includes('document'))return{icon:`<svg viewBox="0 0 24 24" fill="#3b82f6" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,color:'rgba(59,130,246,.15)'};
-  if(mime.includes('sheet')||mime.includes('excel')||mime.includes('csv'))return{icon:`<svg viewBox="0 0 24 24" fill="#10b981" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,color:'rgba(16,185,129,.15)'};
-  if(mime.includes('zip')||mime.includes('archive')||mime.includes('compress'))return{icon:`<svg viewBox="0 0 24 24" fill="#f59e0b" width="16" height="16"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.54 15.46 0 12.36 0c-1.5 0-2.85.57-3.87 1.5L7 3H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>`,color:'rgba(245,158,11,.15)'};
-  return{icon:`<svg viewBox="0 0 24 24" fill="#64748b" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`,color:'rgba(100,116,139,.15)'};
+  if(mime.includes('pdf'))return{icon:`<svg viewBox="0 0 24 24" fill="#dc2626"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5z"/></svg>`,color:'#fef2f2'};
+  if(mime.includes('image'))return{icon:`<svg viewBox="0 0 24 24" fill="#7c3aed"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`,color:'#f5f3ff'};
+  if(mime.includes('word')||mime.includes('document'))return{icon:`<svg viewBox="0 0 24 24" fill="#2563eb"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,color:'#eff6ff'};
+  if(mime.includes('sheet')||mime.includes('excel')||mime.includes('csv'))return{icon:`<svg viewBox="0 0 24 24" fill="#059669"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,color:'#ecfdf5'};
+  if(mime.includes('zip')||mime.includes('archive'))return{icon:`<svg viewBox="0 0 24 24" fill="#d97706"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.54 15.46 0 12.36 0h-.36C9.38 0 7 2.38 7 5v1H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>`,color:'#fffbeb'};
+  if(mime.includes('text'))return{icon:`<svg viewBox="0 0 24 24" fill="#6b7280"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,color:'#f9fafb'};
+  return{icon:`<svg viewBox="0 0 24 24" fill="#6b7280"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`,color:'#f9fafb'};
 }
 
 function clearDetail(){
@@ -872,20 +1065,20 @@ function clearDetail(){
   </div></div>`;
 }
 
-// ── PROGRESS ───────────────────────────────────────────────────────────────────
+// ─── PROGRESS ──────────────────────────────────────────────────────────────────
 function setProgress(pct){
   const pb=document.getElementById('pb'),pf=document.getElementById('pf');
   if(pct<0){pb.style.display='none';pf.style.width='0%';}
   else{pb.style.display='block';pf.style.width=pct+'%';}
 }
 
-// ── DRAG & DROP ────────────────────────────────────────────────────────────────
-let dragCounter=0;
-document.body.addEventListener('dragenter',e=>{e.preventDefault();dragCounter++;document.getElementById('drag-overlay').classList.add('show');});
-document.body.addEventListener('dragleave',e=>{e.preventDefault();dragCounter--;if(dragCounter<=0){dragCounter=0;document.getElementById('drag-overlay').classList.remove('show');}});
+// ─── DRAG & DROP ───────────────────────────────────────────────────────────────
+let dragCtr=0;
+document.body.addEventListener('dragenter',e=>{e.preventDefault();dragCtr++;document.getElementById('drag-overlay').classList.add('show');});
+document.body.addEventListener('dragleave',e=>{e.preventDefault();dragCtr--;if(dragCtr<=0){dragCtr=0;document.getElementById('drag-overlay').classList.remove('show');}});
 document.body.addEventListener('dragover',e=>e.preventDefault());
 document.body.addEventListener('drop',async e=>{
-  e.preventDefault();dragCounter=0;document.getElementById('drag-overlay').classList.remove('show');
+  e.preventDefault();dragCtr=0;document.getElementById('drag-overlay').classList.remove('show');
   const files=[];
   async function readEntry(entry,path){
     if(entry.isFile){
@@ -894,12 +1087,12 @@ document.body.addEventListener('drop',async e=>{
         files.push(f);res();
       }));
     }else if(entry.isDirectory){
-      const reader=entry.createReader();let allEntries=[];
+      const reader=entry.createReader();let allE=[];
       await new Promise(res=>{
-        function readBatch(){reader.readEntries(async entries=>{if(!entries.length){res();}else{allEntries=allEntries.concat(Array.from(entries));readBatch();}});}
-        readBatch();
+        function rb(){reader.readEntries(async entries=>{if(!entries.length){res();}else{allE=allE.concat(Array.from(entries));rb();}});}
+        rb();
       });
-      for(const en of allEntries)await readEntry(en,path+entry.name+'/');
+      for(const en of allE)await readEntry(en,path+entry.name+'/');
     }
   }
   for(const item of Array.from(e.dataTransfer.items)){const en=item.webkitGetAsEntry();if(en)await readEntry(en,'');}
