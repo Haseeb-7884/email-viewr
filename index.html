@@ -7,92 +7,44 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#eef0f5;
-  --surface:#fff;
-  --s2:#f4f5f9;
-  --s3:#e8eaf1;
-  --sb:#0e1420;
-  --sb-border:rgba(255,255,255,.07);
-  --sb-text:#c8d0e4;
-  --sb-muted:#6c7a96;
-  --sb-hover:#171e2e;
-  --sb-active:#1f2a3f;
-  --sb-acc:#6b9cf4;
-  --border:#dde0ea;
-  --border2:#c8cdd9;
-  --text:#111827;
-  --t2:#374151;
-  --t3:#6b7280;
-  --t4:#9ca3af;
-  --acc:#2563eb;
-  --acc-l:#eff4ff;
-  --acc-b:#bfcffd;
-  --r:10px;--rs:7px;
-  --sh:0 1px 4px rgba(0,0,0,.08);
-  --sh2:0 4px 20px rgba(0,0,0,.1);
-  --sh3:0 12px 48px rgba(0,0,0,.15);
+  --bg:#eef0f5;--surface:#fff;--s2:#f4f5f9;--s3:#e8eaf1;
+  --sb:#0e1420;--sb-border:rgba(255,255,255,.07);--sb-text:#c8d0e4;--sb-muted:#6c7a96;
+  --sb-hover:#171e2e;--sb-active:#1f2a3f;--sb-acc:#6b9cf4;
+  --border:#dde0ea;--border2:#c8cdd9;
+  --text:#111827;--t2:#374151;--t3:#6b7280;--t4:#9ca3af;
+  --acc:#2563eb;--acc-l:#eff4ff;--acc-b:#bfcffd;
+  --r:10px;--rs:7px;--sh:0 1px 4px rgba(0,0,0,.08);--sh2:0 4px 20px rgba(0,0,0,.1);--sh3:0 12px 48px rgba(0,0,0,.15);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;display:flex;flex-direction:column;overflow:hidden;color:var(--text);}
 
-/* ── TOPBAR ── */
-#topbar{
-  display:flex;align-items:center;gap:10px;
-  background:var(--sb);padding:0 16px;height:52px;flex-shrink:0;
-  border-bottom:1px solid rgba(255,255,255,.05);z-index:20;
-}
+/* TOPBAR */
+#topbar{display:flex;align-items:center;gap:10px;background:var(--sb);padding:0 16px;height:52px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.05);z-index:20;}
 .logo{display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:700;color:#fff;white-space:nowrap;letter-spacing:-.4px;}
 .logo-mark{width:28px;height:28px;background:linear-gradient(135deg,#3b6ef5,#6366f1);border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(99,102,241,.5);flex-shrink:0;}
 .logo-mark svg{width:15px;height:15px;fill:#fff;}
 .vd{width:1px;height:20px;background:rgba(255,255,255,.1);margin:0 2px;flex-shrink:0;}
-
-/* search */
-#tsearch{
-  display:flex;align-items:center;gap:7px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
-  border-radius:8px;padding:5px 11px;width:230px;flex-shrink:0;
-  transition:border-color .15s,background .15s;
-}
+#tsearch{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:5px 11px;width:230px;flex-shrink:0;transition:border-color .15s,background .15s;}
 #tsearch:focus-within{border-color:rgba(107,156,244,.6);background:rgba(255,255,255,.12);}
 #tsearch svg{width:13px;height:13px;fill:#6c7a96;flex-shrink:0;}
 #tsearch input{background:transparent;border:none;outline:none;color:var(--sb-text);font-size:12.5px;width:100%;font-family:'Inter',sans-serif;}
 #tsearch input::placeholder{color:#4a566e;}
-
-#add-btn{
-  display:flex;align-items:center;gap:6px;
-  padding:6px 13px;border-radius:8px;cursor:pointer;
-  background:linear-gradient(135deg,#2563eb,#4f46e5);
-  color:#fff;border:none;font-size:12.5px;font-weight:600;
-  white-space:nowrap;font-family:'Inter',sans-serif;
-  box-shadow:0 2px 8px rgba(37,99,235,.4);
-  transition:opacity .15s,transform .1s;flex-shrink:0;
-}
+#add-btn{display:flex;align-items:center;gap:6px;padding:6px 13px;border-radius:8px;cursor:pointer;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;border:none;font-size:12.5px;font-weight:600;white-space:nowrap;font-family:'Inter',sans-serif;box-shadow:0 2px 8px rgba(37,99,235,.4);transition:opacity .15s,transform .1s;flex-shrink:0;}
 #add-btn:hover{opacity:.9;transform:translateY(-1px);}
 #add-btn svg{width:13px;height:13px;fill:#fff;}
 #add-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
-
 #tinfo{font-size:11px;color:#4a566e;white-space:nowrap;font-family:'JetBrains Mono',monospace;margin-left:auto;flex-shrink:0;}
 #file-input{display:none;}
 
-/* ── LAYOUT ── */
+/* LAYOUT */
 #main{display:flex;flex:1;overflow:hidden;}
 
-/* ── SIDEBAR ── */
-#sidebar{
-  width:220px;min-width:220px;flex-shrink:0;
-  background:var(--sb);display:flex;flex-direction:column;
-  overflow-y:auto;border-right:1px solid rgba(255,255,255,.05);
-}
+/* SIDEBAR */
+#sidebar{width:220px;min-width:220px;flex-shrink:0;background:var(--sb);display:flex;flex-direction:column;overflow-y:auto;border-right:1px solid rgba(255,255,255,.05);}
 #sidebar::-webkit-scrollbar{width:4px;}
 #sidebar::-webkit-scrollbar-thumb{background:#1f2a3f;border-radius:99px;}
-
-/* account group */
 .acct-group{border-bottom:1px solid rgba(255,255,255,.05);}
-.acct-header{
-  display:flex;align-items:center;gap:8px;
-  padding:10px 12px 10px 10px;cursor:pointer;
-  transition:background .12s;user-select:none;
-}
+.acct-header{display:flex;align-items:center;gap:8px;padding:10px 12px 10px 10px;cursor:pointer;transition:background .12s;user-select:none;}
 .acct-header:hover{background:var(--sb-hover);}
 .acct-header.active-acct{background:var(--sb-active);}
 .acct-color-bar{width:3px;height:32px;border-radius:3px;flex-shrink:0;}
@@ -101,58 +53,32 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
 .acct-sub{font-size:10.5px;color:var(--sb-muted);font-family:'JetBrains Mono',monospace;margin-top:1px;}
 .acct-chevron{width:14px;height:14px;fill:var(--sb-muted);transition:transform .2s;flex-shrink:0;}
 .acct-header.open .acct-chevron{transform:rotate(90deg);}
-.acct-actions{display:flex;align-items:center;gap:4px;}
-.acct-del-btn{
-  width:20px;height:20px;border-radius:5px;
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:opacity .12s,background .12s;cursor:pointer;flex-shrink:0;
-}
+.acct-del-btn{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .12s,background .12s;cursor:pointer;flex-shrink:0;}
 .acct-header:hover .acct-del-btn{opacity:1;}
 .acct-del-btn:hover{background:rgba(220,38,38,.3);}
 .acct-del-btn svg{width:11px;height:11px;fill:#f87171;}
-
-/* folder items inside account */
 .acct-folders{display:none;padding:3px 0 6px;}
 .acct-folders.open{display:block;}
-.fi{
-  display:flex;align-items:center;gap:8px;
-  padding:6px 12px 6px 22px;cursor:pointer;
-  color:#4a566e;font-size:12px;font-weight:400;
-  transition:background .1s,color .1s;border-radius:0;
-}
+.fi{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 22px;cursor:pointer;color:#4a566e;font-size:12px;font-weight:400;transition:background .1s,color .1s;}
 .fi:hover{background:rgba(255,255,255,.05);color:var(--sb-text);}
 .fi.active{background:rgba(107,156,244,.12);color:var(--sb-acc);font-weight:600;}
 .fi svg{width:13px;height:13px;fill:currentColor;flex-shrink:0;}
 .fi .ct{margin-left:auto;font-size:10px;color:#4a566e;font-family:'JetBrains Mono',monospace;}
 .fi.active .ct{color:var(--sb-acc);}
-
-/* "All Mail" global shortcut at top */
-#sb-allmail{
-  display:flex;align-items:center;gap:8px;
-  padding:10px 12px;cursor:pointer;
-  color:var(--sb-muted);font-size:12.5px;font-weight:500;
-  transition:background .1s,color .1s;
-  border-bottom:1px solid rgba(255,255,255,.05);
-}
+#sb-allmail{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;color:var(--sb-muted);font-size:12.5px;font-weight:500;transition:background .1s,color .1s;border-bottom:1px solid rgba(255,255,255,.05);}
 #sb-allmail:hover{background:var(--sb-hover);color:var(--sb-text);}
 #sb-allmail.active{background:var(--sb-active);color:var(--sb-acc);font-weight:600;}
 #sb-allmail svg{width:14px;height:14px;fill:currentColor;flex-shrink:0;}
 #sb-allmail .ct{margin-left:auto;font-size:10px;font-family:'JetBrains Mono',monospace;}
 
-/* ── LIST PANEL ── */
-#lp{
-  width:288px;min-width:288px;flex-shrink:0;
-  display:flex;flex-direction:column;
-  border-right:1px solid var(--border);background:var(--surface);
-}
+/* LIST */
+#lp{width:288px;min-width:288px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--surface);}
 #lh{padding:10px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 #lh-title{font-size:13.5px;font-weight:700;color:var(--text);letter-spacing:-.3px;}
 #lc{font-size:10px;color:var(--t4);font-family:'JetBrains Mono',monospace;background:var(--s2);padding:2px 7px;border-radius:99px;border:1px solid var(--border);}
 #el{flex:1;overflow-y:auto;}
 #el::-webkit-scrollbar{width:4px;}
 #el::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
-
-/* email rows */
 .er{padding:10px 13px;border-bottom:1px solid var(--border);cursor:pointer;border-left:2.5px solid transparent;transition:background .09s;}
 .er:hover{background:#f6f7fc;}
 .er.sel{background:var(--acc-l);border-left-color:var(--acc);}
@@ -167,85 +93,41 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
 .b-att{background:#fff8eb;color:#b45309;border:1px solid #fcd99a;}
 .b-acct{font-size:9px;}
 
-/* ── DETAIL PANEL ── */
+/* DETAIL */
 #dp{flex:1;display:flex;flex-direction:column;background:var(--surface);overflow:hidden;min-width:0;}
-
-/* detail header */
 #dh{flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--border);padding:20px 24px 0;}
 #ds{font-size:17px;font-weight:700;color:var(--text);margin-bottom:14px;line-height:1.4;letter-spacing:-.4px;}
-
 .meta-wrap{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px;box-shadow:var(--sh);}
 .meta-row{display:flex;border-bottom:1px solid var(--border);}
 .meta-row:last-child{border-bottom:none;}
-.meta-k{
-  font-size:10.5px;font-weight:700;color:var(--t3);
-  padding:8px 12px;background:var(--s2);letter-spacing:.4px;
-  text-transform:uppercase;white-space:nowrap;
-  min-width:72px;display:flex;align-items:flex-start;padding-top:10px;
-}
+.meta-k{font-size:10.5px;font-weight:700;color:var(--t3);padding:8px 12px;background:var(--s2);letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;min-width:72px;display:flex;align-items:flex-start;padding-top:10px;}
 .meta-v{font-size:12.5px;color:var(--text);padding:8px 13px;background:var(--surface);line-height:1.6;word-break:break-word;flex:1;}
 .addr-n{font-weight:600;color:var(--text);}
 .addr-e{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3);margin-left:4px;}
 .ftag{display:inline-flex;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px;}
 .mdate{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--t2);}
-
-/* routing */
-.route-btn{
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:11px;font-weight:600;color:var(--t3);
-  cursor:pointer;padding:4px 0 12px;user-select:none;transition:color .12s;
-}
+.route-btn{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;padding:4px 0 12px;user-select:none;transition:color .12s;}
 .route-btn:hover{color:var(--acc);}
 .route-btn svg{width:11px;height:11px;fill:currentColor;transition:transform .18s;}
 .route-btn.open svg{transform:rotate(90deg);}
-.route-body{
-  display:none;margin-bottom:12px;background:var(--s2);
-  border:1px solid var(--border);border-radius:var(--rs);
-  padding:10px 13px;font-size:10.5px;
-  font-family:'JetBrains Mono',monospace;
-  color:var(--t3);line-height:1.9;max-height:160px;overflow-y:auto;
-}
+.route-body{display:none;margin-bottom:12px;background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 13px;font-size:10.5px;font-family:'JetBrains Mono',monospace;color:var(--t3);line-height:1.9;max-height:160px;overflow-y:auto;}
 .route-body.open{display:block;}
-
-/* toolbar */
 #dtb{display:flex;align-items:center;gap:6px;padding:7px 24px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--s2);}
-.vbtn{
-  display:flex;align-items:center;gap:5px;
-  padding:5px 11px;font-size:11.5px;font-weight:600;
-  border-radius:var(--rs);cursor:pointer;
-  border:1px solid var(--border2);background:var(--surface);color:var(--t3);
-  font-family:'Inter',sans-serif;transition:all .12s;
-}
+.vbtn{display:flex;align-items:center;gap:5px;padding:5px 11px;font-size:11.5px;font-weight:600;border-radius:var(--rs);cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--t3);font-family:'Inter',sans-serif;transition:all .12s;}
 .vbtn:hover{background:var(--s3);color:var(--text);}
 .vbtn.on{background:var(--acc-l);color:var(--acc);border-color:var(--acc-b);font-weight:700;}
 .vbtn svg{width:12px;height:12px;fill:currentColor;}
-
-/* body */
 #db{flex:1;overflow-y:auto;padding:18px 24px 28px;}
 #db::-webkit-scrollbar{width:5px;}
 #db::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
 #ifw{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:#fff;box-shadow:var(--sh);}
 #ifw iframe{width:100%;border:none;display:block;min-height:100px;}
-#ptxt{
-  font-size:12px;line-height:1.9;color:var(--t2);
-  white-space:pre-wrap;word-break:break-word;
-  font-family:'JetBrains Mono',monospace;
-  background:var(--s2);border:1px solid var(--border);
-  border-radius:var(--r);padding:16px 18px;
-}
-
-/* attachments */
+#ptxt{font-size:12px;line-height:1.9;color:var(--t2);white-space:pre-wrap;word-break:break-word;font-family:'JetBrains Mono',monospace;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;}
 #atts{margin-top:16px;}
 .att-hdr{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:8px;}
 .att-hdr svg{width:12px;height:12px;fill:var(--t3);}
 #att-list{display:flex;flex-wrap:wrap;gap:7px;}
-.att-card{
-  display:flex;align-items:center;gap:9px;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--rs);padding:9px 12px;cursor:pointer;
-  transition:border-color .12s,box-shadow .12s,transform .1s;
-  min-width:160px;max-width:260px;
-}
+.att-card{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:9px 12px;cursor:pointer;transition:border-color .12s,box-shadow .12s,transform .1s;min-width:160px;max-width:260px;}
 .att-card:hover{border-color:var(--acc-b);box-shadow:var(--sh2);transform:translateY(-1px);}
 .att-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .att-ico svg{width:16px;height:16px;}
@@ -254,8 +136,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
 .att-sz{font-size:10px;color:var(--t4);font-family:'JetBrains Mono',monospace;margin-top:1px;}
 .att-dl{width:26px;height:26px;border-radius:6px;background:var(--acc-l);border:1px solid var(--acc-b);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .att-dl svg{width:12px;height:12px;fill:var(--acc);}
-
-/* empty */
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;padding:30px;text-align:center;}
 .eico{width:56px;height:56px;background:var(--s2);border-radius:16px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);}
 .eico svg{width:26px;height:26px;fill:var(--t4);}
@@ -263,63 +143,33 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
 .empty p{font-size:12.5px;color:var(--t3);line-height:1.7;max-width:230px;}
 .etags{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:2px;}
 .etag{background:var(--acc-l);color:var(--acc);font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;font-family:'JetBrains Mono',monospace;border:1px solid var(--acc-b);}
-
-/* progress */
 #pb{display:none;position:fixed;top:52px;left:0;right:0;height:2px;background:var(--border);z-index:99;}
 #pf{height:100%;background:linear-gradient(90deg,#2563eb,#6366f1);width:0%;transition:width .15s;}
-
-/* toast */
-#toast{
-  position:fixed;bottom:22px;right:22px;z-index:9999;
-  background:#1a2236;color:#c8d0e4;
-  padding:10px 16px;border-radius:var(--r);
-  font-size:12.5px;font-weight:500;
-  box-shadow:var(--sh3);
-  opacity:0;transform:translateY(8px);pointer-events:none;
-  transition:opacity .22s,transform .22s;
-  border-left:3px solid var(--acc);max-width:280px;
-}
+#toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:#1a2236;color:#c8d0e4;padding:10px 16px;border-radius:var(--r);font-size:12.5px;font-weight:500;box-shadow:var(--sh3);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .22s,transform .22s;border-left:3px solid var(--acc);max-width:280px;}
 #toast.show{opacity:1;transform:translateY(0);}
 #toast.warn{border-left-color:#f59e0b;}
-
-/* limit banner */
-#limit-bar{
-  display:none;background:#fffbeb;border-bottom:1px solid #fcd99a;
-  padding:6px 16px;font-size:12px;color:#92400e;font-weight:500;
-  text-align:center;flex-shrink:0;
-}
+#toast.err{border-left-color:#ef4444;}
+#limit-bar{display:none;background:#fffbeb;border-bottom:1px solid #fcd99a;padding:6px 16px;font-size:12px;color:#92400e;font-weight:500;text-align:center;flex-shrink:0;}
 #limit-bar.show{display:block;}
-
-/* drag overlay */
 #dov{display:none;position:fixed;inset:0;background:rgba(238,240,245,.88);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
 #dov.show{display:flex;}
 .dbox{border:2px dashed var(--acc);border-radius:18px;padding:48px 72px;text-align:center;background:#fff;box-shadow:var(--sh3);}
 .dbox svg{width:40px;height:40px;fill:var(--acc);margin-bottom:12px;}
 .dbox h2{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px;}
 .dbox p{font-size:12.5px;color:var(--t3);}
-
-/* loading overlay for large uploads */
-#loading-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(14,20,32,.7);z-index:9990;
-  align-items:center;justify-content:center;
-  flex-direction:column;gap:16px;
-  backdrop-filter:blur(4px);
-}
+#loading-overlay{display:none;position:fixed;inset:0;background:rgba(14,20,32,.7);z-index:9990;align-items:center;justify-content:center;flex-direction:column;gap:16px;backdrop-filter:blur(4px);}
 #loading-overlay.show{display:flex;}
-.loading-card{background:#1a2236;border-radius:14px;padding:28px 36px;text-align:center;min-width:280px;box-shadow:var(--sh3);}
+.loading-card{background:#1a2236;border-radius:14px;padding:28px 36px;text-align:center;min-width:300px;box-shadow:var(--sh3);}
 .loading-title{font-size:14px;font-weight:600;color:#c8d0e4;margin-bottom:8px;}
-.loading-sub{font-size:12px;color:#6c7a96;font-family:'JetBrains Mono',monospace;margin-bottom:16px;}
+.loading-sub{font-size:12px;color:#6c7a96;font-family:'JetBrains Mono',monospace;margin-bottom:16px;min-height:18px;}
 .loading-bar-wrap{background:#0e1420;border-radius:99px;height:6px;overflow:hidden;}
-.loading-bar{height:100%;background:linear-gradient(90deg,#2563eb,#6366f1);width:0%;transition:width .15s;border-radius:99px;}
+.loading-bar{height:100%;background:linear-gradient(90deg,#2563eb,#6366f1);width:0%;transition:width .2s;border-radius:99px;}
 </style>
 </head>
 <body>
-
 <div id="pb"><div id="pf"></div></div>
 <div id="limit-bar">⚠️ Account limit reached (3/3). Remove an account to add another.</div>
 <div id="toast"></div>
-
 <div id="dov">
   <div class="dbox">
     <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
@@ -327,7 +177,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
     <p>Will be added as a new account</p>
   </div>
 </div>
-
 <div id="loading-overlay">
   <div class="loading-card">
     <div class="loading-title" id="lo-title">Loading emails…</div>
@@ -335,7 +184,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
     <div class="loading-bar-wrap"><div class="loading-bar" id="lo-bar"></div></div>
   </div>
 </div>
-
 <input type="file" id="file-input" webkitdirectory multiple/>
 
 <div id="topbar">
@@ -365,7 +213,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
     </div>
     <div id="acct-groups"></div>
   </div>
-
   <div id="lp">
     <div id="lh">
       <span id="lh-title">All Mail</span>
@@ -375,12 +222,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
       <div class="empty">
         <div class="eico"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
         <h2>No accounts yet</h2>
-        <p>Click "Add Account" or drag & drop a backup folder</p>
+        <p>Click "Add Account" or drag &amp; drop a backup folder</p>
         <div class="etags"><span class="etag">.mbox</span><span class="etag">.eml</span><span class="etag">.msg</span><span class="etag">maildir</span></div>
       </div>
     </div>
   </div>
-
   <div id="dp">
     <div id="db">
       <div class="empty">
@@ -393,78 +239,151 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
 
 <script>
 'use strict';
-// ═══════════════════════════ STATE ═══════════════════════════════════
+
+// ══════════════════════════════════════════════════════════
+//  CONSTANTS & STATE
+// ══════════════════════════════════════════════════════════
 const MAX = 3;
 const ACCT_COLORS = ['#3b6ef5','#10b981','#f59e0b'];
-const ACCT_NAMES  = ['Account A','Account B','Account C'];
 
-let accounts = [];   // {id,name,color,colorIdx,emails[],foldersMap{}}
-let activeScope = {type:'global'};  // {type:'global'} | {type:'acct',acctId} | {type:'folder',acctId,folder}
+// File extensions we can try to parse as text
+const TEXT_EXTS = /\.(eml|msg|mbox|mbx|txt|mime|rfc822|mail|emlx)$/i;
+// Extensions to always skip (binary formats we can't parse in browser)
+const SKIP_EXTS = /\.(jpg|jpeg|png|gif|bmp|webp|zip|gz|tar|rar|7z|exe|dll|so|db|sqlite|bin|ico|woff|woff2|ttf|otf|mp3|mp4|avi|mov|mkv|pdf|pst|ost|nsf|tbb|sbd)$/i;
+// PST/OST note — these are proprietary binary formats; we alert the user
+const PST_EXTS  = /\.(pst|ost|nsf|tbb)$/i;
+
+let accounts    = [];
+let activeScope = {type:'global'};
 let selectedEmail = null;
 let currentViewMode = 'html';
 let currentList = [];
 let renderedCount = 0;
 const PAGE = 60;
 let searchQuery = '';
-let isLoading = false;
+let isLoading   = false;
+let hasPstWarned = false;
 
-// ═══════════════════════════ UTILS ═══════════════════════════════════
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function dQP(s){return s.replace(/=\r?\n/g,'').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));}
-function dB64(s){try{return atob(s.replace(/\s+/g,''));}catch{return '';}}
-function dB64bytes(s){
-  const b=s.replace(/\s+/g,'');
-  try{const bin=atob(b);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a;}
-  catch{return new Uint8Array(0);}
+// ══════════════════════════════════════════════════════════
+//  TINY UTILS
+// ══════════════════════════════════════════════════════════
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escR(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function yieldToBrowser(){ return new Promise(r => setTimeout(r,0)); }
+
+let _toTimer;
+function toast(msg, type=''){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (type ? ' '+type : '');
+  clearTimeout(_toTimer);
+  _toTimer = setTimeout(()=> t.className='', 4000);
 }
+function setLB(on){ document.getElementById('limit-bar').classList.toggle('show', on); }
+
+// ══════════════════════════════════════════════════════════
+//  DECODING HELPERS
+// ══════════════════════════════════════════════════════════
+
+/** Decode quoted-printable */
+function dQP(s){
+  return s
+    .replace(/=\r?\n/g,'')                             // soft line breaks
+    .replace(/=([0-9A-Fa-f]{2})/g, (_,h) => String.fromCharCode(parseInt(h,16)));
+}
+
+/** Base64 → string (best-effort UTF-8) */
+function dB64Str(s){
+  const clean = s.replace(/\s+/g,'');
+  if(!clean) return '';
+  try {
+    const bin = atob(clean);
+    // Try UTF-8 decode first
+    try { return decodeURIComponent(escape(bin)); } catch { return bin; }
+  } catch { return ''; }
+}
+
+/** Base64 → Uint8Array (for binary attachments) */
+function dB64Bytes(s){
+  const clean = s.replace(/\s+/g,'');
+  try {
+    const bin = atob(clean);
+    const arr = new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
+    return arr;
+  } catch { return new Uint8Array(0); }
+}
+
+/** Decode RFC 2047 encoded-words  =?charset?B/Q?...?= */
 function dRFC2047(s){
-  if(!s)return '';
-  return s.replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g,(_,cs,enc,data)=>{
-    try{
-      if(enc.toUpperCase()==='B'){const b=dB64(data);return decodeURIComponent(escape(b));}
-      if(enc.toUpperCase()==='Q'){const q=data.replace(/_/g,' ').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));return decodeURIComponent(escape(q));}
-    }catch{}return data;
+  if(!s) return '';
+  return s.replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g, (_,cs,enc,data) => {
+    try {
+      if(enc.toUpperCase()==='B'){
+        const bin = atob(data.replace(/\s/g,''));
+        if(/^utf-?8$/i.test(cs)){
+          try{ return decodeURIComponent(escape(bin)); }catch{}
+        }
+        return bin;
+      }
+      if(enc.toUpperCase()==='Q'){
+        const q = data.replace(/_/g,' ').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));
+        if(/^utf-?8$/i.test(cs)){
+          try{ return decodeURIComponent(escape(q)); }catch{}
+        }
+        return q;
+      }
+    } catch {}
+    return data;
   });
 }
+
+/** Strip HTML tags to plain text */
 function stripHtml(s){
-  return s.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'')
+  return s
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'')
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'')
-    .replace(/<br\s*\/?>/gi,'\n').replace(/<\/(?:p|div|tr|li)>/gi,'\n')
+    .replace(/<br\s*\/?>/gi,'\n')
+    .replace(/<\/(?:p|div|tr|li|blockquote|h[1-6])>/gi,'\n')
     .replace(/<[^>]+>/g,'')
-    .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'")
+    .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<')
+    .replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'")
     .replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
 }
+
 function xName(from){
-  if(!from)return 'Unknown';
-  const m=from.match(/^"?([^"<]+?)"?\s*</);if(m)return m[1].trim();
-  const m2=from.match(/([^\s<>,]+@[^\s<>,>]+)/);if(m2)return m2[1];
-  return from.trim().slice(0,40)||'Unknown';
+  if(!from) return 'Unknown';
+  const m = from.match(/^"?([^"<]+?)"?\s*</); if(m) return m[1].trim();
+  const m2 = from.match(/([^\s<>,]+@[^\s<>,>]+)/); if(m2) return m2[1];
+  return from.trim().slice(0,40) || 'Unknown';
 }
 function xEmail(from){
-  const m=(from||'').match(/<([^>]+)>/);if(m)return m[1];
-  const m2=(from||'').match(/([^\s<>,]+@[^\s<>,>]+)/);if(m2)return m2[1];
+  const m = (from||'').match(/<([^>]+)>/); if(m) return m[1];
+  const m2 = (from||'').match(/([^\s<>,]+@[^\s<>,>]+)/); if(m2) return m2[1];
   return '';
 }
+
 function fmtD(d){
-  if(!d)return '';
-  try{const dt=new Date(d);if(isNaN(dt))return String(d).slice(0,16);return dt.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}catch{return String(d).slice(0,16);}
+  if(!d) return '';
+  try{ const dt=new Date(d); if(isNaN(dt)) return String(d).slice(0,16); return dt.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}); }
+  catch{ return String(d).slice(0,16); }
 }
 function fmtDFull(d){
-  if(!d)return '—';
-  try{const dt=new Date(d);if(isNaN(dt))return d;return dt.toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch{return String(d);}
+  if(!d) return '—';
+  try{ const dt=new Date(d); if(isNaN(dt)) return d; return dt.toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
+  catch{ return String(d); }
 }
-function fmtSz(b){if(!b||b<=0)return '';if(b<1024)return b+'B';if(b<1048576)return(b/1024).toFixed(1)+'KB';return(b/1048576).toFixed(1)+'MB';}
-function escR(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
-let _toTimer;
-function toast(msg,type=''){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className='show'+(type?' '+type:'');
-  clearTimeout(_toTimer);_toTimer=setTimeout(()=>t.className='',3000);
+function fmtSz(b){
+  if(!b||b<=0) return '';
+  if(b<1024) return b+'B';
+  if(b<1048576) return (b/1024).toFixed(1)+'KB';
+  return (b/1048576).toFixed(1)+'MB';
 }
-function setLB(on){document.getElementById('limit-bar').classList.toggle('show',on);}
 
-// ═══════════════════════════ FOLDER META ════════════════════════════
-const FI={
+// ══════════════════════════════════════════════════════════
+//  FOLDER META
+// ══════════════════════════════════════════════════════════
+const FI = {
   inbox:`<svg viewBox="0 0 24 24"><path d="M19 3H4.99C3.89 3 3 3.9 3 5L2.99 19c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.34 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/></svg>`,
   sent:`<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`,
   spam:`<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
@@ -473,319 +392,618 @@ const FI={
   drafts:`<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`,
   default:`<svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>`
 };
-const FC={
+const FC = {
   inbox:['#edfaf5','#0d9e6e'],sent:['#eef3ff','#2563eb'],spam:['#fff1f1','#dc2626'],
   trash:['#f7f8fc','#64748b'],archive:['#fff8eb','#c97a10'],drafts:['#f4eeff','#7c3aed'],
   default:['#eef3ff','#3b6ef5']
 };
-function ficon(n){const k=(n||'').toLowerCase();for(const[kw,v]of Object.entries(FI))if(k.includes(kw))return v;return FI.default;}
-function fcolor(n){const k=(n||'').toLowerCase();for(const[kw,v]of Object.entries(FC))if(k.includes(kw))return v;return FC.default;}
+function ficon(n){ const k=(n||'').toLowerCase(); for(const[kw,v] of Object.entries(FI)) if(k.includes(kw)) return v; return FI.default; }
+function fcolor(n){ const k=(n||'').toLowerCase(); for(const[kw,v] of Object.entries(FC)) if(k.includes(kw)) return v; return FC.default; }
+
 function normF(raw){
-  const n=(raw||'').toLowerCase().trim();
-  if(n.includes('inbox')||n==='cur'||n==='new'||n==='tmp')return 'Inbox';
-  if(n.includes('sent'))return 'Sent';
-  if(n.includes('spam')||n.includes('junk'))return 'Spam';
-  if(n.includes('trash')||n.includes('delet'))return 'Trash';
-  if(n.includes('archive'))return 'Archive';
-  if(n.includes('draft'))return 'Drafts';
-  if(!raw||!raw.trim())return 'Inbox';
+  const n = (raw||'').toLowerCase().trim();
+  if(n==='cur'||n==='new'||n==='tmp') return 'Inbox';
+  if(n.includes('inbox')) return 'Inbox';
+  if(n.includes('sent')) return 'Sent';
+  if(n.includes('spam')||n.includes('junk')) return 'Spam';
+  if(n.includes('trash')||n.includes('delet')) return 'Trash';
+  if(n.includes('archive')) return 'Archive';
+  if(n.includes('draft')) return 'Drafts';
+  if(!raw||!raw.trim()) return 'Inbox';
   return raw.charAt(0).toUpperCase()+raw.slice(1);
 }
 
-// ═══════════════════════════ MIME PARSER ════════════════════════════
-function parseHdrs(raw){
-  const lines=raw.split(/\r?\n/);
-  const hdrs={};let i=0;
-  if(lines[0]&&lines[0].startsWith('From '))i=1;
-  while(i<lines.length){
-    const ln=lines[i];
-    if(!ln||ln.trim()===''){i++;break;}
-    const m=ln.match(/^([\w-]+)\s*:\s*([\s\S]*)$/);
-    if(m){
-      let k=m[1].toLowerCase(),v=m[2];i++;
-      while(i<lines.length&&lines[i]&&/^[ \t]/.test(lines[i])){v+=' '+lines[i].trim();i++;}
-      if(k==='received'){if(!hdrs['_rcv'])hdrs['_rcv']=[];hdrs['_rcv'].push(v.trim());}
-      else if(!hdrs[k])hdrs[k]=v;
-    }else{i++;}
-  }
-  return{hdrs,body:lines.slice(i).join('\n')};
-}
-function mparam(h,p){
-  const re=new RegExp(p+'\\s*=\\s*(?:"([^"]*)"|(\\S+?)(?:;|\\s|$))','i');
-  const m=(h||'').match(re);return m?(m[1]||m[2]||'').trim():null;
-}
-function walkMime(raw){
-  const{hdrs,body}=parseHdrs(raw);
-  const ct=hdrs['content-type']||'text/plain';
-  const cte=(hdrs['content-transfer-encoding']||'').toLowerCase().trim();
-  const cd=hdrs['content-disposition']||'';
-  const mime=ct.split(';')[0].toLowerCase().trim();
-  const bnd=mparam(ct,'boundary');
-  const fnCd=mparam(cd,'filename')||mparam(cd,'name');
-  const fnCt=mparam(ct,'name');
-  const fn=fnCd||fnCt||null;
-  const isAtt=/^attachment/i.test(cd.trim())||(fn&&!/^inline/i.test(cd.trim()));
+// ══════════════════════════════════════════════════════════
+//  MIME PARSER  (fixed)
+// ══════════════════════════════════════════════════════════
 
-  if(mime.startsWith('multipart/')&&bnd){
-    const sep=new RegExp('--'+escR(bnd)+'(?:--)?\\r?\\n?','g');
-    const parts=body.split(sep).slice(1);
-    const res={text:'',html:'',atts:[]};
-    for(const p of parts){
-      const t=p.trim();if(!t||t==='--')continue;
-      const s=walkMime(p);
-      if(!res.html&&s.html)res.html=s.html;
-      if(!res.text&&s.text)res.text=s.text;
+/**
+ * Parse raw RFC 2822 headers from a string.
+ * Returns { hdrs: {key:value}, bodyStart: number }
+ * Uses index-based scan to avoid splitting on embedded newlines in header values.
+ */
+function parseHdrs(raw){
+  const hdrs = {};
+  let i = 0;
+
+  // Skip mbox "From " separator line
+  if(raw.startsWith('From ')){
+    const nl = raw.indexOf('\n'); i = nl < 0 ? raw.length : nl+1;
+  }
+
+  while(i < raw.length){
+    const ch = raw[i];
+    // Blank line → end of headers
+    if(ch==='\r'&&raw[i+1]==='\n'){ i+=2; break; }
+    if(ch==='\n'){ i+=1; break; }
+
+    // Find end of header line (support folding)
+    let lineEnd = i;
+    while(lineEnd < raw.length){
+      const nl = raw.indexOf('\n', lineEnd);
+      if(nl < 0){ lineEnd = raw.length; break; }
+      lineEnd = nl+1;
+      // Folded? next char is space/tab
+      if(lineEnd < raw.length && (raw[lineEnd]===' '||raw[lineEnd]==='\t')) continue;
+      break;
+    }
+
+    const line = raw.slice(i, lineEnd).replace(/\r?\n[ \t]+/g,' ').replace(/\r?\n$/,'');
+    i = lineEnd;
+
+    const colon = line.indexOf(':');
+    if(colon < 1){ continue; } // not a header line
+
+    const key = line.slice(0,colon).toLowerCase().trim();
+    const val = line.slice(colon+1).trim();
+
+    if(key === 'received'){
+      if(!hdrs['_rcv']) hdrs['_rcv']=[];
+      hdrs['_rcv'].push(val);
+    } else if(!hdrs[key]){
+      hdrs[key] = val;
+    }
+  }
+
+  return { hdrs, bodyOffset: i };
+}
+
+/** Extract a MIME parameter value (e.g. boundary, name, filename) */
+function mparam(headerVal, paramName){
+  if(!headerVal) return null;
+  // Handle multi-line parameter continuations (RFC 2231) simply
+  const re = new RegExp(paramName+'\\*?(?:\\d+)?\\*?\\s*=\\s*(?:utf-8\'\')?(?:"([^"]*)"|([^;\\s]+))','gi');
+  let result = null, m;
+  while((m=re.exec(headerVal))!==null){
+    const v = (m[1]!==undefined?m[1]:m[2]||'').trim();
+    if(v){ result = (result||'') + v; }
+  }
+  if(result){
+    try{ result = decodeURIComponent(result); }catch{}
+  }
+  return result;
+}
+
+/**
+ * Walk a MIME part recursively.
+ * Returns { text, html, atts[] }
+ */
+function walkMime(raw){
+  const { hdrs, bodyOffset } = parseHdrs(raw);
+  const body = raw.slice(bodyOffset);
+
+  const ct  = hdrs['content-type'] || 'text/plain';
+  const cte = (hdrs['content-transfer-encoding']||'').toLowerCase().trim();
+  const cd  = hdrs['content-disposition'] || '';
+  const mime= ct.split(';')[0].toLowerCase().trim();
+  const bnd = mparam(ct,'boundary');
+
+  // Filename from Content-Disposition first, then Content-Type name param
+  const fn = mparam(cd,'filename') || mparam(cd,'name') || mparam(ct,'name') || null;
+  const isAtt = /^attachment/i.test(cd.trim()) || (!!fn && !/^inline/i.test(cd.trim()));
+
+  // ── Multipart ──────────────────────────────────────────
+  if(mime.startsWith('multipart/') && bnd){
+    const res = { text:'', html:'', atts:[] };
+    const parts = splitMultipart(body, bnd);
+    for(const part of parts){
+      if(!part.trim()) continue;
+      const s = walkMime(part);
+      // Prefer first html/text found, merge atts
+      if(!res.html && s.html) res.html = s.html;
+      if(!res.text && s.text) res.text = s.text;
       res.atts.push(...s.atts);
     }
     return res;
   }
 
-  let dec=body;
-  if(cte==='quoted-printable') dec=dQP(body);
-  else if(cte==='base64'){
-    const b64=body.replace(/\s+/g,'');
-    if(isAtt||!mime.startsWith('text/')){
-      return{text:'',html:'',atts:[{name:fn||'attachment',mime,data:b64,enc:'base64',size:Math.floor(b64.length*.75)}]};
+  // ── Decode body ────────────────────────────────────────
+  let decoded = body;
+  if(cte === 'quoted-printable'){
+    decoded = dQP(body);
+  } else if(cte === 'base64'){
+    const b64clean = body.replace(/\s+/g,'');
+    if(isAtt || !mime.startsWith('text/')){
+      // Binary attachment — keep raw base64
+      return { text:'', html:'', atts:[{
+        name: fn || 'attachment', mime,
+        data: b64clean, enc:'base64',
+        size: Math.floor(b64clean.length * 0.75)
+      }]};
     }
-    try{dec=decodeURIComponent(escape(dB64(b64)));}catch{dec=body;}
+    decoded = dB64Str(b64clean);
   }
 
-  if(isAtt&&fn) return{text:'',html:'',atts:[{name:fn,mime,data:dec,enc:cte,size:dec.length}]};
-  if(mime==='text/html') return{text:'',html:dec,atts:[]};
-  return{text:dec,html:'',atts:[]};
+  // ── Attachment (non-base64) ───────────────────────────
+  if(isAtt && fn){
+    return { text:'', html:'', atts:[{ name:fn, mime, data:decoded, enc:cte, size:decoded.length }] };
+  }
+
+  // ── Text parts ────────────────────────────────────────
+  if(mime === 'text/html') return { text:'', html:decoded, atts:[] };
+  return { text:decoded, html:'', atts:[] };
 }
 
-function parseEmail(raw,folder,acctId){
-  if(!raw||raw.length<10)return null;
-  const{hdrs,body}=parseHdrs(raw);
+/**
+ * Split a multipart body on --boundary, return array of part strings.
+ * This is more robust than a regex split because boundaries can contain
+ * regex special chars and the delimiter must appear at line start.
+ */
+function splitMultipart(body, boundary){
+  const delim  = '--' + boundary;
+  const terminator = '--' + boundary + '--';
+  const parts  = [];
+  let   pos    = 0;
+  const len    = body.length;
 
-  const from   =dRFC2047(hdrs['from']||'');
-  const to     =dRFC2047(hdrs['to']||'');
-  const cc     =dRFC2047(hdrs['cc']||'');
-  const replyTo=dRFC2047(hdrs['reply-to']||'');
-  const subject=dRFC2047(hdrs['subject']||'(No subject)');
-  const date   =hdrs['date']||hdrs['delivery-date']||'';
-  const msgId  =hdrs['message-id']||'';
-  const ct     =hdrs['content-type']||'text/plain';
-  const cte    =(hdrs['content-transfer-encoding']||'').toLowerCase().trim();
-  const rcv    =hdrs['_rcv']||[];
+  while(pos < len){
+    // Find next delimiter
+    const idx = body.indexOf(delim, pos);
+    if(idx < 0) break;
 
-  if(!from&&!to&&!date&&subject==='(No subject)')return null;
+    // Must be at start of line (pos 0 or preceded by \n)
+    if(idx > 0 && body[idx-1]!=='\n' && body[idx-1]!=='\r'){
+      pos = idx + delim.length; continue;
+    }
 
-  const w=walkMime(raw);
-  let html=w.html||'';
-  let text=w.text||'';
+    // Skip past delimiter line
+    const lineEnd = body.indexOf('\n', idx);
+    if(lineEnd < 0){ pos=len; break; }
+    pos = lineEnd+1;
 
-  if(!html&&!text){
-    let dec=body;
-    if(cte==='quoted-printable')dec=dQP(body);
-    else if(cte==='base64'){try{dec=decodeURIComponent(escape(dB64(body.replace(/\s+/g,''))));}catch{dec=body;}}
-    if(ct.toLowerCase().includes('html'))html=dec;
+    // Terminator?
+    const delimLine = body.slice(idx, lineEnd).trim();
+    if(delimLine === terminator || delimLine.startsWith(terminator)) break;
+
+    // Find start of NEXT delimiter
+    let nextIdx = body.indexOf(delim, pos);
+    while(nextIdx > 0 && body[nextIdx-1]!=='\n' && body[nextIdx-1]!=='\r'){
+      nextIdx = body.indexOf(delim, nextIdx+1);
+    }
+
+    if(nextIdx < 0){
+      parts.push(body.slice(pos));
+      break;
+    }
+
+    // Trim trailing CRLF before delimiter
+    let partEnd = nextIdx;
+    if(body[partEnd-1]==='\n') partEnd--;
+    if(body[partEnd-1]==='\r') partEnd--;
+
+    parts.push(body.slice(pos, partEnd));
+    pos = nextIdx;
+  }
+  return parts;
+}
+
+// ══════════════════════════════════════════════════════════
+//  EMAIL PARSER
+// ══════════════════════════════════════════════════════════
+
+function parseEmail(raw, folder, acctId){
+  if(!raw || raw.length < 15) return null;
+
+  const { hdrs } = parseHdrs(raw);
+
+  const from    = dRFC2047(hdrs['from']   || '');
+  const to      = dRFC2047(hdrs['to']     || '');
+  const cc      = dRFC2047(hdrs['cc']     || '');
+  const replyTo = dRFC2047(hdrs['reply-to']|| '');
+  const subject = dRFC2047(hdrs['subject']|| '(No subject)');
+  const date    = hdrs['date'] || hdrs['delivery-date'] || '';
+  const msgId   = hdrs['message-id'] || '';
+  const rcv     = hdrs['_rcv'] || [];
+
+  // Reject completely empty mails
+  if(!from && !to && !date && subject==='(No subject)') return null;
+
+  const w = walkMime(raw);
+  let html = w.html || '';
+  let text = w.text || '';
+
+  // If MIME walk found nothing, try reading the raw body with the top-level encoding
+  if(!html && !text){
+    const { hdrs:h2, bodyOffset } = parseHdrs(raw);
+    const rawBody = raw.slice(bodyOffset);
+    const cte2 = (h2['content-transfer-encoding']||'').toLowerCase().trim();
+    const ct2  = h2['content-type']||'text/plain';
+    let dec = rawBody;
+    if(cte2==='quoted-printable') dec=dQP(rawBody);
+    else if(cte2==='base64') dec=dB64Str(rawBody.replace(/\s+/g,''));
+    if(ct2.toLowerCase().includes('html')) html=dec;
     else text=dec;
   }
 
-  // clean text: remove header-like lines that leaked
-  let pt=(text||'').trim();
-  if(!pt&&html)pt=stripHtml(html);
+  // Plain text fallback from HTML
+  let pt = (text||'').trim();
+  if(!pt && html) pt = stripHtml(html);
+  // Truncate massive bodies for performance
+  if(pt.length > 50000) pt = pt.slice(0,50000) + '\n…[truncated]';
 
-  return{
-    from,to,cc,replyTo,subject,date,msgId,folder,acctId,
-    html:html.trim(),text:pt,
-    atts:w.atts||[],rcv,
-    hasHtml:!!html.trim(),
-    hasAtts:(w.atts||[]).length>0
+  return {
+    from, to, cc, replyTo, subject, date, msgId, folder, acctId,
+    html: html.trim(), text: pt,
+    atts: w.atts || [], rcv,
+    hasHtml: !!html.trim(),
+    hasAtts: (w.atts||[]).length > 0
   };
 }
 
-function splitMbox(t){return t.split(/(?=^From\s+\S)/m);}
+// ══════════════════════════════════════════════════════════
+//  MBOX SPLITTER  (fixed)
+// ══════════════════════════════════════════════════════════
+/**
+ * Split an mbox file into individual raw messages.
+ * The "From " line must appear at the very start of a line.
+ * We do this manually to avoid regex issues with multiline mode.
+ */
+function splitMbox(text){
+  const messages = [];
+  // Find all positions of "From " at start of line
+  const indices = [];
+  // Check position 0
+  if(text.startsWith('From ')) indices.push(0);
+  let p = text.indexOf('\nFrom ');
+  while(p >= 0){
+    indices.push(p+1); // +1 to skip the \n, start at 'F'
+    p = text.indexOf('\nFrom ', p+1);
+  }
+  for(let i=0; i<indices.length; i++){
+    const start = indices[i];
+    const end   = i+1 < indices.length ? indices[i+1] : text.length;
+    messages.push(text.slice(start, end));
+  }
+  return messages;
+}
 
-function parseFile(text,filename,folder,acctId){
-  const out=[];
-  if(!text||text.length<5)return out;
-  const tr=text.trimStart();
+/** Detect if text looks like an RFC 2822 email */
+function looksLikeEmail(text){
+  if(!text || text.length < 10) return false;
+  const head = text.slice(0, Math.min(4000, text.length));
+  return /^(From|To|Subject|Date|MIME-Version|Content-Type|Message-ID|Return-Path|Received)\s*:/im.test(head);
+}
 
-  if(tr.startsWith('From ')&&text.includes('\nFrom ')){
-    for(const p of splitMbox(text)){const e=parseEmail(p,folder,acctId);if(e)out.push(e);}
-    if(out.length)return out;
+/** Detect if text looks like an mbox file */
+function looksLikeMbox(text){
+  if(!text) return false;
+  // mbox starts with "From " and contains at least two messages or one long message
+  return text.startsWith('From ') && (text.includes('\nFrom ') || text.length > 2000);
+}
+
+/**
+ * Parse all emails from a single file's text content.
+ * Returns array of parsed email objects.
+ */
+function parseFile(text, filename, folder, acctId){
+  const out = [];
+  if(!text || text.length < 10) return out;
+
+  const tr = text.trimStart();
+
+  // ── mbox format ───────────────────────────────────────
+  if(looksLikeMbox(tr)){
+    const msgs = splitMbox(tr);
+    for(const msg of msgs){
+      try{
+        const e = parseEmail(msg, folder, acctId);
+        if(e) out.push(e);
+      } catch(err){ console.warn('mbox parse err', err); }
+    }
+    if(out.length) return out;
   }
-  if(/^(From|To|Subject|Date|MIME-Version|Content-Type|Message-ID|Return-Path|Received)\s*:/im.test(tr.slice(0,3000))){
-    const e=parseEmail(text,folder,acctId);if(e)out.push(e);
-    if(out.length)return out;
+
+  // ── Single RFC 2822 email ─────────────────────────────
+  if(looksLikeEmail(tr)){
+    try{
+      const e = parseEmail(tr, folder, acctId);
+      if(e){ out.push(e); return out; }
+    } catch(err){ console.warn('eml parse err', err); }
   }
-  if(/^(Date|Received)\s*:/im.test(tr.slice(0,600))){
-    const e=parseEmail('From: unknown\n'+text,folder,acctId);if(e)out.push(e);
-    if(out.length)return out;
+
+  // ── .msg (Outlook) — text-mode best-effort ────────────
+  if(/\.msg$/i.test(filename)){
+    // MSG is a CFBF binary format; we can only do a heuristic text extract
+    // Look for readable strings that look like headers
+    const fromM  = text.match(/From\s*:\s*(.+)/i);
+    const toM    = text.match(/To\s*:\s*(.+)/i);
+    const subjM  = text.match(/Subject\s*:\s*(.+)/i);
+    const dateM  = text.match(/Date\s*:\s*(.+)/i);
+    if(fromM || subjM){
+      out.push({
+        from:   fromM?fromM[1].trim():'',
+        to:     toM?toM[1].trim():'',
+        cc:'', replyTo:'',
+        subject:subjM?subjM[1].trim():filename,
+        date:   dateM?dateM[1].trim():'',
+        msgId:'', folder, acctId,
+        html:'', text:text.replace(/[^\x20-\x7E\n\r\t]/g,'').slice(0,8000).trim(),
+        atts:[], rcv:[], hasHtml:false, hasAtts:false
+      });
+      return out;
+    }
   }
-  if(text.length>20&&!/[\x00-\x08\x0e-\x1f]/.test(text.slice(0,200))){
-    out.push({from:'',to:'',cc:'',replyTo:'',subject:filename,date:'',folder,acctId,
-      html:'',text:text.slice(0,12000).trim(),atts:[],rcv:[],hasHtml:false,hasAtts:false});
+
+  // ── emlx (Apple Mail) ─────────────────────────────────
+  if(/\.emlx$/i.test(filename)){
+    // emlx has a byte count on the first line, then the raw RFC2822 message
+    const nl = text.indexOf('\n');
+    if(nl > 0){
+      const inner = text.slice(nl+1);
+      if(looksLikeEmail(inner)){
+        try{
+          const e = parseEmail(inner, folder, acctId);
+          if(e){ out.push(e); return out; }
+        } catch {}
+      }
+    }
+  }
+
+  // ── Fallback: treat as plain text note ────────────────
+  if(text.length > 20 && !/[\x00-\x08\x0e-\x1f]/.test(text.slice(0,500))){
+    out.push({
+      from:'', to:'', cc:'', replyTo:'',
+      subject: filename,
+      date:'', msgId:'', folder, acctId,
+      html:'', text: text.slice(0,12000).trim(),
+      atts:[], rcv:[], hasHtml:false, hasAtts:false
+    });
   }
   return out;
 }
 
-// ═══════════════════════════ UPLOAD ══════════════════════════════════
+// ══════════════════════════════════════════════════════════
+//  FILE READING (robust encoding)
+// ══════════════════════════════════════════════════════════
+
+/**
+ * Read a file as text, trying UTF-8 first, then latin-1 on decode error.
+ * Returns a string (never throws).
+ */
+function readFileText(file){
+  return new Promise((resolve) => {
+    // First pass: try UTF-8
+    const r = new FileReader();
+    r.onload = e => {
+      let text = e.target.result;
+      // Check for replacement character that indicates encoding issue
+      if(text && !text.includes('\uFFFD')){
+        resolve(text);
+      } else {
+        // Retry with latin-1 (ISO-8859-1) — covers many legacy email backups
+        const r2 = new FileReader();
+        r2.onload = e2 => resolve(e2.target.result || '');
+        r2.onerror = () => resolve('');
+        r2.readAsText(file, 'iso-8859-1');
+      }
+    };
+    r.onerror = () => {
+      // Last resort: latin-1
+      const r2 = new FileReader();
+      r2.onload = e2 => resolve(e2.target.result || '');
+      r2.onerror = () => resolve('');
+      r2.readAsText(file, 'iso-8859-1');
+    };
+    r.readAsText(file, 'utf-8');
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  FOLDER DETECTION FROM PATH
+// ══════════════════════════════════════════════════════════
+function folderFromPath(file){
+  const rel = (file.webkitRelativePath || file.name).replace(/\\/g,'/');
+  const parts = rel.split('/');
+  // e.g. backup/Mail/Inbox/cur/001.eml  →  Inbox
+  //       backup/Sent/msg.eml            →  Sent
+  if(parts.length >= 3){
+    const leaf = parts[parts.length-2].toLowerCase();
+    if(['cur','new','tmp'].includes(leaf) && parts.length >= 4){
+      return normF(parts[parts.length-3]);
+    }
+    return normF(parts[parts.length-2]);
+  }
+  if(parts.length === 2) return normF(parts[0]);
+  return 'Inbox';
+}
+
+// ══════════════════════════════════════════════════════════
+//  UPLOAD & ACCOUNT LOADING
+// ══════════════════════════════════════════════════════════
 function triggerUpload(){
-  if(isLoading)return;
-  if(accounts.length>=MAX){setLB(true);toast('Limit: 3 accounts max. Remove one first.','warn');return;}
+  if(isLoading) return;
+  if(accounts.length >= MAX){ setLB(true); toast('Limit: 3 accounts max. Remove one first.','warn'); return; }
   document.getElementById('file-input').click();
 }
-document.getElementById('file-input').addEventListener('change',async ev=>{
-  const files=Array.from(ev.target.files);
-  ev.target.value='';
-  if(files.length)await loadAccount(files);
+document.getElementById('file-input').addEventListener('change', async ev => {
+  const files = Array.from(ev.target.files);
+  ev.target.value = '';
+  if(files.length) await loadAccount(files);
 });
 
 async function loadAccount(files){
-  if(isLoading||accounts.length>=MAX)return;
-  isLoading=true;
+  if(isLoading || accounts.length >= MAX) return;
+  isLoading = true;
 
-  const SKIP=/\.(jpg|jpeg|png|gif|bmp|webp|zip|gz|tar|rar|7z|exe|dll|so|db|sqlite|bin|dat|ico|woff|woff2|ttf|otf|mp3|mp4|avi|mov|mkv|pdf)$/i;
-  const toProc=files.filter(f=>{
-    if(SKIP.test(f.name.toLowerCase()))return false;
-    if(f.size===0||f.size>200*1024*1024)return false;
+  let pstCount = 0;
+
+  // Filter files to process
+  const toProcess = files.filter(f => {
+    const nm = f.name.toLowerCase();
+    if(PST_EXTS.test(nm)){ pstCount++; return false; }   // PST/OST — skip, warn later
+    if(SKIP_EXTS.test(nm)) return false;                  // binary, skip silently
+    if(f.size === 0) return false;                         // empty
+    if(f.size > 50 * 1024 * 1024) return false;           // skip single files > 50MB
     return true;
   });
 
-  const acctId='a'+Date.now();
-  const ci=accounts.length;
-  const color=ACCT_COLORS[ci];
-  const firstRel=files[0]?.(files[0].webkitRelativePath||files[0].name)||'';
-  const rootName=(firstRel.split('/')[0]||'Account '+(ci+1)).slice(0,22);
-  const acct={id:acctId,name:rootName,color,colorIdx:ci,emails:[],foldersMap:{}};
+  if(pstCount > 0 && !hasPstWarned){
+    hasPstWarned = true;
+    toast(`⚠️ ${pstCount} PST/OST file(s) skipped — browser can't read Outlook binary format. Export to .eml first.`,'warn');
+  }
+
+  if(toProcess.length === 0){
+    isLoading = false;
+    toast('No supported email files found in this folder.','warn');
+    return;
+  }
+
+  const acctId = 'a' + Date.now();
+  const ci     = accounts.length;
+  const color  = ACCT_COLORS[ci];
+
+  // Derive account name from the root folder name
+  const firstRel = (files[0]?.webkitRelativePath || files[0]?.name || '');
+  const rootName = (firstRel.split('/')[0] || 'Account '+(ci+1)).slice(0,24);
+
+  const acct = { id:acctId, name:rootName, color, colorIdx:ci, emails:[], foldersMap:{} };
 
   // Show loading overlay
-  const lov=document.getElementById('loading-overlay');
-  const loTitle=document.getElementById('lo-title');
-  const loSub=document.getElementById('lo-sub');
-  const loBar=document.getElementById('lo-bar');
+  const lov   = document.getElementById('loading-overlay');
+  const loTitle = document.getElementById('lo-title');
+  const loSub   = document.getElementById('lo-sub');
+  const loBar   = document.getElementById('lo-bar');
   lov.classList.add('show');
-  loTitle.textContent=`Loading "${rootName}"…`;
-  loSub.textContent=`0 / ${toProc.length} files`;
-  loBar.style.width='0%';
+  loTitle.textContent = `Loading "${rootName}"…`;
+  loSub.textContent   = `0 / ${toProcess.length} files`;
+  loBar.style.width   = '0%';
 
-  const BATCH=20; // small batches to stay responsive
-  let done=0;
+  const BATCH = 15;  // files per batch before yielding
+  let done = 0, skipped = 0;
 
-  for(let b=0;b<toProc.length;b+=BATCH){
-    const batch=toProc.slice(b,b+BATCH);
+  for(let b = 0; b < toProcess.length; b += BATCH){
+    const batch = toProcess.slice(b, b+BATCH);
+
     for(const f of batch){
-      const rel=f.webkitRelativePath||f.name;
-      const parts=rel.replace(/\\/g,'/').split('/');
-      let raw='Inbox';
-      if(parts.length>=3){
-        const cand=parts[parts.length-2];
-        if(['cur','new','tmp'].includes(cand.toLowerCase())&&parts.length>=4)raw=parts[parts.length-3];
-        else raw=cand;
-      }else if(parts.length===2)raw=parts[0];
-      const folder=normF(raw);
-      try{
-        // Read file in a non-blocking way
-        const text=await readFileAsync(f);
-        const parsed=parseFile(text,f.name,folder,acctId);
+      try {
+        const text = await readFileText(f);
+        if(!text || text.trim().length < 5){ skipped++; done++; continue; }
+
+        const folder = folderFromPath(f);
+        const parsed = parseFile(text, f.name, folder, acctId);
+
         for(const e of parsed){
-          if(!acct.foldersMap[folder])acct.foldersMap[folder]=[];
+          if(!acct.foldersMap[folder]) acct.foldersMap[folder] = [];
           acct.foldersMap[folder].push(e);
           acct.emails.push(e);
         }
-      }catch(err){console.warn('skip',f.name,err);}
+      } catch(err){
+        console.warn('Skip file', f.name, err);
+        skipped++;
+      }
       done++;
     }
-    const pct=Math.floor(done/Math.max(toProc.length,1)*100);
-    loBar.style.width=pct+'%';
-    loSub.textContent=`${done.toLocaleString()} / ${toProc.length.toLocaleString()} files · ${acct.emails.length.toLocaleString()} emails found`;
-    // Yield to browser every batch to prevent freeze
+
+    const pct = Math.round(done / Math.max(toProcess.length,1) * 100);
+    loBar.style.width = pct + '%';
+    loSub.textContent = `${done.toLocaleString()} / ${toProcess.length.toLocaleString()} files · ${acct.emails.length.toLocaleString()} emails`;
+
     await yieldToBrowser();
   }
 
-  const sortFn=(a,b)=>new Date(b.date||0)-new Date(a.date||0);
+  // Sort all by date desc
+  const sortFn = (a,b) => new Date(b.date||0) - new Date(a.date||0);
   acct.emails.sort(sortFn);
-  for(const k of Object.keys(acct.foldersMap))acct.foldersMap[k].sort(sortFn);
+  for(const k of Object.keys(acct.foldersMap)) acct.foldersMap[k].sort(sortFn);
 
   lov.classList.remove('show');
-  isLoading=false;
+  isLoading = false;
+
+  if(acct.emails.length === 0){
+    toast(`"${rootName}": no emails could be parsed from ${toProcess.length} files.`,'warn');
+    return;
+  }
 
   accounts.push(acct);
-  setLB(accounts.length>=MAX);
-  document.getElementById('add-btn').disabled=accounts.length>=MAX;
+  setLB(accounts.length >= MAX);
+  document.getElementById('add-btn').disabled = accounts.length >= MAX;
 
-  activeScope={type:'acct',acctId};
-  searchQuery='';document.getElementById('si').value='';
-  selectedEmail=null;
+  activeScope   = { type:'acct', acctId };
+  searchQuery   = ''; document.getElementById('si').value='';
+  selectedEmail = null;
 
   buildSidebar();
   renderList();
   clearDetail();
   updateTinfo();
-  toast(`"${rootName}" — ${acct.emails.length.toLocaleString()} emails loaded`);
+  toast(`"${rootName}" — ${acct.emails.length.toLocaleString()} emails loaded`+(skipped?` (${skipped} files skipped)`:''));
 }
 
-// Non-blocking file read with yield
-function readFileAsync(f){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=e=>res(e.target.result);
-    r.onerror=()=>rej(new Error('read fail'));
-    r.readAsText(f,'utf-8');
-  });
-}
-function yieldToBrowser(){return new Promise(r=>setTimeout(r,0));}
-
-// ═══════════════════════════ ACCOUNT MANAGEMENT ════════════════════════
-function removeAccount(acctId,ev){
-  if(ev){ev.stopPropagation();ev.preventDefault();}
-  const idx=accounts.findIndex(a=>a.id===acctId);
-  if(idx===-1)return;
-  const name=accounts[idx].name;
+// ══════════════════════════════════════════════════════════
+//  ACCOUNT MANAGEMENT
+// ══════════════════════════════════════════════════════════
+function removeAccount(acctId, ev){
+  if(ev){ ev.stopPropagation(); ev.preventDefault(); }
+  const idx = accounts.findIndex(a=>a.id===acctId);
+  if(idx===-1) return;
+  const name = accounts[idx].name;
   accounts.splice(idx,1);
-  // Reindex colors
-  accounts.forEach((a,i)=>{a.colorIdx=i;a.color=ACCT_COLORS[i];});
+  accounts.forEach((a,i)=>{ a.colorIdx=i; a.color=ACCT_COLORS[i]; });
 
-  if(activeScope.type!=='global'&&activeScope.acctId===acctId){
-    activeScope=accounts.length?{type:'acct',acctId:accounts[0].id}:{type:'global'};
+  if(activeScope.type!=='global' && activeScope.acctId===acctId){
+    activeScope = accounts.length ? {type:'acct',acctId:accounts[0].id} : {type:'global'};
   }
-  selectedEmail=null;
+  selectedEmail = null;
   setLB(accounts.length>=MAX);
-  document.getElementById('add-btn').disabled=accounts.length>=MAX;
-  buildSidebar();
-  renderList();
-  clearDetail();
-  updateTinfo();
+  document.getElementById('add-btn').disabled = accounts.length>=MAX;
+  buildSidebar(); renderList(); clearDetail(); updateTinfo();
   toast(`"${name}" removed`,'warn');
 }
 
-// ═══════════════════════════ SIDEBAR ════════════════════════════════
+// ══════════════════════════════════════════════════════════
+//  SIDEBAR
+// ══════════════════════════════════════════════════════════
 function updateTinfo(){
-  const total=accounts.reduce((s,a)=>s+a.emails.length,0);
-  document.getElementById('tinfo').textContent=
-    accounts.length===0?'No accounts':
+  const total = accounts.reduce((s,a)=>s+a.emails.length,0);
+  document.getElementById('tinfo').textContent =
+    accounts.length===0 ? 'No accounts' :
     `${total.toLocaleString()} emails · ${accounts.length}/${MAX} accts`;
-  document.getElementById('ca').textContent=total.toLocaleString();
+  document.getElementById('ca').textContent = total.toLocaleString();
 }
 
 function buildSidebar(){
-  const wrap=document.getElementById('acct-groups');
-  wrap.innerHTML='';
-  const ORDER=['Inbox','Sent','Drafts','Archive','Spam','Trash'];
+  const wrap = document.getElementById('acct-groups');
+  wrap.innerHTML = '';
+  const ORDER = ['Inbox','Sent','Drafts','Archive','Spam','Trash'];
 
   for(const a of accounts){
-    const isActiveAcct=(activeScope.type==='acct'||activeScope.type==='folder')&&activeScope.acctId===a.id;
-    const isOpen=isActiveAcct;
+    const isActiveAcct = (activeScope.type==='acct'||activeScope.type==='folder') && activeScope.acctId===a.id;
+    const isOpen = isActiveAcct;
+    const grp = document.createElement('div');
+    grp.className = 'acct-group'; grp.dataset.id = a.id;
 
-    const grp=document.createElement('div');
-    grp.className='acct-group';
-    grp.dataset.id=a.id;
-
-    const sorted=[...ORDER.filter(o=>a.foldersMap[o]),...Object.keys(a.foldersMap).filter(k=>!ORDER.includes(k)).sort()];
-    const folderItems=sorted.map(name=>{
-      const isActiveFold=activeScope.type==='folder'&&activeScope.acctId===a.id&&activeScope.folder===name;
-      return `<div class="fi${isActiveFold?' active':''}" data-folder="${esc(name)}" data-acct="${a.id}" onclick="selectFolder('${a.id}','${esc(name)}')">
-        ${ficon(name)}
-        ${esc(name)}
-        <span class="ct">${a.foldersMap[name].length.toLocaleString()}</span>
+    const sorted = [
+      ...ORDER.filter(o=>a.foldersMap[o]),
+      ...Object.keys(a.foldersMap).filter(k=>!ORDER.includes(k)).sort()
+    ];
+    const folderItems = sorted.map(name=>{
+      const isActiveFold = activeScope.type==='folder' && activeScope.acctId===a.id && activeScope.folder===name;
+      return `<div class="fi${isActiveFold?' active':''}" onclick="selectFolder('${a.id}','${esc(name).replace(/'/g,"\\'")}')">
+        ${ficon(name)}${esc(name)}<span class="ct">${a.foldersMap[name].length.toLocaleString()}</span>
       </div>`;
     }).join('');
 
-    grp.innerHTML=`
+    grp.innerHTML = `
       <div class="acct-header${isOpen?' open':''}${isActiveAcct&&activeScope.type==='acct'?' active-acct':''}" onclick="toggleAcct('${a.id}',this)">
         <div class="acct-color-bar" style="background:${a.color}"></div>
         <div class="acct-info">
@@ -800,113 +1018,99 @@ function buildSidebar(){
       <div class="acct-folders${isOpen?' open':''}">
         <div class="fi${activeScope.type==='acct'&&activeScope.acctId===a.id?' active':''}" onclick="selectAcctAll('${a.id}')">
           <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-          All Mail
-          <span class="ct">${a.emails.length.toLocaleString()}</span>
+          All Mail<span class="ct">${a.emails.length.toLocaleString()}</span>
         </div>
         ${folderItems}
       </div>`;
     wrap.appendChild(grp);
   }
-
-  // Global all mail active state
-  document.getElementById('sb-allmail').classList.toggle('active',activeScope.type==='global');
+  document.getElementById('sb-allmail').classList.toggle('active', activeScope.type==='global');
 }
 
 function toggleAcct(acctId, headerEl){
-  // If clicking already-open account header: just select its All Mail
-  const foldersEl=headerEl.nextElementSibling;
-  const isOpen=foldersEl.classList.contains('open');
+  const foldersEl = headerEl.nextElementSibling;
+  const isOpen = foldersEl.classList.contains('open');
   if(!isOpen){
-    headerEl.classList.add('open');
-    foldersEl.classList.add('open');
+    headerEl.classList.add('open'); foldersEl.classList.add('open');
     selectAcctAll(acctId);
-  }else{
-    // Click again to collapse if clicking header (not inner fi)
-    headerEl.classList.remove('open');
-    foldersEl.classList.remove('open');
+  } else {
+    headerEl.classList.remove('open'); foldersEl.classList.remove('open');
   }
 }
 
 function selectGlobalAll(){
   activeScope={type:'global'};
-  searchQuery='';document.getElementById('si').value='';
+  searchQuery=''; document.getElementById('si').value='';
   selectedEmail=null;
-  buildSidebar();renderList();clearDetail();
+  buildSidebar(); renderList(); clearDetail();
 }
-function selectAcctAll(acctId){
-  activeScope={type:'acct',acctId};
-  selectedEmail=null;
-  buildSidebar();renderList();
-}
-function selectFolder(acctId,folder){
-  activeScope={type:'folder',acctId,folder};
-  selectedEmail=null;
-  buildSidebar();renderList();clearDetail();
-}
+function selectAcctAll(acctId){ activeScope={type:'acct',acctId}; selectedEmail=null; buildSidebar(); renderList(); }
+function selectFolder(acctId,folder){ activeScope={type:'folder',acctId,folder}; selectedEmail=null; buildSidebar(); renderList(); clearDetail(); }
 
-// ═══════════════════════════ LIST ════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+//  EMAIL LIST
+// ══════════════════════════════════════════════════════════
 function getEmails(){
-  let base=[];
+  let base = [];
   if(activeScope.type==='global'){
-    base=accounts.flatMap(a=>a.emails);
+    base = accounts.flatMap(a=>a.emails);
     base.sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
-  }else if(activeScope.type==='acct'){
-    const a=accounts.find(x=>x.id===activeScope.acctId);
-    base=a?a.emails:[];
-  }else{
-    const a=accounts.find(x=>x.id===activeScope.acctId);
-    base=a?(a.foldersMap[activeScope.folder]||[]):[];
+  } else if(activeScope.type==='acct'){
+    const a = accounts.find(x=>x.id===activeScope.acctId);
+    base = a?a.emails:[];
+  } else {
+    const a = accounts.find(x=>x.id===activeScope.acctId);
+    base = a?(a.foldersMap[activeScope.folder]||[]):[];
   }
-  if(!searchQuery)return base;
-  const q=searchQuery.toLowerCase();
+  if(!searchQuery) return base;
+  const q = searchQuery.toLowerCase();
   return base.filter(e=>(e.from+e.subject+(e.text||'').slice(0,400)+e.to).toLowerCase().includes(q));
 }
 
 function scopeTitle(){
-  if(activeScope.type==='global')return 'All Mail';
-  if(activeScope.type==='acct'){
-    const a=accounts.find(x=>x.id===activeScope.acctId);return a?a.name+' — All':'All';
-  }
+  if(activeScope.type==='global') return 'All Mail';
+  if(activeScope.type==='acct'){ const a=accounts.find(x=>x.id===activeScope.acctId); return a?a.name+' — All':'All'; }
   return activeScope.folder||'Folder';
 }
 
 function renderList(){
-  currentList=getEmails();
-  renderedCount=0;
-  const el=document.getElementById('el');
-  const cnt=currentList.length;
-  document.getElementById('lh-title').textContent=scopeTitle();
-  document.getElementById('lc').textContent=cnt.toLocaleString()+' email'+(cnt!==1?'s':'');
+  currentList = getEmails();
+  renderedCount = 0;
+  const el = document.getElementById('el');
+  const cnt = currentList.length;
+  document.getElementById('lh-title').textContent = scopeTitle();
+  document.getElementById('lc').textContent = cnt.toLocaleString()+' email'+(cnt!==1?'s':'');
 
   if(cnt===0){
-    el.innerHTML=accounts.length===0
-      ?`<div class="empty"><div class="eico"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><h2>No accounts</h2><p>Click "Add Account" or drag & drop</p><div class="etags"><span class="etag">.mbox</span><span class="etag">.eml</span><span class="etag">maildir</span></div></div>`
-      :`<div class="empty"><div class="eico"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><p>No emails found</p></div>`;
+    el.innerHTML = accounts.length===0
+      ? `<div class="empty"><div class="eico"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><h2>No accounts</h2><p>Click "Add Account" or drag &amp; drop</p><div class="etags"><span class="etag">.mbox</span><span class="etag">.eml</span><span class="etag">.emlx</span><span class="etag">maildir</span></div></div>`
+      : `<div class="empty"><div class="eico"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><p>No emails found</p></div>`;
+    el.onscroll = null;
     return;
   }
-  el.innerHTML='';
-  appendRows(el,Math.min(PAGE,cnt));
-  el.onscroll=function(){
-    if(el.scrollTop+el.clientHeight>=el.scrollHeight-100&&renderedCount<currentList.length)
-      appendRows(el,Math.min(PAGE,currentList.length-renderedCount));
+  el.innerHTML = '';
+  appendRows(el, Math.min(PAGE, cnt));
+  el.onscroll = function(){
+    if(el.scrollTop + el.clientHeight >= el.scrollHeight - 100 && renderedCount < currentList.length)
+      appendRows(el, Math.min(PAGE, currentList.length - renderedCount));
   };
 }
 
-function appendRows(el,count){
-  const frag=document.createDocumentFragment();
-  for(let i=renderedCount;i<renderedCount+count;i++){
-    const e=currentList[i];
-    const div=document.createElement('div');
-    div.className='er'+(e===selectedEmail?' sel':'');
-    const badges=[];
-    if(e.hasHtml)badges.push('<span class="badge b-html">HTML</span>');
-    if(e.hasAtts)badges.push(`<span class="badge b-att">📎 ${e.atts.length}</span>`);
-    // show account badge in global view
+function appendRows(el, count){
+  const frag = document.createDocumentFragment();
+  const end = Math.min(renderedCount + count, currentList.length);
+  for(let i = renderedCount; i < end; i++){
+    const e = currentList[i];
+    const div = document.createElement('div');
+    div.className = 'er' + (e===selectedEmail?' sel':'');
+    const badges = [];
+    if(e.hasHtml) badges.push('<span class="badge b-html">HTML</span>');
+    if(e.hasAtts) badges.push(`<span class="badge b-att">📎 ${e.atts.length}</span>`);
     if(activeScope.type==='global'){
-      const a=accounts.find(x=>x.id===e.acctId);
-      if(a)badges.push(`<span class="badge b-acct" style="background:${a.color}22;color:${a.color};border:1px solid ${a.color}44">${esc(a.name)}</span>`);
+      const a = accounts.find(x=>x.id===e.acctId);
+      if(a) badges.push(`<span class="badge b-acct" style="background:${a.color}22;color:${a.color};border:1px solid ${a.color}44">${esc(a.name)}</span>`);
     }
-    div.innerHTML=`
+    div.innerHTML = `
       <div class="er-top">
         <span class="er-from">${esc(xName(e.from)||'Unknown')}</span>
         <span class="er-date">${fmtD(e.date)}</span>
@@ -914,62 +1118,62 @@ function appendRows(el,count){
       <div class="er-subj">${esc(e.subject)}</div>
       <div class="er-prev">${esc((e.text||'').replace(/\s+/g,' ').slice(0,90))}</div>
       ${badges.length?`<div class="er-badges">${badges.join('')}</div>`:''}`;
-    div.addEventListener('click',(function(email,row){return()=>openEmail(email,row);})(e,div));
+    div.addEventListener('click', (function(email,row){ return ()=>openEmail(email,row); })(e,div));
     frag.appendChild(div);
   }
   el.appendChild(frag);
-  renderedCount+=count;
+  renderedCount = end;
 }
 
 function doSearch(){
-  searchQuery=document.getElementById('si').value;
-  selectedEmail=null;clearDetail();renderList();
+  searchQuery = document.getElementById('si').value.trim();
+  selectedEmail = null; clearDetail(); renderList();
 }
 
-// ═══════════════════════════ DETAIL ══════════════════════════════════
-function openEmail(e,row){
-  selectedEmail=e;
+// ══════════════════════════════════════════════════════════
+//  DETAIL PANEL
+// ══════════════════════════════════════════════════════════
+function openEmail(e, row){
+  selectedEmail = e;
   document.querySelectorAll('.er').forEach(r=>r.classList.remove('sel'));
   row.classList.add('sel');
-  currentViewMode=e.hasHtml?'html':'text';
+  currentViewMode = e.hasHtml ? 'html' : 'text';
   renderDetail(e);
 }
 
 function fmtAddr(raw){
-  if(!raw)return '<span style="color:var(--t4)">—</span>';
-  const n=xName(raw),em=xEmail(raw);
+  if(!raw) return '<span style="color:var(--t4)">—</span>';
+  const n=xName(raw), em=xEmail(raw);
   if(em&&n&&n!==em&&!n.includes('@'))
     return `<span class="addr-n">${esc(n)}</span><span class="addr-e">&lt;${esc(em)}&gt;</span>`;
   return `<span class="addr-n">${esc(raw)}</span>`;
 }
 function fmtAddrList(raw){
-  if(!raw)return '<span style="color:var(--t4)">—</span>';
-  const parts=[];let d=0,cur='';
-  for(const ch of raw){if(ch==='<')d++;else if(ch==='>')d--;if(ch===','&&d===0){parts.push(cur.trim());cur='';}else cur+=ch;}
-  if(cur.trim())parts.push(cur.trim());
-  if(parts.length<=1)return fmtAddr(raw);
+  if(!raw) return '<span style="color:var(--t4)">—</span>';
+  const parts=[]; let d=0,cur='';
+  for(const ch of raw){ if(ch==='<')d++; else if(ch==='>')d--; if(ch===','&&d===0){parts.push(cur.trim());cur='';}else cur+=ch; }
+  if(cur.trim()) parts.push(cur.trim());
+  if(parts.length<=1) return fmtAddr(raw);
   return parts.map(fmtAddr).join('<span style="color:var(--t4);margin:0 3px">·</span>');
 }
 
 function renderDetail(e){
-  const[bg,tc]=fcolor(e.folder);
-  const acct=accounts.find(a=>a.id===e.acctId);
+  const [bg,tc] = fcolor(e.folder);
+  const acct = accounts.find(a=>a.id===e.acctId);
 
-  // routing
-  let routeHtml='';
-  if(e.rcv&&e.rcv.length>0){
-    routeHtml=`<div class="route-btn" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+  let routeHtml = '';
+  if(e.rcv && e.rcv.length > 0){
+    routeHtml = `<div class="route-btn" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
       <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       Routing · ${e.rcv.length} hop${e.rcv.length>1?'s':''}
     </div>
     <div class="route-body">${e.rcv.map(r=>`<div style="border-bottom:1px solid var(--border);padding:2px 0">${esc(r)}</div>`).join('')}</div>`;
   }
 
-  // attachments
-  let attsHtml='';
-  if(e.atts&&e.atts.length>0){
-    window.__openEmail=e;
-    const items=e.atts.map((a,i)=>{
+  let attsHtml = '';
+  if(e.atts && e.atts.length > 0){
+    window.__openEmail = e;
+    const items = e.atts.map((a,i)=>{
       const{ico,bg:ab}=attIco(a.mime||'');
       return `<div class="att-card" onclick="dlAtt(${i})">
         <div class="att-ico" style="background:${ab}">${ico}</div>
@@ -980,133 +1184,148 @@ function renderDetail(e){
         <div class="att-dl"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></div>
       </div>`;
     }).join('');
-    attsHtml=`<div id="atts">
+    attsHtml = `<div id="atts">
       <div class="att-hdr"><svg viewBox="0 0 24 24"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/></svg>Attachments (${e.atts.length})</div>
       <div id="att-list">${items}</div>
     </div>`;
   }
 
-  const htmlBtn=e.hasHtml?`<button class="vbtn${currentViewMode==='html'?' on':''}" onclick="setView('html')">
-    <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>HTML</button>`:'';
-  const txtBtn=`<button class="vbtn${currentViewMode==='text'?' on':''}" onclick="setView('text')">
+  const htmlBtn = e.hasHtml
+    ? `<button class="vbtn${currentViewMode==='html'?' on':''}" onclick="setView('html')">
+        <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>HTML</button>`
+    : '';
+  const txtBtn = `<button class="vbtn${currentViewMode==='text'?' on':''}" onclick="setView('text')">
     <svg viewBox="0 0 24 24"><path d="M2.5 4v3h5v12h3V7h5V4h-13zm19 5h-9v3h3v7h3v-7h3V9z"/></svg>Plain Text</button>`;
 
-  let bodyHtml='';
-  if(currentViewMode==='html'&&e.hasHtml){
-    bodyHtml=`<div id="ifw"><iframe sandbox="allow-same-origin" frameborder="0" scrolling="auto"></iframe></div>`;
-  }else{
-    bodyHtml=`<div id="ptxt">${esc(e.text||'(No message body)')}</div>`;
+  let bodyHtml = '';
+  if(currentViewMode==='html' && e.hasHtml){
+    bodyHtml = `<div id="ifw"><iframe sandbox="allow-same-origin" frameborder="0" scrolling="auto"></iframe></div>`;
+  } else {
+    bodyHtml = `<div id="ptxt">${esc(e.text||'(No message body)')}</div>`;
   }
 
-  const acctBadge=acct?`&nbsp;<span class="ftag" style="background:${acct.color}18;color:${acct.color};border:1px solid ${acct.color}33;font-size:10px;padding:1px 7px">${esc(acct.name)}</span>`:'';
+  const acctBadge = acct
+    ? `&nbsp;<span class="ftag" style="background:${acct.color}18;color:${acct.color};border:1px solid ${acct.color}33;font-size:10px;padding:1px 7px">${esc(acct.name)}</span>`
+    : '';
 
-  const metaRows=[
-    ['From',fmtAddr(e.from)],
-    ['To',fmtAddrList(e.to)],
-    e.cc?['CC',fmtAddrList(e.cc)]:null,
-    e.replyTo&&e.replyTo!==e.from?['Reply-To',fmtAddr(e.replyTo)]:null,
-    ['Date',`<span class="mdate">${fmtDFull(e.date)}</span>`],
-    ['Folder',`<span class="ftag" style="background:${bg};color:${tc};border:1px solid ${tc}30">${esc(e.folder)}</span>${acctBadge}`],
-    e.msgId?['Msg-ID',`<span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3)">${esc(e.msgId)}</span>`]:null,
+  const metaRows = [
+    ['From',   fmtAddr(e.from)],
+    ['To',     fmtAddrList(e.to)],
+    e.cc        ? ['CC',       fmtAddrList(e.cc)]    : null,
+    (e.replyTo&&e.replyTo!==e.from) ? ['Reply-To', fmtAddr(e.replyTo)] : null,
+    ['Date',   `<span class="mdate">${fmtDFull(e.date)}</span>`],
+    ['Folder', `<span class="ftag" style="background:${bg};color:${tc};border:1px solid ${tc}30">${esc(e.folder)}</span>${acctBadge}`],
+    e.msgId     ? ['Msg-ID',  `<span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3)">${esc(e.msgId)}</span>`] : null,
   ].filter(Boolean);
 
-  document.getElementById('dp').innerHTML=`
+  document.getElementById('dp').innerHTML = `
     <div id="dh">
       <div id="ds">${esc(e.subject)}</div>
       <div class="meta-wrap">${metaRows.map(([k,v])=>`<div class="meta-row"><span class="meta-k">${k}</span><span class="meta-v">${v}</span></div>`).join('')}</div>
       ${routeHtml}
     </div>
-    ${htmlBtn||txtBtn?`<div id="dtb">${htmlBtn}${txtBtn}</div>`:''}
+    ${(htmlBtn||txtBtn)?`<div id="dtb">${htmlBtn}${txtBtn}</div>`:''}
     <div id="db">${bodyHtml}${attsHtml}</div>`;
 
-  if(currentViewMode==='html'&&e.hasHtml){
+  if(currentViewMode==='html' && e.hasHtml){
     requestAnimationFrame(()=>{
-      const iframe=document.querySelector('#ifw iframe');
-      if(!iframe)return;
-      const doc=iframe.contentDocument||iframe.contentWindow.document;
-      doc.open();
-      doc.write(`<!DOCTYPE html><html><head><meta charset="utf-8"/>
-        <style>
-          *{box-sizing:border-box;}html,body{margin:0;padding:0;}
-          body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.65;color:#1a1a1a;padding:16px 20px;word-break:break-word;background:#fff;}
-          img{max-width:100%!important;height:auto!important;}a{color:#1d4ed8;}
-          table{border-collapse:collapse;max-width:100%!important;}td,th{padding:4px 8px;word-break:break-word;}
-          pre{font-family:monospace;font-size:12px;background:#f5f5f5;border-radius:4px;padding:10px;white-space:pre-wrap;}
-          code{font-family:monospace;font-size:12px;background:#f5f5f5;border-radius:3px;padding:1px 4px;}
-          blockquote{border-left:3px solid #d0d0d0;margin:8px 0;padding-left:14px;color:#555;}
-          hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0;}
-        </style></head><body>${e.html}</body></html>`);
-      doc.close();
-      const resize=()=>{try{const h=iframe.contentDocument.body.scrollHeight;iframe.style.height=Math.min(Math.max(h+32,120),9000)+'px';}catch{}};
-      iframe.onload=resize;setTimeout(resize,150);setTimeout(resize,600);setTimeout(resize,1500);
+      const iframe = document.querySelector('#ifw iframe');
+      if(!iframe) return;
+      try{
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write(`<!DOCTYPE html><html><head><meta charset="utf-8"/>
+          <style>
+            *{box-sizing:border-box;}html,body{margin:0;padding:0;}
+            body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.65;color:#1a1a1a;padding:16px 20px;word-break:break-word;background:#fff;}
+            img{max-width:100%!important;height:auto!important;}
+            a{color:#1d4ed8;}
+            table{border-collapse:collapse;max-width:100%!important;}
+            td,th{padding:4px 8px;word-break:break-word;}
+            pre{font-family:monospace;font-size:12px;background:#f5f5f5;border-radius:4px;padding:10px;white-space:pre-wrap;}
+            code{font-family:monospace;font-size:12px;background:#f5f5f5;border-radius:3px;padding:1px 4px;}
+            blockquote{border-left:3px solid #d0d0d0;margin:8px 0;padding-left:14px;color:#555;}
+            hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0;}
+          </style></head><body>${e.html}</body></html>`);
+        doc.close();
+        const resize = () => {
+          try{
+            const h = iframe.contentDocument.body.scrollHeight;
+            iframe.style.height = Math.min(Math.max(h+32,120),12000) + 'px';
+          } catch {}
+        };
+        iframe.onload = resize;
+        setTimeout(resize,200); setTimeout(resize,700); setTimeout(resize,2000);
+      } catch(err){ console.warn('iframe write err',err); }
     });
   }
 }
 
-function setView(mode){if(!selectedEmail)return;currentViewMode=mode;renderDetail(selectedEmail);}
+function setView(mode){ if(!selectedEmail) return; currentViewMode=mode; renderDetail(selectedEmail); }
 
 function dlAtt(i){
-  const e=window.__openEmail;if(!e)return;
-  const a=e.atts[i];if(!a)return;
+  const e = window.__openEmail; if(!e) return;
+  const a = e.atts[i]; if(!a) return;
   let blob;
   try{
-    if(a.enc==='base64'||/^[A-Za-z0-9+/\s=]{20,}$/.test((a.data||'').slice(0,200)))
-      blob=new Blob([dB64bytes(a.data)],{type:a.mime||'application/octet-stream'});
-    else blob=new Blob([a.data],{type:a.mime||'text/plain'});
-  }catch{blob=new Blob([a.data||''],{type:'application/octet-stream'});}
-  const url=URL.createObjectURL(blob);
-  const el=document.createElement('a');el.href=url;el.download=a.name||'attachment';
-  document.body.appendChild(el);el.click();document.body.removeChild(el);
-  setTimeout(()=>URL.revokeObjectURL(url),2000);
+    if(a.enc==='base64'){
+      blob = new Blob([dB64Bytes(a.data)], {type:a.mime||'application/octet-stream'});
+    } else {
+      blob = new Blob([a.data], {type:a.mime||'text/plain'});
+    }
+  } catch {
+    blob = new Blob([a.data||''], {type:'application/octet-stream'});
+  }
+  const url = URL.createObjectURL(blob);
+  const el = document.createElement('a'); el.href=url; el.download=a.name||'attachment';
+  document.body.appendChild(el); el.click(); document.body.removeChild(el);
+  setTimeout(()=>URL.revokeObjectURL(url), 3000);
   toast(`Downloading "${a.name||'attachment'}"`);
 }
 
 function attIco(mime){
-  if(mime.includes('pdf'))return{ico:`<svg viewBox="0 0 24 24" fill="#dc2626" width="16" height="16"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5z"/></svg>`,bg:'#fff1f1'};
-  if(mime.includes('image'))return{ico:`<svg viewBox="0 0 24 24" fill="#7c3aed" width="16" height="16"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`,bg:'#f4eeff'};
-  if(mime.includes('word')||mime.includes('document'))return{ico:`<svg viewBox="0 0 24 24" fill="#2563eb" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,bg:'#eef3ff'};
-  if(mime.includes('sheet')||mime.includes('excel')||mime.includes('csv'))return{ico:`<svg viewBox="0 0 24 24" fill="#059669" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,bg:'#ecfdf5'};
-  if(mime.includes('zip')||mime.includes('archive'))return{ico:`<svg viewBox="0 0 24 24" fill="#d97706" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`,bg:'#fffbeb'};
+  if(mime.includes('pdf'))    return{ico:`<svg viewBox="0 0 24 24" fill="#dc2626" width="16" height="16"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5z"/></svg>`,bg:'#fff1f1'};
+  if(mime.includes('image'))  return{ico:`<svg viewBox="0 0 24 24" fill="#7c3aed" width="16" height="16"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`,bg:'#f4eeff'};
+  if(mime.includes('word')||mime.includes('document')) return{ico:`<svg viewBox="0 0 24 24" fill="#2563eb" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,bg:'#eef3ff'};
+  if(mime.includes('sheet')||mime.includes('excel')||mime.includes('csv')) return{ico:`<svg viewBox="0 0 24 24" fill="#059669" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,bg:'#ecfdf5'};
+  if(mime.includes('zip')||mime.includes('archive')) return{ico:`<svg viewBox="0 0 24 24" fill="#d97706" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`,bg:'#fffbeb'};
   return{ico:`<svg viewBox="0 0 24 24" fill="#6b7280" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`,bg:'#f9fafb'};
 }
 
 function clearDetail(){
-  document.getElementById('dp').innerHTML=`<div id="db"><div class="empty"><div class="eico"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><p>Select an email to read it</p></div></div>`;
+  document.getElementById('dp').innerHTML = `<div id="db"><div class="empty"><div class="eico"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><p>Select an email to read it</p></div></div>`;
 }
 
-// ═══════════════════════════ PROGRESS ════════════════════════════════
-function setP(pct){
-  const pb=document.getElementById('pb'),pf=document.getElementById('pf');
-  if(pct<0){pb.style.display='none';pf.style.width='0%';}
-  else{pb.style.display='block';pf.style.width=pct+'%';}
-}
-
-// ═══════════════════════════ DRAG & DROP ════════════════════════════
-let dc=0;
-document.body.addEventListener('dragenter',e=>{e.preventDefault();dc++;document.getElementById('dov').classList.add('show');});
-document.body.addEventListener('dragleave',e=>{e.preventDefault();dc--;if(dc<=0){dc=0;document.getElementById('dov').classList.remove('show');}});
-document.body.addEventListener('dragover',e=>e.preventDefault());
-document.body.addEventListener('drop',async e=>{
-  e.preventDefault();dc=0;document.getElementById('dov').classList.remove('show');
-  if(accounts.length>=MAX){setLB(true);toast('3 account limit reached','warn');return;}
+// ══════════════════════════════════════════════════════════
+//  DRAG & DROP
+// ══════════════════════════════════════════════════════════
+let dc = 0;
+document.body.addEventListener('dragenter', e=>{ e.preventDefault(); dc++; document.getElementById('dov').classList.add('show'); });
+document.body.addEventListener('dragleave', e=>{ e.preventDefault(); dc--; if(dc<=0){dc=0;document.getElementById('dov').classList.remove('show');} });
+document.body.addEventListener('dragover',  e=> e.preventDefault());
+document.body.addEventListener('drop', async e=>{
+  e.preventDefault(); dc=0; document.getElementById('dov').classList.remove('show');
+  if(accounts.length>=MAX){ setLB(true); toast('3 account limit reached','warn'); return; }
   const files=[];
   async function readEntry(entry,path){
     if(entry.isFile){
       await new Promise(res=>entry.file(f=>{
-        try{Object.defineProperty(f,'webkitRelativePath',{value:path+f.name,writable:false,configurable:true});}catch{}
-        files.push(f);res();
+        try{ Object.defineProperty(f,'webkitRelativePath',{value:path+f.name,writable:false,configurable:true}); }catch{}
+        files.push(f); res();
       }));
     }else if(entry.isDirectory){
-      const reader=entry.createReader();let all=[];
+      const reader=entry.createReader(); let all=[];
       await new Promise(res=>{
-        function rb(){reader.readEntries(async ents=>{if(!ents.length){res();}else{all=all.concat(Array.from(ents));rb();}});}
+        function rb(){ reader.readEntries(async ents=>{ if(!ents.length){res();}else{all=all.concat(Array.from(ents));rb();} }); }
         rb();
       });
-      for(const en of all)await readEntry(en,path+entry.name+'/');
+      for(const en of all) await readEntry(en,path+entry.name+'/');
     }
   }
-  for(const item of Array.from(e.dataTransfer.items)){const en=item.webkitGetAsEntry();if(en)await readEntry(en,'');}
-  if(files.length>0)await loadAccount(files);
+  for(const item of Array.from(e.dataTransfer.items)){
+    const en=item.webkitGetAsEntry(); if(en) await readEntry(en,'');
+  }
+  if(files.length>0) await loadAccount(files);
 });
 </script>
 </body>
