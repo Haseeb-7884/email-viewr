@@ -3,424 +3,382 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MailVault — Backup Viewer</title>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<title>MailVault — Multi-Account Email Viewer</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg:#f8f9fb;
+:root{
+  --bg:#f0f2f7;
   --surface:#ffffff;
-  --surface2:#f1f3f7;
-  --sb:#1a1f2e;
-  --sb2:#232a3b;
-  --sb-text:#e8edf5;
-  --sb-muted:#6b7a99;
-  --sb-hover:#2a3347;
-  --sb-active:#2d3750;
-  --sb-accent:#4f8ef7;
-  --border:#e4e8f0;
-  --border2:#d0d7e3;
-  --text:#111827;
-  --text2:#374151;
-  --text3:#6b7280;
-  --text4:#9ca3af;
-  --accent:#2563eb;
-  --accent-light:#eff4ff;
-  --accent-border:#bfcffd;
-  --green:#059669;
-  --green-bg:#ecfdf5;
-  --amber:#d97706;
-  --amber-bg:#fffbeb;
-  --red:#dc2626;
-  --red-bg:#fef2f2;
-  --purple:#7c3aed;
-  --purple-bg:#f5f3ff;
-  --radius:10px;
-  --radius-sm:7px;
-  --shadow-sm:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
-  --shadow:0 4px 16px rgba(0,0,0,.1);
-  --shadow-lg:0 10px 40px rgba(0,0,0,.14);
+  --surface2:#f7f8fc;
+  --surface3:#eef0f6;
+  --sb:#12151f;
+  --sb2:#1a1f2e;
+  --sb3:#222840;
+  --sb-text:#dde3f0;
+  --sb-muted:#5a6480;
+  --sb-hover:#1e2435;
+  --sb-active:#252d42;
+  --sb-accent:#5b8df6;
+  --border:#e2e6f0;
+  --border2:#ccd2e0;
+  --text:#0f1829;
+  --text2:#2d3a52;
+  --text3:#64748b;
+  --text4:#94a3b8;
+  --accent:#3b6ef5;
+  --accent2:#5b8df6;
+  --accent-light:#eef3ff;
+  --accent-border:#c0d0fb;
+  --green:#0d9e6e;--green-bg:#edfaf5;--green-border:#a7e8cf;
+  --amber:#c97a10;--amber-bg:#fff8eb;--amber-border:#fcd99a;
+  --red:#d42b2b;--red-bg:#fff1f1;--red-border:#fbb5b5;
+  --purple:#6d35d9;--purple-bg:#f4eeff;--purple-border:#c9abf5;
+  --teal:#0891b2;--teal-bg:#ecfeff;
+  --r:10px;--rs:7px;--rm:14px;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --sh2:0 4px 16px rgba(0,0,0,.09),0 2px 6px rgba(0,0,0,.05);
+  --sh3:0 12px 40px rgba(0,0,0,.13),0 4px 16px rgba(0,0,0,.07);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{
-  font-family:'Geist',system-ui,sans-serif;
-  background:var(--bg);height:100vh;
-  display:flex;flex-direction:column;overflow:hidden;
-  color:var(--text);
-}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);height:100vh;display:flex;flex-direction:column;overflow:hidden;color:var(--text);}
 
-/* ─── TOPBAR ─── */
+/* TOPBAR */
 #topbar{
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:8px;
   background:var(--sb);color:var(--sb-text);
-  padding:0 16px;height:52px;flex-shrink:0;
-  border-bottom:1px solid rgba(255,255,255,.05);
-  position:relative;z-index:10;
+  padding:0 16px;height:54px;flex-shrink:0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  position:relative;z-index:20;
 }
-.logo{
-  display:flex;align-items:center;gap:9px;
-  font-size:15px;font-weight:700;color:#fff;
-  white-space:nowrap;letter-spacing:-.4px;
-  text-decoration:none;
-}
-.logo-mark{
-  width:28px;height:28px;
-  background:linear-gradient(135deg,#4f8ef7 0%,#6366f1 100%);
-  border-radius:8px;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 8px rgba(79,142,247,.4);flex-shrink:0;
-}
-.logo-mark svg{width:15px;height:15px;fill:#fff;}
-.vd{width:1px;height:20px;background:rgba(255,255,255,.1);margin:0 4px;}
+.logo{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;color:#fff;white-space:nowrap;letter-spacing:-.5px;margin-right:4px;}
+.logo-mark{width:30px;height:30px;background:linear-gradient(135deg,#3b6ef5,#6366f1);border-radius:9px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(91,141,246,.45);flex-shrink:0;}
+.logo-mark svg{width:16px;height:16px;fill:#fff;}
+.vd{width:1px;height:22px;background:rgba(255,255,255,.08);margin:0 4px;flex-shrink:0;}
 
-/* topbar buttons */
-.tb-btn{
-  display:flex;align-items:center;gap:6px;
-  padding:6px 13px;font-size:12.5px;font-weight:500;
-  border-radius:var(--radius-sm);cursor:pointer;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.07);color:var(--sb-text);
-  font-family:'Geist',sans-serif;
-  transition:background .14s,border-color .14s;white-space:nowrap;
-}
-.tb-btn:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.22);}
-.tb-btn svg{width:13px;height:13px;fill:currentColor;flex-shrink:0;}
-.tb-btn.primary{
-  background:linear-gradient(135deg,#3b82f6,#4f46e5);
-  border-color:transparent;color:#fff;
-  box-shadow:0 2px 10px rgba(59,130,246,.4);
-}
-.tb-btn.primary:hover{opacity:.9;}
-.tb-btn.danger{background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.25);color:#f87171;}
-.tb-btn.danger:hover{background:rgba(220,38,38,.2);color:#fca5a5;}
-#file-input{display:none;}
-
-/* search */
-#tsearch{
+/* account tabs in topbar */
+#acct-tabs{display:flex;align-items:center;gap:4px;flex:1;overflow-x:auto;min-width:0;}
+#acct-tabs::-webkit-scrollbar{display:none;}
+.acct-tab{
   display:flex;align-items:center;gap:7px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
-  border-radius:var(--radius-sm);padding:6px 12px;flex:1;max-width:280px;
-  transition:border-color .15s,background .15s;
+  padding:6px 11px;border-radius:8px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.05);
+  color:var(--sb-muted);font-size:12.5px;font-weight:500;
+  white-space:nowrap;transition:all .15s;flex-shrink:0;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  max-width:200px;
 }
-#tsearch:focus-within{border-color:rgba(79,142,247,.6);background:rgba(255,255,255,.12);}
-#tsearch svg{width:13px;height:13px;fill:var(--sb-muted);flex-shrink:0;}
-#tsearch input{background:transparent;border:none;outline:none;color:var(--sb-text);font-size:13px;width:100%;font-family:'Geist',sans-serif;}
-#tsearch input::placeholder{color:var(--sb-muted);}
-#tinfo{
-  margin-left:auto;font-size:11.5px;color:var(--sb-muted);
-  white-space:nowrap;font-family:'Geist Mono',monospace;
-  background:rgba(255,255,255,.05);padding:4px 10px;
-  border-radius:99px;border:1px solid rgba(255,255,255,.08);
+.acct-tab:hover{background:rgba(255,255,255,.1);color:var(--sb-text);}
+.acct-tab.active{background:var(--sb-active);color:#fff;border-color:rgba(91,141,246,.4);}
+.acct-tab .acct-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.acct-tab .acct-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;}
+.acct-tab .acct-ct{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--sb-muted);background:rgba(255,255,255,.06);padding:1px 5px;border-radius:99px;}
+.acct-tab.active .acct-ct{color:var(--sb-accent);}
+.acct-tab .acct-del{
+  width:16px;height:16px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .12s,background .12s;flex-shrink:0;
 }
+.acct-tab:hover .acct-del{opacity:1;}
+.acct-tab .acct-del:hover{background:rgba(220,38,38,.3);}
+.acct-tab .acct-del svg{width:10px;height:10px;fill:currentColor;}
 
-/* ─── LAYOUT ─── */
-#main{display:flex;flex:1;overflow:hidden;}
-
-/* ─── SIDEBAR ─── */
-#sidebar{
-  width:214px;min-width:214px;
-  background:var(--sb);
-  display:flex;flex-direction:column;
-  overflow-y:auto;
-  border-right:1px solid rgba(255,255,255,.05);
+.add-acct-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 11px;border-radius:8px;cursor:pointer;
+  border:1px dashed rgba(255,255,255,.15);
+  background:transparent;color:var(--sb-muted);
+  font-size:12px;font-weight:500;white-space:nowrap;
+  transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif;
   flex-shrink:0;
 }
-.ss{
-  padding:14px 14px 5px;
-  font-size:10px;font-weight:600;letter-spacing:1.1px;
-  color:var(--sb-muted);text-transform:uppercase;
+.add-acct-btn:hover{border-color:var(--sb-accent);color:var(--sb-accent);background:rgba(91,141,246,.08);}
+.add-acct-btn svg{width:12px;height:12px;fill:currentColor;}
+
+#tsearch{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;padding:6px 11px;width:220px;flex-shrink:0;
+  transition:border-color .15s,background .15s;
 }
+#tsearch:focus-within{border-color:rgba(91,141,246,.5);background:rgba(255,255,255,.11);}
+#tsearch svg{width:13px;height:13px;fill:var(--sb-muted);flex-shrink:0;}
+#tsearch input{background:transparent;border:none;outline:none;color:var(--sb-text);font-size:12.5px;width:100%;font-family:'Plus Jakarta Sans',sans-serif;}
+#tsearch input::placeholder{color:var(--sb-muted);}
+#tinfo{font-size:11px;color:var(--sb-muted);white-space:nowrap;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.04);padding:4px 9px;border-radius:99px;border:1px solid rgba(255,255,255,.07);flex-shrink:0;}
+
+/* hidden input */
+#file-input{display:none;}
+
+/* MAIN */
+#main{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+#sidebar{
+  width:208px;min-width:208px;flex-shrink:0;
+  background:var(--sb);display:flex;flex-direction:column;
+  overflow-y:auto;border-right:1px solid rgba(255,255,255,.04);
+}
+.ss{padding:14px 13px 5px;font-size:10px;font-weight:700;letter-spacing:1.1px;color:var(--sb-muted);text-transform:uppercase;}
 .fi{
   display:flex;align-items:center;gap:8px;
-  padding:7px 11px;cursor:pointer;border-radius:var(--radius-sm);
-  margin:1px 6px;color:var(--sb-muted);font-size:13px;
+  padding:7px 11px;cursor:pointer;border-radius:8px;
+  margin:1px 5px;color:var(--sb-muted);font-size:12.5px;
   transition:background .12s,color .12s;font-weight:400;
 }
 .fi:hover{background:var(--sb-hover);color:var(--sb-text);}
-.fi.active{background:var(--sb-active);color:var(--sb-accent);font-weight:500;}
+.fi.active{background:var(--sb-active);color:var(--sb-accent);font-weight:600;}
 .fi svg{width:14px;height:14px;fill:currentColor;flex-shrink:0;}
-.fi .ct{
-  margin-left:auto;
-  background:rgba(255,255,255,.07);
-  color:var(--sb-muted);font-size:10.5px;
-  padding:1px 7px;border-radius:99px;
-  font-family:'Geist Mono',monospace;
-}
-.fi.active .ct{background:rgba(79,142,247,.15);color:var(--sb-accent);}
-#sb-bottom{padding:12px 8px;border-top:1px solid rgba(255,255,255,.05);margin-top:auto;}
+.fi .ct{margin-left:auto;background:rgba(255,255,255,.06);color:var(--sb-muted);font-size:10px;padding:1px 6px;border-radius:99px;font-family:'JetBrains Mono',monospace;}
+.fi.active .ct{background:rgba(91,141,246,.15);color:var(--sb-accent);}
 
-/* ─── LIST PANEL ─── */
+/* LIST PANEL */
 #lp{
-  width:296px;min-width:296px;flex-shrink:0;
+  width:290px;min-width:290px;flex-shrink:0;
   display:flex;flex-direction:column;
-  border-right:1px solid var(--border);
-  background:var(--surface);
+  border-right:1px solid var(--border);background:var(--surface);
 }
 #lh{
-  padding:11px 14px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;background:var(--surface);
+  padding:11px 13px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+  background:var(--surface);
 }
-#lh-left{display:flex;flex-direction:column;gap:1px;}
-#lh h3{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.3px;}
-#lc{font-size:11px;color:var(--text4);font-family:'Geist Mono',monospace;}
+#lh-title{font-size:13.5px;font-weight:700;color:var(--text);letter-spacing:-.3px;}
+#lc{font-size:10.5px;color:var(--text4);font-family:'JetBrains Mono',monospace;background:var(--surface3);padding:2px 8px;border-radius:99px;border:1px solid var(--border);}
 #el{flex:1;overflow-y:auto;}
 
-/* email row */
+/* list rows */
 .er{
-  padding:10px 14px;
-  border-bottom:1px solid var(--border);
-  cursor:pointer;border-left:2px solid transparent;
+  padding:10px 13px;border-bottom:1px solid var(--border);
+  cursor:pointer;border-left:2.5px solid transparent;
   transition:background .1s;
 }
-.er:hover{background:#f5f7fc;}
+.er:hover{background:#f4f6fc;}
 .er.active{background:var(--accent-light);border-left-color:var(--accent);}
-.er.unread .ef{font-weight:600;}
-.er-t{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px;gap:6px;}
-.ef{font-size:12.5px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
-.ed{font-size:10px;color:var(--text4);white-space:nowrap;font-family:'Geist Mono',monospace;flex-shrink:0;}
-.es{font-size:11.5px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px;}
-.ep{font-size:11px;color:var(--text4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.er-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px;gap:6px;}
+.er-from{font-size:12.5px;color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
+.er-date{font-size:10px;color:var(--text4);white-space:nowrap;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.er-subj{font-size:11.5px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px;font-weight:500;}
+.er-prev{font-size:11px;color:var(--text4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .er-badges{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;}
-.badge{font-size:10px;font-weight:600;padding:1px 6px;border-radius:99px;font-family:'Geist Mono',monospace;}
-.badge-att{background:var(--amber-bg);color:var(--amber);}
-.badge-html{background:var(--purple-bg);color:var(--purple);}
+.badge{font-size:10px;font-weight:600;padding:1px 6px;border-radius:99px;font-family:'JetBrains Mono',monospace;}
+.badge-html{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);}
+.badge-att{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border);}
+.badge-acct{font-size:9.5px;padding:1px 5px;}
 
-/* ─── DETAIL PANEL ─── */
-#dp{
-  flex:1;display:flex;flex-direction:column;
-  background:var(--surface);overflow:hidden;
-}
+/* DETAIL PANEL */
+#dp{flex:1;display:flex;flex-direction:column;background:var(--surface);overflow:hidden;min-width:0;}
 
-/* email header card */
+/* detail header */
 #dh{
-  flex-shrink:0;
-  background:var(--surface);
+  flex-shrink:0;background:var(--surface);
   border-bottom:1px solid var(--border);
-  padding:20px 28px 0;
+  padding:20px 26px 0;
 }
-#ds{
-  font-size:19px;font-weight:700;color:var(--text);
-  margin-bottom:14px;line-height:1.4;letter-spacing:-.4px;
-}
+#ds{font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;line-height:1.4;letter-spacing:-.4px;}
 
-/* metadata grid */
-#dm{
-  display:grid;grid-template-columns:auto 1fr;
-  gap:0;background:var(--surface2);
-  border:1px solid var(--border);border-radius:var(--radius);
-  overflow:hidden;margin-bottom:14px;
+/* meta grid */
+.meta-grid{
+  display:grid;grid-template-columns:min-content 1fr;
+  border:1px solid var(--border);border-radius:var(--r);overflow:hidden;
+  margin-bottom:14px;background:var(--surface);
+  box-shadow:var(--sh);
 }
-.mr{
-  display:contents;
+.meta-label{
+  font-size:11px;font-weight:700;color:var(--text3);
+  padding:9px 13px;border-bottom:1px solid var(--border);
+  background:var(--surface2);letter-spacing:.4px;text-transform:uppercase;
+  white-space:nowrap;display:flex;align-items:center;
 }
-.ml{
-  font-size:11.5px;font-weight:600;color:var(--text3);
-  padding:8px 14px;border-bottom:1px solid var(--border);
-  background:var(--surface2);letter-spacing:.2px;text-transform:uppercase;
-  display:flex;align-items:center;
-}
-.mv{
-  font-size:13px;color:var(--text);word-break:break-all;
-  padding:8px 14px;border-bottom:1px solid var(--border);
+.meta-val{
+  font-size:13px;color:var(--text);word-break:break-word;
+  padding:9px 14px;border-bottom:1px solid var(--border);
   background:var(--surface);line-height:1.5;
+  display:flex;align-items:center;flex-wrap:wrap;gap:4px;
 }
-.mr:last-child .ml,
-.mr:last-child .mv{border-bottom:none;}
+.meta-grid .meta-label:last-of-type,
+.meta-grid .meta-val:last-of-type{border-bottom:none;}
+.addr-name{font-weight:600;color:var(--text);}
+.addr-email{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text3);margin-left:3px;}
+.ftag{display:inline-flex;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;}
+.meta-date{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2);}
 
-/* from/to special */
-.mv-from{font-weight:600;color:var(--text);}
-.mv-email{font-weight:400;color:var(--text3);font-family:'Geist Mono',monospace;font-size:12px;margin-left:4px;}
-
-.ftag{
-  display:inline-flex;font-size:11px;font-weight:600;
-  padding:2px 9px;border-radius:99px;
+/* routing chain */
+.route-toggle{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11.5px;font-weight:600;color:var(--text3);
+  cursor:pointer;padding:5px 0 12px;user-select:none;
+  transition:color .12s;
 }
+.route-toggle:hover{color:var(--accent);}
+.route-toggle svg{width:11px;height:11px;fill:currentColor;transition:transform .18s;}
+.route-toggle.open svg.chevron{transform:rotate(90deg);}
+.route-list{
+  display:none;margin-bottom:14px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--rs);padding:10px 14px;
+  font-size:11px;font-family:'JetBrains Mono',monospace;
+  color:var(--text3);line-height:1.8;max-height:180px;overflow-y:auto;
+}
+.route-list.show{display:block;}
 
 /* toolbar */
 #dtb{
   display:flex;align-items:center;gap:6px;
-  padding:8px 28px;border-bottom:1px solid var(--border);
-  flex-shrink:0;background:var(--bg);
+  padding:8px 26px;border-bottom:1px solid var(--border);
+  flex-shrink:0;background:var(--surface2);
 }
 .view-btn{
   display:flex;align-items:center;gap:5px;
-  padding:5px 11px;font-size:12px;font-weight:500;
-  border-radius:var(--radius-sm);cursor:pointer;
+  padding:5px 11px;font-size:12px;font-weight:600;
+  border-radius:var(--rs);cursor:pointer;
   border:1px solid var(--border2);
   background:var(--surface);color:var(--text3);
-  font-family:'Geist',sans-serif;
+  font-family:'Plus Jakarta Sans',sans-serif;
   transition:all .12s;
 }
-.view-btn:hover{background:var(--surface2);color:var(--text);}
-.view-btn.active{background:var(--accent-light);color:var(--accent);border-color:var(--accent-border);font-weight:600;}
+.view-btn:hover{background:var(--surface3);color:var(--text);}
+.view-btn.active{background:var(--accent-light);color:var(--accent);border-color:var(--accent-border);font-weight:700;}
 .view-btn svg{width:12px;height:12px;fill:currentColor;}
 
-/* body area */
-#db{flex:1;overflow-y:auto;padding:20px 28px 28px;}
-
-/* HTML iframe */
-#email-iframe-wrap{
-  border:1px solid var(--border);border-radius:var(--radius);
-  overflow:hidden;background:#fff;
-  box-shadow:var(--shadow-sm);
-}
+/* body */
+#db{flex:1;overflow-y:auto;padding:20px 26px 28px;}
+#email-iframe-wrap{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:#fff;box-shadow:var(--sh);}
 #email-iframe{width:100%;border:none;display:block;min-height:100px;}
-
-/* plain text */
 #dc{
-  font-size:12.5px;line-height:1.85;color:var(--text2);
+  font-size:12.5px;line-height:1.9;color:var(--text2);
   white-space:pre-wrap;word-break:break-word;
-  font-family:'Geist Mono',monospace;
+  font-family:'JetBrains Mono',monospace;
   background:var(--surface2);border:1px solid var(--border);
-  border-radius:var(--radius);padding:18px 20px;
+  border-radius:var(--r);padding:18px 20px;
 }
-
-/* received chain */
-#received-section{
-  margin-bottom:14px;
-}
-.received-toggle{
-  display:flex;align-items:center;gap:6px;
-  font-size:11.5px;font-weight:600;color:var(--text3);
-  cursor:pointer;padding:6px 0;user-select:none;
-  letter-spacing:.2px;
-}
-.received-toggle:hover{color:var(--text2);}
-.received-toggle svg{width:12px;height:12px;fill:currentColor;transition:transform .2s;}
-.received-toggle.open svg{transform:rotate(90deg);}
-#received-list{
-  display:none;background:var(--surface2);border:1px solid var(--border);
-  border-radius:var(--radius-sm);padding:10px 14px;margin-top:4px;
-  font-size:11.5px;font-family:'Geist Mono',monospace;color:var(--text3);
-  line-height:1.8;
-}
-#received-list.show{display:block;}
 
 /* attachments */
-#att-section{margin-top:16px;}
-#att-title{
-  font-size:11px;font-weight:600;letter-spacing:.8px;
-  text-transform:uppercase;color:var(--text3);margin-bottom:8px;
-  display:flex;align-items:center;gap:6px;
+#att-section{margin-top:18px;}
+.att-header{
+  display:flex;align-items:center;gap:7px;
+  font-size:11px;font-weight:700;letter-spacing:.6px;
+  text-transform:uppercase;color:var(--text3);margin-bottom:10px;
 }
+.att-header svg{width:13px;height:13px;fill:var(--text3);}
 #att-list{display:flex;flex-wrap:wrap;gap:8px;}
 .att-item{
   display:flex;align-items:center;gap:10px;
   background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius-sm);padding:9px 14px;
-  cursor:pointer;transition:border-color .12s,box-shadow .12s;
-  max-width:260px;min-width:160px;
+  border-radius:var(--rs);padding:10px 13px;cursor:pointer;
+  transition:border-color .12s,box-shadow .12s,transform .1s;
+  min-width:180px;max-width:280px;
 }
-.att-item:hover{border-color:var(--accent-border);box-shadow:var(--shadow-sm);}
-.att-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.att-icon svg{width:16px;height:16px;}
+.att-item:hover{border-color:var(--accent-border);box-shadow:var(--sh2);transform:translateY(-1px);}
+.att-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.att-icon svg{width:17px;height:17px;}
 .att-info{flex:1;min-width:0;}
-.att-name{font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.att-meta{font-size:10.5px;color:var(--text4);font-family:'Geist Mono',monospace;margin-top:1px;}
-.att-dl{
-  width:26px;height:26px;border-radius:6px;
-  background:var(--accent-light);border:1px solid var(--accent-border);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.att-dl svg{width:12px;height:12px;fill:var(--accent);}
+.att-name{font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.att-meta{font-size:10px;color:var(--text4);font-family:'JetBrains Mono',monospace;margin-top:1px;}
+.att-dl{width:28px;height:28px;border-radius:7px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.att-dl svg{width:13px;height:13px;fill:var(--accent);}
 
-/* empty states */
-.empty{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;height:100%;gap:12px;
-  padding:30px;text-align:center;
-}
-.empty-icon{
-  width:60px;height:60px;background:var(--surface2);
-  border-radius:18px;display:flex;align-items:center;justify-content:center;
-  border:1px solid var(--border);
-}
+/* empty */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:13px;padding:32px;text-align:center;}
+.empty-icon{width:64px;height:64px;background:var(--surface2);border-radius:20px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);box-shadow:var(--sh);}
 .empty-icon svg{width:28px;height:28px;fill:var(--text4);}
-.empty h2{font-size:16px;font-weight:600;color:var(--text2);}
-.empty p{font-size:13px;color:var(--text3);line-height:1.7;max-width:240px;}
-.ftags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:2px;}
-.ftag2{
-  background:var(--accent-light);color:var(--accent);
-  font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;
-  font-family:'Geist Mono',monospace;border:1px solid var(--accent-border);
-}
-.drop-hint{
-  border:1.5px dashed var(--border2);border-radius:10px;
-  padding:10px 18px;font-size:12px;color:var(--text4);
-  display:flex;align-items:center;gap:7px;margin-top:4px;
-  background:var(--surface2);
-}
-.drop-hint svg{width:13px;height:13px;fill:var(--text4);}
+.empty h2{font-size:15px;font-weight:700;color:var(--text2);}
+.empty p{font-size:12.5px;color:var(--text3);line-height:1.7;max-width:230px;}
+.empty-tags{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:2px;}
+.etag{background:var(--accent-light);color:var(--accent);font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px;font-family:'JetBrains Mono',monospace;border:1px solid var(--accent-border);}
+.drop-hint{border:1.5px dashed var(--border2);border-radius:10px;padding:9px 16px;font-size:12px;color:var(--text4);display:flex;align-items:center;gap:6px;margin-top:2px;background:var(--surface2);}
+.drop-hint svg{width:12px;height:12px;fill:var(--text4);}
 
 /* progress */
-#pb{display:none;position:fixed;top:52px;left:0;right:0;height:2px;background:var(--border);z-index:99;}
-#pf{height:100%;background:linear-gradient(90deg,#3b82f6,#6366f1);width:0%;transition:width .18s;border-radius:0 2px 2px 0;}
+#pb{display:none;position:fixed;top:54px;left:0;right:0;height:2px;background:var(--border);z-index:99;}
+#pf{height:100%;background:linear-gradient(90deg,#3b6ef5,#6366f1);width:0%;transition:width .18s;}
 
 /* drag overlay */
-#drag-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(255,255,255,.85);z-index:999;
-  align-items:center;justify-content:center;
-  backdrop-filter:blur(6px);
-}
+#drag-overlay{display:none;position:fixed;inset:0;background:rgba(240,242,247,.88);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
 #drag-overlay.show{display:flex;}
-.dbox{
-  border:2px dashed var(--accent);border-radius:20px;
-  padding:48px 72px;text-align:center;
-  background:var(--surface);box-shadow:var(--shadow-lg);
-}
-.dbox svg{width:40px;height:40px;fill:var(--accent);margin-bottom:14px;}
+.dbox{border:2px dashed var(--accent);border-radius:20px;padding:50px 80px;text-align:center;background:#fff;box-shadow:var(--sh3);}
+.dbox svg{width:44px;height:44px;fill:var(--accent);margin-bottom:14px;}
 .dbox h2{font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px;}
 .dbox p{font-size:13px;color:var(--text3);}
 
-/* virtual scroll notice */
-#scroll-notice{
-  text-align:center;font-size:11.5px;color:var(--text4);
-  padding:12px;font-family:'Geist Mono',monospace;
-  border-top:1px solid var(--border);
+/* toast */
+#toast{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:var(--sb);color:var(--sb-text);
+  padding:11px 18px;border-radius:var(--r);
+  font-size:13px;font-weight:500;
+  box-shadow:var(--sh3);
+  opacity:0;transform:translateY(10px);
+  transition:opacity .25s,transform .25s;
+  pointer-events:none;max-width:300px;
+  border-left:3px solid var(--accent);
 }
+#toast.show{opacity:1;transform:translateY(0);}
+#toast.warn{border-left-color:#f59e0b;}
+#toast.err{border-left-color:#ef4444;}
+
+/* limit modal */
+#limit-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+#limit-modal.show{display:flex;}
+.modal-box{background:var(--surface);border-radius:var(--rm);padding:28px;max-width:360px;width:90%;box-shadow:var(--sh3);text-align:center;}
+.modal-icon{width:52px;height:52px;background:var(--amber-bg);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.modal-icon svg{width:24px;height:24px;fill:var(--amber);}
+.modal-box h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.modal-box p{font-size:13px;color:var(--text3);line-height:1.7;margin-bottom:18px;}
+.modal-btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Plus Jakarta Sans',sans-serif;background:var(--accent);color:#fff;transition:opacity .15s;}
+.modal-btn:hover{opacity:.88;}
 
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
 ::-webkit-scrollbar-thumb:hover{background:#b0bac9;}
+
+/* account color dots */
+.dot-0{background:#3b6ef5;} .dot-1{background:#0d9e6e;} .dot-2{background:#c97a10;}
+.tag-0{background:#eef3ff;color:#3b6ef5;border-color:#c0d0fb;}
+.tag-1{background:#edfaf5;color:#0d9e6e;border-color:#a7e8cf;}
+.tag-2{background:#fff8eb;color:#c97a10;border-color:#fcd99a;}
 </style>
 </head>
 <body>
 
 <div id="pb"><div id="pf"></div></div>
-
 <div id="drag-overlay">
   <div class="dbox">
     <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
     <h2>Drop your backup folder</h2>
-    <p>Release to load all emails</p>
+    <p>Release to add as a new account</p>
+  </div>
+</div>
+<div id="toast"></div>
+<div id="limit-modal">
+  <div class="modal-box">
+    <div class="modal-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+    <h3>Account Limit Reached</h3>
+    <p>You can have up to <strong>3 accounts</strong> loaded at once. Please remove an existing account to add a new one.</p>
+    <button class="modal-btn" onclick="document.getElementById('limit-modal').classList.remove('show')">Got it</button>
   </div>
 </div>
 
+<input type="file" id="file-input" webkitdirectory multiple/>
+
 <div id="topbar">
   <div class="logo">
-    <div class="logo-mark">
-      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-    </div>
+    <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
     MailVault
   </div>
   <div class="vd"></div>
-  <button class="tb-btn primary" onclick="document.getElementById('file-input').click()">
-    <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
-    Upload Folder
+  <div id="acct-tabs"></div>
+  <button class="add-acct-btn" id="add-btn" onclick="triggerUpload()">
+    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    Add Account
   </button>
-  <button class="tb-btn danger" id="clear-btn" onclick="clearAll()" style="display:none">
-    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-    Clear
-  </button>
-  <input type="file" id="file-input" webkitdirectory multiple/>
   <div class="vd"></div>
   <div id="tsearch">
     <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-    <input type="text" id="si" placeholder="Search emails…" oninput="doSearch()"/>
+    <input type="text" id="si" placeholder="Search…" oninput="doSearch()"/>
   </div>
-  <div id="tinfo">No backup loaded</div>
+  <div id="tinfo">No accounts</div>
 </div>
 
 <div id="main">
@@ -431,39 +389,31 @@ body{
       All Mail <span class="ct" id="ca">0</span>
     </div>
     <div id="df"></div>
-    <div id="sb-bottom"></div>
   </div>
-
   <div id="lp">
     <div id="lh">
-      <div id="lh-left">
-        <h3 id="lt">All Mail</h3>
-        <span id="lc">0 emails</span>
-      </div>
+      <span id="lh-title">All Mail</span>
+      <span id="lc">0 emails</span>
     </div>
     <div id="el">
-      <div class="empty" id="ws">
+      <div class="empty">
         <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-        <h2>No backup loaded</h2>
-        <p>Upload a folder or drag & drop it anywhere on this page</p>
-        <div class="ftags">
-          <span class="ftag2">.mbox</span>
-          <span class="ftag2">.eml</span>
-          <span class="ftag2">.msg</span>
-          <span class="ftag2">maildir</span>
-          <span class="ftag2">any format</span>
+        <h2>No accounts loaded</h2>
+        <p>Click "Add Account" or drag & drop a backup folder</p>
+        <div class="empty-tags">
+          <span class="etag">.mbox</span><span class="etag">.eml</span>
+          <span class="etag">.msg</span><span class="etag">maildir</span>
         </div>
         <div class="drop-hint">
           <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
-          Drag & drop your folder here
+          Drag & drop here
         </div>
       </div>
     </div>
   </div>
-
   <div id="dp">
     <div id="db">
-      <div class="empty" id="ed">
+      <div class="empty">
         <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
         <p>Select an email to read it</p>
       </div>
@@ -472,30 +422,41 @@ body{
 </div>
 
 <script>
-// ─── STATE ─────────────────────────────────────────────────────────────────────
-let allEmails=[], foldersMap={}, currentFolder='__all__', searchQuery='', selectedEmail=null;
-let currentViewMode='html';
-// Virtual scroll state
-const PAGE=80;
-let renderedCount=0;
-let currentList=[];
+// ═══════════════════════════════════════════════════════════════════
+// MULTI-ACCOUNT STATE
+// ═══════════════════════════════════════════════════════════════════
+const MAX_ACCOUNTS = 3;
+const ACCT_COLORS = ['#3b6ef5','#0d9e6e','#c97a10'];
 
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
+// accounts[i] = { id, name, color, emails[], foldersMap{} }
+let accounts = [];
+let activeAcctId = null;
+
+// VIEW STATE
+let currentFolder = '__all__';
+let searchQuery = '';
+let selectedEmail = null;
+let currentViewMode = 'html';
+let currentList = [];
+let renderedCount = 0;
+const PAGE = 80;
+
+// ═══════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function decodeQP(s){return s.replace(/=\r?\n/g,'').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));}
-function decodeB64(s){try{return atob(s.replace(/\s+/g,''));}catch{return s;}}
-function decodeB64Bytes(s){
+function decodeB64str(s){try{return atob(s.replace(/\s+/g,''));}catch{return s;}}
+function decodeB64bytes(s){
   const b=s.replace(/\s+/g,'');
-  try{
-    const bin=atob(b);const arr=new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return arr;
-  }catch{return new Uint8Array(0);}
+  try{const bin=atob(b);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a;}
+  catch{return new Uint8Array(0);}
 }
 function decodeRFC2047(s){
   if(!s)return '';
   return s.replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g,(_,cs,enc,data)=>{
     try{
-      if(enc.toUpperCase()==='B'){const b=decodeB64(data);return decodeURIComponent(escape(b));}
+      if(enc.toUpperCase()==='B'){const b=decodeB64str(data);return decodeURIComponent(escape(b));}
       if(enc.toUpperCase()==='Q'){const q=data.replace(/_/g,' ').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));return decodeURIComponent(escape(q));}
     }catch{}return data;
   });
@@ -503,19 +464,21 @@ function decodeRFC2047(s){
 function stripHtml(s){
   return s.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'')
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'')
-    .replace(/<br\s*\/?>/gi,'\n').replace(/<\/p>/gi,'\n\n').replace(/<\/div>/gi,'\n')
+    .replace(/<br\s*\/?>/gi,'\n').replace(/<\/p>/gi,'\n\n').replace(/<\/div>/gi,'\n').replace(/<\/tr>/gi,'\n')
     .replace(/<[^>]+>/g,'')
-    .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'")
+    .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&#\d+;/g,'')
     .replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
 }
 function extractName(from){
   if(!from)return 'Unknown';
   const m=from.match(/^"?([^"<]+?)"?\s*</);if(m)return m[1].trim();
-  const m2=from.match(/([^@<\s]+)@/);return m2?m2[1]:from.slice(0,30);
+  const m2=from.match(/([^@<\s,]+@[^@<\s,>]+)/);if(m2)return m2[1];
+  return from.trim().slice(0,40);
 }
 function extractEmail(from){
   const m=(from||'').match(/<([^>]+)>/);if(m)return m[1];
-  if(from&&from.includes('@'))return from.trim();return '';
+  const m2=(from||'').match(/([^\s<>,]+@[^\s<>,>]+)/);if(m2)return m2[1];
+  return '';
 }
 function fmtDate(d){
   if(!d)return '';
@@ -525,10 +488,17 @@ function fmtDateFull(d){
   if(!d)return '—';
   try{const dt=new Date(d);if(isNaN(dt))return d;return dt.toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch{return String(d);}
 }
-function fmtSize(b){if(!b||b<0)return '';if(b<1024)return b+'B';if(b<1048576)return(b/1024).toFixed(1)+'KB';return(b/1048576).toFixed(1)+'MB';}
+function fmtSize(b){if(!b||b<=0)return '';if(b<1024)return b+'B';if(b<1048576)return(b/1024).toFixed(1)+'KB';return(b/1048576).toFixed(1)+'MB';}
 function escReg(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function showToast(msg,type='info'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='show '+(type==='warn'?'warn':type==='err'?'err':'');
+  clearTimeout(t._timer);t._timer=setTimeout(()=>t.className='',3000);
+}
 
-// ─── FOLDER HELPERS ────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// FOLDER META
+// ═══════════════════════════════════════════════════════════════════
 const FICONS={
   inbox:`<svg viewBox="0 0 24 24"><path d="M19 3H4.99C3.89 3 3 3.9 3 5L2.99 19c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.34 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/></svg>`,
   sent:`<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`,
@@ -539,12 +509,12 @@ const FICONS={
   default:`<svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>`
 };
 const FCOLORS={
-  inbox:['#ecfdf5','#059669'],sent:['#eff6ff','#2563eb'],spam:['#fef2f2','#dc2626'],
-  trash:['#f9fafb','#6b7280'],archive:['#fffbeb','#d97706'],drafts:['#f5f3ff','#7c3aed'],
-  default:['#eff4ff','#4f46e5']
+  inbox:['#edfaf5','#0d9e6e'],sent:['#eef3ff','#3b6ef5'],spam:['#fff1f1','#d42b2b'],
+  trash:['#f7f8fc','#64748b'],archive:['#fff8eb','#c97a10'],drafts:['#f4eeff','#6d35d9'],
+  default:['#eef3ff','#3b6ef5']
 };
-function ficon(n){const k=n.toLowerCase();for(const[kw,v]of Object.entries(FICONS))if(k.includes(kw))return v;return FICONS.default;}
-function fcolor(n){const k=n.toLowerCase();for(const[kw,v]of Object.entries(FCOLORS))if(k.includes(kw))return v;return FCOLORS.default;}
+function ficon(n){const k=(n||'').toLowerCase();for(const[kw,v]of Object.entries(FICONS))if(k.includes(kw))return v;return FICONS.default;}
+function fcolor(n){const k=(n||'').toLowerCase();for(const[kw,v]of Object.entries(FCOLORS))if(k.includes(kw))return v;return FCOLORS.default;}
 function normFolder(raw){
   const n=(raw||'').toLowerCase().trim();
   if(n.includes('inbox')||n==='cur'||n==='new'||n==='tmp')return 'Inbox';
@@ -553,392 +523,546 @@ function normFolder(raw){
   if(n.includes('trash')||n.includes('delet'))return 'Trash';
   if(n.includes('archive'))return 'Archive';
   if(n.includes('draft'))return 'Drafts';
-  if(!raw||raw.trim()==='')return 'Inbox';
+  if(!raw||!raw.trim())return 'Inbox';
   return raw.charAt(0).toUpperCase()+raw.slice(1);
 }
 
-// ─── MIME PARSER ───────────────────────────────────────────────────────────────
-function parseMimePart(raw){
-  const lines=raw.split(/\r?\n/);
-  const headers={};
-  let i=0;
-  if(lines[0]&&lines[0].startsWith('From '))i=1;
-  while(i<lines.length){
-    const line=lines[i];
-    if(line.trim()===''){i++;break;}
-    const m=line.match(/^([\w-]+)\s*:\s*(.*)$/);
-    if(m){
-      let key=m[1].toLowerCase(),val=m[2];i++;
-      while(i<lines.length&&lines[i]&&/^[ \t]/.test(lines[i])){val+=' '+lines[i].trim();i++;}
-      if(!headers[key])headers[key]=val;
-    }else{i++;}
+// ═══════════════════════════════════════════════════════════════════
+// MIME / RFC-2822 PARSER  (fixed: proper header+body separation)
+// ═══════════════════════════════════════════════════════════════════
+function parseHeaders(raw){
+  // Returns {headers:{}, bodyStart:number (line index after blank line)}
+  const lines = raw.split(/\r?\n/);
+  const headers = {};
+  let i = 0;
+  // skip mbox envelope line
+  if(lines[0] && lines[0].startsWith('From ')) i = 1;
+  while(i < lines.length){
+    const line = lines[i];
+    // blank line = header/body separator
+    if(line.trim() === ''){ i++; break; }
+    // fold check first
+    const hm = line.match(/^([\w-]+)\s*:\s*([\s\S]*)$/);
+    if(hm){
+      let key = hm[1].toLowerCase();
+      let val = hm[2];
+      i++;
+      // folded header lines start with whitespace
+      while(i < lines.length && lines[i] && /^[ \t]/.test(lines[i])){
+        val += ' ' + lines[i].trim(); i++;
+      }
+      // keep FIRST occurrence for most, but collect ALL Received: headers
+      if(key === 'received'){
+        if(!headers['received-list']) headers['received-list'] = [];
+        headers['received-list'].push(val.trim());
+      } else if(!headers[key]){
+        headers[key] = val;
+      }
+    } else { i++; }
   }
-  return{headers,body:lines.slice(i).join('\n')};
+  const bodyLines = lines.slice(i);
+  return { headers, body: bodyLines.join('\n'), bodyLines };
 }
-function getMimeParam(h,p){const re=new RegExp(p+'\\s*=\\s*"?([^";\\s]+)"?','i');const m=(h||'').match(re);return m?m[1]:null;}
 
-function walkMime(raw,depth){
-  const{headers,body}=parseMimePart(raw);
-  const ct=headers['content-type']||'text/plain';
-  const cte=(headers['content-transfer-encoding']||'').toLowerCase().trim();
-  const cd=headers['content-disposition']||'';
-  const mimeType=ct.split(';')[0].toLowerCase().trim();
-  const boundary=getMimeParam(ct,'boundary');
-  const name=getMimeParam(cd,'filename')||getMimeParam(ct,'name')||null;
-  const isAtt=cd.toLowerCase().startsWith('attachment')||(name&&!cd.toLowerCase().startsWith('inline'));
+function getMimeParam(h, p){
+  const re = new RegExp(p + '\\s*=\\s*(?:"([^"]*)"|(\\S+?)(?:;|$))', 'i');
+  const m = (h||'').match(re);
+  return m ? (m[1]||m[2]||'').trim() : null;
+}
 
-  if(mimeType.startsWith('multipart/')&&boundary){
-    const sep=new RegExp('--'+escReg(boundary)+'(?:--)?','g');
-    const parts=body.split(sep).slice(1);
-    const result={textBody:'',htmlBody:'',attachments:[],received:[]};
-    for(const part of parts){
-      if(part.trim()===''||part.trim()==='--')continue;
-      const sub=walkMime(part,depth+1);
-      if(!result.htmlBody&&sub.htmlBody)result.htmlBody=sub.htmlBody;
-      if(!result.textBody&&sub.textBody)result.textBody=sub.textBody;
+// Recursively walk MIME tree
+function walkMime(raw){
+  const { headers, body } = parseHeaders(raw);
+  const ct  = headers['content-type'] || 'text/plain';
+  const cte = (headers['content-transfer-encoding'] || '').toLowerCase().trim();
+  const cd  = headers['content-disposition'] || '';
+  const mimeType = ct.split(';')[0].toLowerCase().trim();
+  const boundary = getMimeParam(ct, 'boundary');
+  const nameFromCd = getMimeParam(cd, 'filename') || getMimeParam(cd, 'name');
+  const nameFromCt = getMimeParam(ct, 'name');
+  const attName = nameFromCd || nameFromCt || null;
+  const isAtt = /^attachment/i.test(cd.trim()) || (attName && !/^inline/i.test(cd.trim()));
+
+  // ── multipart ──
+  if(mimeType.startsWith('multipart/') && boundary){
+    const sep = new RegExp('--' + escReg(boundary) + '(?:--)?\\r?\\n?', 'g');
+    const rawParts = body.split(sep).slice(1);
+    const result = { textBody:'', htmlBody:'', attachments:[] };
+    for(const part of rawParts){
+      const trimmed = part.trim();
+      if(!trimmed || trimmed === '--') continue;
+      const sub = walkMime(part);
+      // prefer html, fall back to text
+      if(!result.htmlBody && sub.htmlBody) result.htmlBody = sub.htmlBody;
+      if(!result.textBody && sub.textBody) result.textBody = sub.textBody;
       result.attachments.push(...sub.attachments);
     }
     return result;
   }
 
-  let decoded=body;
-  if(cte==='quoted-printable')decoded=decodeQP(body);
-  else if(cte==='base64'){
-    if(isAtt||!mimeType.startsWith('text/')){
-      const rawB64=body.replace(/\s+/g,'');
-      return{textBody:'',htmlBody:'',attachments:[{
-        name:name||'attachment',mimeType,
-        data:rawB64,encoding:'base64',
-        size:Math.floor(rawB64.length*0.75)
-      }],received:[]};
+  // ── decode body ──
+  let decoded = body;
+  if(cte === 'quoted-printable'){
+    decoded = decodeQP(body);
+  } else if(cte === 'base64'){
+    const b64 = body.replace(/\s+/g,'');
+    if(isAtt || !mimeType.startsWith('text/')){
+      // binary attachment
+      return { textBody:'', htmlBody:'', attachments:[{
+        name: attName || 'attachment',
+        mimeType: mimeType,
+        data: b64, encoding: 'base64',
+        size: Math.floor(b64.length * 0.75)
+      }]};
     }
-    try{decoded=decodeURIComponent(escape(decodeB64(body)));}catch{decoded=body;}
+    try{ decoded = decodeURIComponent(escape(decodeB64str(b64))); } catch{ decoded = body; }
   }
 
-  if(isAtt&&name){
-    return{textBody:'',htmlBody:'',attachments:[{name,mimeType,data:decoded,encoding:cte,size:decoded.length}],received:[]};
+  // ── named attachment ──
+  if(isAtt && attName){
+    return { textBody:'', htmlBody:'', attachments:[{
+      name: attName, mimeType: mimeType,
+      data: decoded, encoding: cte, size: decoded.length
+    }]};
   }
-  if(mimeType==='text/html')return{textBody:'',htmlBody:decoded,attachments:[],received:[]};
-  return{textBody:decoded,htmlBody:'',attachments:[],received:[]};
+
+  // ── html part ──
+  if(mimeType === 'text/html'){
+    return { textBody:'', htmlBody: decoded, attachments:[] };
+  }
+  // ── plain text ──
+  return { textBody: decoded, htmlBody:'', attachments:[] };
 }
 
-// ─── FULL EMAIL PARSER ────────────────────────────────────────────────────────
-function parseRFC2822Full(raw,folder){
-  if(!raw||raw.length<10)return null;
-  const{headers}=parseMimePart(raw);
+function parseEmail(raw, folder, acctId){
+  if(!raw || raw.length < 10) return null;
 
-  const from    =decodeRFC2047(headers['from']||'');
-  const to      =decodeRFC2047(headers['to']||'');
-  const cc      =decodeRFC2047(headers['cc']||'');
-  const replyTo =decodeRFC2047(headers['reply-to']||'');
-  const subject =decodeRFC2047(headers['subject']||'(No subject)');
-  const date    =headers['date']||headers['delivery-date']||'';
-  const msgId   =headers['message-id']||'';
-  const ct      =headers['content-type']||'text/plain';
+  const { headers, body } = parseHeaders(raw);
 
-  // Collect all Received: headers (routing chain)
-  const receivedHeaders=[];
-  const rawLines=raw.split(/\r?\n/);
-  let i=rawLines[0]&&rawLines[0].startsWith('From ')?1:0;
-  while(i<rawLines.length){
-    if(rawLines[i].trim()==='')break;
-    const m=rawLines[i].match(/^([\w-]+)\s*:\s*(.*)$/);
-    if(m&&m[1].toLowerCase()==='received'){
-      let val=m[2];i++;
-      while(i<rawLines.length&&rawLines[i]&&/^[ \t]/.test(rawLines[i])){val+=' '+rawLines[i].trim();i++;}
-      receivedHeaders.push(val.trim());
-    }else{i++;}
+  // Decode header fields
+  const from    = decodeRFC2047(headers['from'] || '');
+  const to      = decodeRFC2047(headers['to'] || '');
+  const cc      = decodeRFC2047(headers['cc'] || '');
+  const replyTo = decodeRFC2047(headers['reply-to'] || '');
+  const subject = decodeRFC2047(headers['subject'] || '(No subject)');
+  const date    = headers['date'] || headers['delivery-date'] || '';
+  const msgId   = headers['message-id'] || '';
+  const ct      = headers['content-type'] || 'text/plain';
+  const cte     = (headers['content-transfer-encoding'] || '').toLowerCase().trim();
+  const receivedHeaders = headers['received-list'] || [];
+
+  // Must have SOMETHING to be a real email
+  if(!from && !to && !date && subject === '(No subject)') return null;
+
+  // Walk MIME tree
+  const walked = walkMime(raw);
+  let htmlBody = walked.htmlBody || '';
+  let textBody = walked.textBody || '';
+
+  // FALLBACK: if walkMime found nothing (single-part email), decode body directly
+  if(!htmlBody && !textBody){
+    let decoded = body;
+    if(cte === 'quoted-printable') decoded = decodeQP(body);
+    else if(cte === 'base64'){
+      try{ decoded = decodeURIComponent(escape(decodeB64str(body.replace(/\s+/g,'')))); } catch{ decoded = body; }
+    }
+    if(ct.toLowerCase().includes('html')) htmlBody = decoded;
+    else textBody = decoded;
   }
 
-  if(!from&&subject==='(No subject)'&&!date)return null;
+  // Strip raw Received/header lines that leaked into body (common in malformed .eml)
+  // Only strip if the body starts with what looks like headers (no real content before them)
+  let cleanText = textBody.trim();
+  // Remove leading header-like lines only if there's no real body content mixed in
+  cleanText = cleanText.replace(/^(Received|X-[A-Za-z-]+|Authentication-Results|DKIM-Signature|ARC-[A-Za-z-]+|Return-Path|Delivered-To)\s*:[\s\S]*?\n(?=\S|\n)/gm,'').trim();
+  // Final plaintext fallback from HTML
+  if(!cleanText && htmlBody) cleanText = stripHtml(htmlBody);
 
-  const walked=walkMime(raw,0);
-  let htmlBody=walked.htmlBody||'';
-  let textBody=walked.textBody||'';
-
-  if(!htmlBody&&!textBody){
-    const cte=(headers['content-transfer-encoding']||'').toLowerCase().trim();
-    const lines=raw.split(/\r?\n/);
-    let bi=lines[0]&&lines[0].startsWith('From ')?1:0;
-    let inH=true;const bodyLines=[];
-    for(let j=bi;j<lines.length;j++){if(inH){if(lines[j].trim()==='')inH=false;}else{bodyLines.push(lines[j]);}}
-    let body=bodyLines.join('\n');
-    if(cte==='quoted-printable')body=decodeQP(body);
-    else if(cte==='base64'){try{body=decodeURIComponent(escape(decodeB64(body)));}catch{}}
-    if(ct.toLowerCase().includes('html'))htmlBody=body;
-    else textBody=body;
-  }
-
-  const plainBody=(textBody||stripHtml(htmlBody)||'').trim();
-
-  return{
-    from,to,cc,replyTo,subject,date,msgId,folder,
-    htmlBody:htmlBody.trim(),
-    textBody:plainBody,
-    attachments:walked.attachments||[],
+  return {
+    from, to, cc, replyTo, subject, date, msgId, folder, acctId,
+    htmlBody: htmlBody.trim(),
+    textBody: cleanText,
+    attachments: walked.attachments || [],
     receivedHeaders,
-    hasHtml:!!htmlBody.trim(),
-    hasAttachments:(walked.attachments||[]).length>0
+    hasHtml: !!htmlBody.trim(),
+    hasAttachments: (walked.attachments || []).length > 0
   };
 }
 
-function splitMbox(text){return text.split(/(?=^From\s+\S)/m);}
+function splitMbox(text){ return text.split(/(?=^From\s+\S)/m); }
 
-function parseFile(text,filename,folder){
-  const emails=[];
-  if(!text||text.length<5)return emails;
-  const trimmed=text.trimStart();
-  if(trimmed.startsWith('From ')&&text.includes('\nFrom ')){
-    const parts=splitMbox(text);
-    for(const part of parts){const e=parseRFC2822Full(part,folder);if(e)emails.push(e);}
-    if(emails.length>0)return emails;
+function parseFile(text, filename, folder, acctId){
+  const emails = [];
+  if(!text || text.length < 5) return emails;
+  const trimmed = text.trimStart();
+
+  // mbox
+  if(trimmed.startsWith('From ') && text.includes('\nFrom ')){
+    const parts = splitMbox(text);
+    for(const part of parts){ const e = parseEmail(part, folder, acctId); if(e) emails.push(e); }
+    if(emails.length > 0) return emails;
   }
-  if(/^(From|To|Subject|Date|MIME-Version|Content-Type)\s*:/im.test(trimmed.slice(0,2000))){
-    const e=parseRFC2822Full(text,folder);if(e)emails.push(e);
-    if(emails.length>0)return emails;
+  // single RFC-2822
+  if(/^(From|To|Subject|Date|MIME-Version|Content-Type|Message-ID|Return-Path|Received)\s*:/im.test(trimmed.slice(0,3000))){
+    const e = parseEmail(text, folder, acctId); if(e) emails.push(e);
+    if(emails.length > 0) return emails;
   }
-  if(/^Date\s*:/im.test(trimmed.slice(0,500))){
-    const e=parseRFC2822Full('From: unknown\n'+text,folder);if(e)emails.push(e);
-    if(emails.length>0)return emails;
+  // maildir (starts with Date: or Received:)
+  if(/^(Date|Received)\s*:/im.test(trimmed.slice(0,600))){
+    const e = parseEmail('From: unknown\n' + text, folder, acctId); if(e) emails.push(e);
+    if(emails.length > 0) return emails;
   }
-  if(text.length>20&&!/[\x00-\x08\x0e-\x1f]/.test(text.slice(0,200))){
-    emails.push({from:'',to:'',cc:'',replyTo:'',subject:filename,date:'',folder,
-      htmlBody:'',textBody:text.slice(0,12000).trim(),receivedHeaders:[],
-      attachments:[],hasHtml:false,hasAttachments:false});
+  // plain text fallback
+  if(text.length > 20 && !/[\x00-\x08\x0e-\x1f]/.test(text.slice(0,200))){
+    emails.push({
+      from:'', to:'', cc:'', replyTo:'', subject: filename, date:'',
+      folder, acctId, htmlBody:'', textBody: text.slice(0,14000).trim(),
+      attachments:[], receivedHeaders:[], hasHtml:false, hasAttachments:false
+    });
   }
   return emails;
 }
 
-// ─── CLEAR ALL ────────────────────────────────────────────────────────────────
-function clearAll(){
-  allEmails=[];foldersMap={};currentFolder='__all__';
-  searchQuery='';selectedEmail=null;renderedCount=0;currentList=[];
-  document.getElementById('si').value='';
-  document.getElementById('tinfo').textContent='No backup loaded';
-  document.getElementById('ca').textContent='0';
-  document.getElementById('df').innerHTML='';
-  document.getElementById('lt').textContent='All Mail';
-  document.getElementById('lc').textContent='0 emails';
-  document.getElementById('el').innerHTML=`<div class="empty" id="ws">
-    <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-    <h2>No backup loaded</h2>
-    <p>Upload a folder or drag & drop it anywhere on this page</p>
-    <div class="ftags"><span class="ftag2">.mbox</span><span class="ftag2">.eml</span><span class="ftag2">.msg</span><span class="ftag2">maildir</span></div>
-  </div>`;
-  clearDetail();
-  document.getElementById('clear-btn').style.display='none';
-  document.querySelectorAll('.fi').forEach(f=>f.classList.remove('active'));
-  document.querySelector('.fi[data-folder="__all__"]').classList.add('active');
+// ═══════════════════════════════════════════════════════════════════
+// FILE LOADING
+// ═══════════════════════════════════════════════════════════════════
+function triggerUpload(){
+  if(accounts.length >= MAX_ACCOUNTS){
+    document.getElementById('limit-modal').classList.add('show');
+    return;
+  }
+  document.getElementById('file-input').click();
 }
 
-// ─── FILE LOADING ──────────────────────────────────────────────────────────────
-document.getElementById('file-input').addEventListener('change',async ev=>{
-  await loadFiles(Array.from(ev.target.files));
-  ev.target.value=''; // CRITICAL: reset so same folder can be re-uploaded
+document.getElementById('file-input').addEventListener('change', async ev => {
+  const files = Array.from(ev.target.files);
+  ev.target.value = ''; // always reset
+  if(files.length > 0) await loadAccount(files);
 });
 
-async function loadFiles(files){
-  // Full reset before loading new backup
-  allEmails=[];foldersMap={};selectedEmail=null;renderedCount=0;currentList=[];
+async function loadAccount(files){
+  if(accounts.length >= MAX_ACCOUNTS){
+    document.getElementById('limit-modal').classList.add('show');
+    return;
+  }
 
-  const SKIP_EXT=/\.(jpg|jpeg|png|gif|bmp|webp|pdf|zip|gz|tar|rar|7z|exe|dll|so|db|sqlite|bin|dat)$/i;
-  const toProcess=files.filter(f=>{
-    const n=f.name.toLowerCase();
-    if(SKIP_EXT.test(n))return false;
-    if(f.size===0)return false;
-    // Removed 20MB limit — process all files
-    if(f.size>150*1024*1024)return false; // only skip truly huge single files
+  const acctId = 'acct_' + Date.now();
+  const colorIdx = accounts.length; // 0,1,2
+  const color = ACCT_COLORS[colorIdx];
+
+  // Derive account name from root folder name
+  const firstRel = (files[0].webkitRelativePath || files[0].name);
+  const rootName = firstRel.split('/')[0] || 'Account ' + (accounts.length+1);
+  const acctName = rootName.slice(0, 24);
+
+  const newAcct = { id: acctId, name: acctName, color, colorIdx, emails:[], foldersMap:{} };
+
+  const SKIP_EXT = /\.(jpg|jpeg|png|gif|bmp|webp|zip|gz|tar|rar|7z|exe|dll|so|db|sqlite|bin|dat|ico|svg|woff|woff2|ttf|otf|mp3|mp4|avi|mov)$/i;
+  const toProcess = files.filter(f => {
+    const n = f.name.toLowerCase();
+    if(SKIP_EXT.test(n)) return false;
+    if(f.size === 0) return false;
+    if(f.size > 150*1024*1024) return false;
     return true;
   });
 
   setProgress(5);
-  let done=0;
-  const BATCH=50; // process in batches to keep UI responsive
-  for(let b=0;b<toProcess.length;b+=BATCH){
-    const batch=toProcess.slice(b,b+BATCH);
+  let done = 0;
+  const BATCH = 60;
+
+  for(let b = 0; b < toProcess.length; b += BATCH){
+    const batch = toProcess.slice(b, b + BATCH);
     for(const f of batch){
-      const relPath=f.webkitRelativePath||f.name;
-      const parts=relPath.replace(/\\/g,'/').split('/');
-      let rawFolder='Inbox';
-      if(parts.length>=3){
-        const candidate=parts[parts.length-2];
-        if(['cur','new','tmp'].includes(candidate.toLowerCase())&&parts.length>=4)rawFolder=parts[parts.length-3];
-        else rawFolder=candidate;
-      }else if(parts.length===2)rawFolder=parts[0];
-      const folder=normFolder(rawFolder);
+      const relPath = f.webkitRelativePath || f.name;
+      const parts = relPath.replace(/\\/g, '/').split('/');
+      let rawFolder = 'Inbox';
+      if(parts.length >= 3){
+        const cand = parts[parts.length - 2];
+        if(['cur','new','tmp'].includes(cand.toLowerCase()) && parts.length >= 4) rawFolder = parts[parts.length - 3];
+        else rawFolder = cand;
+      } else if(parts.length === 2) rawFolder = parts[0];
+      const folder = normFolder(rawFolder);
       try{
-        const text=await f.text();
-        const parsed=parseFile(text,f.name,folder);
+        const text = await f.text();
+        const parsed = parseFile(text, f.name, folder, acctId);
         for(const e of parsed){
-          if(!foldersMap[folder])foldersMap[folder]=[];
-          foldersMap[folder].push(e);allEmails.push(e);
+          if(!newAcct.foldersMap[folder]) newAcct.foldersMap[folder] = [];
+          newAcct.foldersMap[folder].push(e);
+          newAcct.emails.push(e);
         }
-      }catch(err){console.warn('Error:',f.name,err);}
+      } catch(err){ console.warn('Error:', f.name, err); }
       done++;
     }
-    setProgress(5+Math.floor(done/toProcess.length*88));
-    await new Promise(r=>setTimeout(r,0)); // yield to browser
+    setProgress(5 + Math.floor(done / toProcess.length * 88));
+    await new Promise(r => setTimeout(r, 0));
   }
 
-  const sortFn=(a,b)=>new Date(b.date||0)-new Date(a.date||0);
-  allEmails.sort(sortFn);
-  for(const k of Object.keys(foldersMap))foldersMap[k].sort(sortFn);
+  const sortFn = (a,b) => new Date(b.date||0) - new Date(a.date||0);
+  newAcct.emails.sort(sortFn);
+  for(const k of Object.keys(newAcct.foldersMap)) newAcct.foldersMap[k].sort(sortFn);
 
-  setProgress(100);setTimeout(()=>setProgress(-1),400);
+  setProgress(100);
+  setTimeout(() => setProgress(-1), 400);
 
-  document.getElementById('tinfo').textContent=`${allEmails.length.toLocaleString()} emails · ${Object.keys(foldersMap).length} folders`;
-  document.getElementById('clear-btn').style.display='flex';
+  accounts.push(newAcct);
+  activeAcctId = acctId;
+  currentFolder = '__all__';
+  searchQuery = '';
+  document.getElementById('si').value = '';
+  selectedEmail = null;
+
+  renderAccountTabs();
   buildSidebar();
-  currentFolder='__all__';
-  document.querySelectorAll('.fi').forEach(f=>f.classList.remove('active'));
-  document.querySelector('.fi[data-folder="__all__"]').classList.add('active');
-  document.getElementById('lt').textContent='All Mail';
-  searchQuery='';document.getElementById('si').value='';
-  renderList();clearDetail();
+  renderList();
+  clearDetail();
+  showToast(`"${acctName}" loaded — ${newAcct.emails.length.toLocaleString()} emails`);
+  updateTinfo();
 }
 
-// ─── SIDEBAR ───────────────────────────────────────────────────────────────────
-function buildSidebar(){
-  document.getElementById('ca').textContent=allEmails.length.toLocaleString();
-  const df=document.getElementById('df');df.innerHTML='';
-  const order=['Inbox','Sent','Drafts','Archive','Spam','Trash'];
-  const sorted=[...order.filter(o=>foldersMap[o]),...Object.keys(foldersMap).filter(k=>!order.includes(k)).sort()];
-  if(sorted.length){const s=document.createElement('div');s.className='ss';s.textContent='By Folder';df.appendChild(s);}
-  for(const name of sorted){
-    const d=document.createElement('div');d.className='fi';d.dataset.folder=name;
-    d.innerHTML=ficon(name)+` ${esc(name)} <span class="ct">${foldersMap[name].length.toLocaleString()}</span>`;
-    d.addEventListener('click',()=>switchFolder(name,d));df.appendChild(d);
+function removeAccount(acctId, ev){
+  ev && ev.stopPropagation();
+  const idx = accounts.findIndex(a => a.id === acctId);
+  if(idx === -1) return;
+  const name = accounts[idx].name;
+  accounts.splice(idx, 1);
+  // reassign colorIdx
+  accounts.forEach((a,i) => { a.colorIdx = i; a.color = ACCT_COLORS[i]; });
+
+  if(activeAcctId === acctId){
+    activeAcctId = accounts.length > 0 ? accounts[0].id : null;
   }
+  currentFolder = '__all__';
+  selectedEmail = null;
+
+  renderAccountTabs();
+  buildSidebar();
+  renderList();
+  clearDetail();
+  updateTinfo();
+  showToast(`"${name}" removed`, 'warn');
 }
 
-function switchFolder(folder,el){
-  currentFolder=folder;selectedEmail=null;
-  document.querySelectorAll('.fi').forEach(f=>f.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('lt').textContent=folder==='__all__'?'All Mail':folder;
-  clearDetail();renderList();
+function switchAccount(acctId){
+  activeAcctId = acctId;
+  currentFolder = '__all__';
+  selectedEmail = null;
+  searchQuery = '';
+  document.getElementById('si').value = '';
+
+  renderAccountTabs();
+  buildSidebar();
+  renderList();
+  clearDetail();
 }
 
-// ─── LIST RENDERING (paginated / infinite scroll) ──────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// ACCOUNT TABS
+// ═══════════════════════════════════════════════════════════════════
+function renderAccountTabs(){
+  const wrap = document.getElementById('acct-tabs');
+  wrap.innerHTML = '';
+  for(const a of accounts){
+    const tab = document.createElement('div');
+    tab.className = 'acct-tab' + (a.id === activeAcctId ? ' active' : '');
+    tab.innerHTML = `
+      <span class="acct-dot" style="background:${a.color}"></span>
+      <span class="acct-name">${esc(a.name)}</span>
+      <span class="acct-ct">${a.emails.length.toLocaleString()}</span>
+      <span class="acct-del" onclick="removeAccount('${a.id}',event)" title="Remove account">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </span>`;
+    tab.addEventListener('click', () => switchAccount(a.id));
+    wrap.appendChild(tab);
+  }
+
+  // Show/hide add button
+  const addBtn = document.getElementById('add-btn');
+  addBtn.style.display = accounts.length >= MAX_ACCOUNTS ? 'none' : 'flex';
+}
+
+function updateTinfo(){
+  const total = accounts.reduce((s,a) => s + a.emails.length, 0);
+  document.getElementById('tinfo').textContent =
+    accounts.length === 0 ? 'No accounts' :
+    `${total.toLocaleString()} emails · ${accounts.length}/${MAX_ACCOUNTS} accounts`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════════════════════════
+function getActiveAccount(){
+  return accounts.find(a => a.id === activeAcctId) || null;
+}
+
+function getAllEmailsForView(){
+  const acct = getActiveAccount();
+  if(!acct) return [];
+  return acct.emails;
+}
+function getFoldersForView(){
+  const acct = getActiveAccount();
+  if(!acct) return {};
+  return acct.foldersMap;
+}
+
+function buildSidebar(){
+  const allCount = getAllEmailsForView().length;
+  document.getElementById('ca').textContent = allCount.toLocaleString();
+  const df = document.getElementById('df');
+  df.innerHTML = '';
+  const foldersMap = getFoldersForView();
+  const order = ['Inbox','Sent','Drafts','Archive','Spam','Trash'];
+  const sorted = [...order.filter(o => foldersMap[o]), ...Object.keys(foldersMap).filter(k => !order.includes(k)).sort()];
+  if(sorted.length){ const s=document.createElement('div');s.className='ss';s.textContent='By Folder';df.appendChild(s); }
+  for(const name of sorted){
+    const d = document.createElement('div');
+    d.className = 'fi' + (currentFolder === name ? ' active' : '');
+    d.dataset.folder = name;
+    d.innerHTML = ficon(name) + ` ${esc(name)} <span class="ct">${foldersMap[name].length.toLocaleString()}</span>`;
+    d.addEventListener('click', () => switchFolder(name, d));
+    df.appendChild(d);
+  }
+  // Update All Mail active state
+  document.querySelectorAll('.fi').forEach(f => f.classList.toggle('active', f.dataset.folder === currentFolder));
+}
+
+function switchFolder(folder, el){
+  currentFolder = folder; selectedEmail = null;
+  document.querySelectorAll('.fi').forEach(f => f.classList.toggle('active', f.dataset.folder === folder));
+  document.getElementById('lh-title').textContent = folder === '__all__' ? 'All Mail' : folder;
+  clearDetail(); renderList();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// LIST
+// ═══════════════════════════════════════════════════════════════════
 function getEmails(){
-  const base=currentFolder==='__all__'?allEmails:(foldersMap[currentFolder]||[]);
-  if(!searchQuery)return base;
-  const q=searchQuery.toLowerCase();
-  return base.filter(e=>(e.from+e.subject+(e.textBody||'').slice(0,500)+e.to).toLowerCase().includes(q));
+  const base = currentFolder === '__all__' ? getAllEmailsForView() : (getFoldersForView()[currentFolder] || []);
+  if(!searchQuery) return base;
+  const q = searchQuery.toLowerCase();
+  return base.filter(e => (e.from+e.subject+(e.textBody||'').slice(0,500)+e.to).toLowerCase().includes(q));
 }
 
 function renderList(){
-  currentList=getEmails();
-  renderedCount=0;
-  const el=document.getElementById('el');
-  document.getElementById('lc').textContent=currentList.length.toLocaleString()+' email'+(currentList.length!==1?'s':'');
-  if(currentList.length===0){
-    el.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><p>No emails found</p></div>';
+  currentList = getEmails();
+  renderedCount = 0;
+  const el = document.getElementById('el');
+  const count = currentList.length;
+  document.getElementById('lh-title').textContent = currentFolder === '__all__' ? 'All Mail' : currentFolder;
+  document.getElementById('lc').textContent = count.toLocaleString() + ' email' + (count !== 1 ? 's' : '');
+
+  if(count === 0){
+    const msg = accounts.length === 0 ? `<div class="empty">
+      <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+      <h2>No accounts loaded</h2><p>Click "Add Account" above to load a backup folder</p>
+      <div class="empty-tags"><span class="etag">.mbox</span><span class="etag">.eml</span><span class="etag">maildir</span></div>
+    </div>` : `<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><p>No emails found</p></div>`;
+    el.innerHTML = msg;
     return;
   }
-  el.innerHTML='';
-  appendRows(el, Math.min(PAGE, currentList.length));
-
-  // Infinite scroll
-  el.onscroll=function(){
-    if(el.scrollTop+el.clientHeight>=el.scrollHeight-50){
-      if(renderedCount<currentList.length)appendRows(el,Math.min(PAGE,currentList.length-renderedCount));
-    }
+  el.innerHTML = '';
+  appendRows(el, Math.min(PAGE, count));
+  el.onscroll = function(){
+    if(el.scrollTop + el.clientHeight >= el.scrollHeight - 80 && renderedCount < currentList.length)
+      appendRows(el, Math.min(PAGE, currentList.length - renderedCount));
   };
 }
 
 function appendRows(el, count){
-  const frag=document.createDocumentFragment();
-  for(let i=renderedCount;i<renderedCount+count;i++){
-    const e=currentList[i];
-    const div=document.createElement('div');
-    div.className='er';
-    const badges=[];
-    if(e.hasHtml)badges.push('<span class="badge badge-html">HTML</span>');
-    if(e.hasAttachments)badges.push(`<span class="badge badge-att">📎 ${e.attachments.length}</span>`);
-    div.innerHTML=`
-      <div class="er-t">
-        <span class="ef">${esc(extractName(e.from)||'(Unknown)')}</span>
-        <span class="ed">${fmtDate(e.date)}</span>
+  const frag = document.createDocumentFragment();
+  const acct = getActiveAccount();
+  for(let i = renderedCount; i < renderedCount + count; i++){
+    const e = currentList[i];
+    const div = document.createElement('div');
+    div.className = 'er' + (e === selectedEmail ? ' active' : '');
+    const badges = [];
+    if(e.hasHtml) badges.push('<span class="badge badge-html">HTML</span>');
+    if(e.hasAttachments) badges.push(`<span class="badge badge-att">📎 ${e.attachments.length}</span>`);
+    div.innerHTML = `
+      <div class="er-top">
+        <span class="er-from">${esc(extractName(e.from) || '(Unknown)')}</span>
+        <span class="er-date">${fmtDate(e.date)}</span>
       </div>
-      <div class="es">${esc(e.subject)}</div>
-      <div class="ep">${esc((e.textBody||'').replace(/\n/g,' ').slice(0,90))}</div>
-      ${badges.length?`<div class="er-badges">${badges.join('')}</div>`:''}`;
-    if(e===selectedEmail)div.classList.add('active');
-    div.addEventListener('click',(function(email,row){return()=>openEmail(email,row);})(e,div));
+      <div class="er-subj">${esc(e.subject)}</div>
+      <div class="er-prev">${esc((e.textBody||'').replace(/\s+/g,' ').slice(0,90))}</div>
+      ${badges.length ? `<div class="er-badges">${badges.join('')}</div>` : ''}`;
+    div.addEventListener('click', (function(email, row){ return () => openEmail(email, row); })(e, div));
     frag.appendChild(div);
   }
   el.appendChild(frag);
-  renderedCount+=count;
+  renderedCount += count;
 }
 
 function doSearch(){
-  searchQuery=document.getElementById('si').value;
-  selectedEmail=null;clearDetail();renderList();
+  searchQuery = document.getElementById('si').value;
+  selectedEmail = null; clearDetail(); renderList();
 }
 
-// ─── DETAIL ────────────────────────────────────────────────────────────────────
-function openEmail(e,row){
-  selectedEmail=e;
-  document.querySelectorAll('.er').forEach(r=>r.classList.remove('active'));
+// ═══════════════════════════════════════════════════════════════════
+// DETAIL
+// ═══════════════════════════════════════════════════════════════════
+function openEmail(e, row){
+  selectedEmail = e;
+  document.querySelectorAll('.er').forEach(r => r.classList.remove('active'));
   row.classList.add('active');
-  currentViewMode=e.hasHtml?'html':'text';
+  currentViewMode = e.hasHtml ? 'html' : 'text';
   renderDetail(e);
 }
 
+function formatAddr(raw){
+  if(!raw) return '<span style="color:var(--text4)">—</span>';
+  const name = extractName(raw);
+  const email = extractEmail(raw);
+  if(email && name && name !== email && !name.includes('@')){
+    return `<span class="addr-name">${esc(name)}</span><span class="addr-email">&lt;${esc(email)}&gt;</span>`;
+  }
+  return `<span class="addr-name">${esc(raw)}</span>`;
+}
+function formatAddrList(raw){
+  if(!raw) return '<span style="color:var(--text4)">—</span>';
+  // Split on comma but not commas inside angle brackets
+  const addrs = [];
+  let depth = 0, cur = '';
+  for(const ch of raw){ if(ch==='<')depth++; else if(ch==='>')depth--; if(ch===',' && depth===0){addrs.push(cur.trim());cur='';}else cur+=ch; }
+  if(cur.trim()) addrs.push(cur.trim());
+  if(addrs.length <= 1) return formatAddr(raw);
+  return addrs.map(formatAddr).join('<span style="color:var(--text4);margin:0 3px">·</span>');
+}
+
 function renderDetail(e){
-  const[bg,tc]=fcolor(e.folder);
+  const [bg,tc] = fcolor(e.folder);
+  const acct = accounts.find(a => a.id === e.acctId);
 
-  // Parse from/to names+emails
-  function formatAddr(raw){
-    if(!raw)return '<span style="color:var(--text4)">—</span>';
-    const name=extractName(raw);
-    const email=extractEmail(raw);
-    if(email&&name&&name!==email){
-      return `<span class="mv-from">${esc(name)}</span><span class="mv-email">&lt;${esc(email)}&gt;</span>`;
-    }
-    return `<span class="mv-from">${esc(raw)}</span>`;
-  }
-
-  // Multiple recipients
-  function formatAddrList(raw){
-    if(!raw)return '<span style="color:var(--text4)">—</span>';
-    const addrs=raw.split(/,(?=\s*[^,<>]+(?:<|$))/);
-    if(addrs.length<=1)return formatAddr(raw);
-    return addrs.map(a=>formatAddr(a.trim())).join('<span style="color:var(--text4)"> · </span>');
-  }
-
-  // Received headers section
-  let receivedHtml='';
-  if(e.receivedHeaders&&e.receivedHeaders.length>0){
-    const lines=e.receivedHeaders.map(r=>`<div style="margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border)">${esc(r)}</div>`).join('');
-    receivedHtml=`<div id="received-section">
-      <div class="received-toggle" onclick="toggleReceived(this)">
-        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-        Routing chain (${e.receivedHeaders.length} hop${e.receivedHeaders.length>1?'s':''})
-      </div>
-      <div id="received-list">${lines}</div>
-    </div>`;
+  // Routing chain
+  let routeHtml = '';
+  if(e.receivedHeaders && e.receivedHeaders.length > 0){
+    const lines = e.receivedHeaders.map(r => `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${esc(r)}</div>`).join('');
+    routeHtml = `<div class="route-toggle" onclick="toggleRoute(this)">
+      <svg class="chevron" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      Routing chain · ${e.receivedHeaders.length} hop${e.receivedHeaders.length>1?'s':''}
+    </div>
+    <div class="route-list">${lines}</div>`;
   }
 
   // Attachments
-  let attHtml='';
-  if(e.attachments&&e.attachments.length>0){
-    const globalIdx=allEmails.indexOf(e);
-    const items=e.attachments.map((a,i)=>{
-      const{icon,color}=attIcon(a.mimeType||'');
-      return `<div class="att-item" onclick="downloadAtt(${globalIdx},${i})">
-        <div class="att-icon" style="background:${color}">${icon}</div>
+  let attHtml = '';
+  if(e.attachments && e.attachments.length > 0){
+    // Store email in a temp global for download
+    window.__openEmail = e;
+    const items = e.attachments.map((a,i) => {
+      const {icon,bg:ab} = attIconData(a.mimeType||'');
+      return `<div class="att-item" onclick="downloadAttFromOpen(${i})">
+        <div class="att-icon" style="background:${ab}">${icon}</div>
         <div class="att-info">
           <div class="att-name">${esc(a.name||'attachment')}</div>
-          <div class="att-meta">${esc(a.mimeType||'file')} ${a.size?'· '+fmtSize(a.size):''}</div>
+          <div class="att-meta">${esc((a.mimeType||'file').split('/').pop())}${a.size?' · '+fmtSize(a.size):''}</div>
         </div>
         <div class="att-dl"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></div>
       </div>`;
     }).join('');
-    attHtml=`<div id="att-section">
-      <div id="att-title">
-        <svg viewBox="0 0 24 24" width="13" height="13" fill="var(--text3)"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/></svg>
+    attHtml = `<div id="att-section">
+      <div class="att-header">
+        <svg viewBox="0 0 24 24"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/></svg>
         Attachments (${e.attachments.length})
       </div>
       <div id="att-list">${items}</div>
@@ -946,58 +1070,69 @@ function renderDetail(e){
   }
 
   // View toolbar
-  const htmlBtn=e.hasHtml?`<button class="view-btn${currentViewMode==='html'?' active':''}" onclick="setView('html')">
+  const htmlBtn = e.hasHtml ? `<button class="view-btn${currentViewMode==='html'?' active':''}" onclick="setView('html')">
     <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
-    Rendered HTML</button>`:'';
-  const textBtn=`<button class="view-btn${currentViewMode==='text'?' active':''}" onclick="setView('text')">
+    Rendered HTML</button>` : '';
+  const textBtn = `<button class="view-btn${currentViewMode==='text'?' active':''}" onclick="setView('text')">
     <svg viewBox="0 0 24 24"><path d="M2.5 4v3h5v12h3V7h5V4h-13zm19 5h-9v3h3v7h3v-7h3V9z"/></svg>
     Plain Text</button>`;
 
-  let bodyHtml='';
-  if(currentViewMode==='html'&&e.hasHtml){
-    bodyHtml=`<div id="email-iframe-wrap"><iframe id="email-iframe" sandbox="allow-same-origin" scrolling="auto" frameborder="0"></iframe></div>`;
-  }else{
-    bodyHtml=`<div id="dc">${esc(e.textBody||'(No message body)')}</div>`;
+  // Body
+  let bodyHtml = '';
+  if(currentViewMode === 'html' && e.hasHtml){
+    bodyHtml = `<div id="email-iframe-wrap"><iframe id="email-iframe" sandbox="allow-same-origin" frameborder="0" scrolling="auto"></iframe></div>`;
+  } else {
+    const displayText = e.textBody || '(No message body)';
+    bodyHtml = `<div id="dc">${esc(displayText)}</div>`;
   }
 
-  // Build metadata rows  
-  const metaRows=[];
-  metaRows.push(`<div class="mr"><span class="ml">From</span><span class="mv">${formatAddr(e.from)}</span></div>`);
-  metaRows.push(`<div class="mr"><span class="ml">To</span><span class="mv">${formatAddrList(e.to)}</span></div>`);
-  if(e.cc)metaRows.push(`<div class="mr"><span class="ml">CC</span><span class="mv">${formatAddrList(e.cc)}</span></div>`);
-  if(e.replyTo&&e.replyTo!==e.from)metaRows.push(`<div class="mr"><span class="ml">Reply-To</span><span class="mv">${formatAddr(e.replyTo)}</span></div>`);
-  metaRows.push(`<div class="mr"><span class="ml">Date</span><span class="mv" style="font-family:'Geist Mono',monospace;font-size:12px">${fmtDateFull(e.date)}</span></div>`);
-  metaRows.push(`<div class="mr"><span class="ml">Folder</span><span class="mv"><span class="ftag" style="background:${bg};color:${tc}">${esc(e.folder)}</span></span></div>`);
-  if(e.msgId)metaRows.push(`<div class="mr"><span class="ml">Msg-ID</span><span class="mv" style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--text3)">${esc(e.msgId)}</span></div>`);
+  // Meta rows
+  const acctBadge = acct ? `<span class="ftag badge-acct tag-${acct.colorIdx}" style="">${esc(acct.name)}</span>` : '';
+  const metaRows = [
+    ['From', formatAddr(e.from)],
+    ['To', formatAddrList(e.to)],
+    e.cc ? ['CC', formatAddrList(e.cc)] : null,
+    e.replyTo && e.replyTo !== e.from ? ['Reply-To', formatAddr(e.replyTo)] : null,
+    ['Date', `<span class="meta-date">${fmtDateFull(e.date)}</span>`],
+    ['Folder', `<span class="ftag" style="background:${bg};color:${tc};border:1px solid ${tc}22">${esc(e.folder)}</span>${acctBadge?'&nbsp;&nbsp;'+acctBadge:''}`],
+    e.msgId ? ['Msg-ID', `<span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text3)">${esc(e.msgId)}</span>`] : null,
+  ].filter(Boolean);
 
-  document.getElementById('dp').innerHTML=`
+  const metaHtml = metaRows.map(([l,v]) =>
+    `<span class="meta-label">${l}</span><span class="meta-val">${v}</span>`
+  ).join('');
+
+  document.getElementById('dp').innerHTML = `
     <div id="dh">
       <div id="ds">${esc(e.subject)}</div>
-      <div id="dm">${metaRows.join('')}</div>
-      ${receivedHtml}
+      <div class="meta-grid">${metaHtml}</div>
+      ${routeHtml}
     </div>
-    ${(htmlBtn||textBtn)?`<div id="dtb">${htmlBtn}${textBtn}</div>`:''}
+    ${htmlBtn||textBtn ? `<div id="dtb">${htmlBtn}${textBtn}</div>` : ''}
     <div id="db">
       ${bodyHtml}
       ${attHtml}
     </div>`;
 
-  if(currentViewMode==='html'&&e.hasHtml){
-    requestAnimationFrame(()=>{
-      const iframe=document.getElementById('email-iframe');
-      if(!iframe)return;
-      const doc=iframe.contentDocument||iframe.contentWindow.document;
+  if(currentViewMode === 'html' && e.hasHtml){
+    requestAnimationFrame(() => {
+      const iframe = document.getElementById('email-iframe');
+      if(!iframe) return;
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
       doc.open();
       doc.write(`<!DOCTYPE html><html><head><meta charset="utf-8"/>
         <style>
           *{box-sizing:border-box;}
-          body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.65;color:#1a1a1a;margin:0;padding:16px 20px;word-break:break-word;}
+          html,body{margin:0;padding:0;}
+          body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.65;color:#1a1a1a;padding:18px 22px;word-break:break-word;background:#fff;}
           img{max-width:100%!important;height:auto!important;}
           a{color:#1d4ed8;}
-          table{border-collapse:collapse;max-width:100%;}
-          td,th{padding:4px 8px;}
-          pre,code{font-family:monospace;font-size:12px;background:#f5f5f5;border-radius:4px;padding:2px 4px;}
-          blockquote{border-left:3px solid #d0d0d0;margin:8px 0;padding-left:12px;color:#555;}
+          table{border-collapse:collapse;max-width:100%!important;}
+          td,th{padding:4px 8px;word-break:break-word;}
+          pre{font-family:monospace;font-size:12px;background:#f5f5f5;border-radius:4px;padding:10px;overflow-x:auto;white-space:pre-wrap;}
+          code{font-family:monospace;font-size:12px;background:#f5f5f5;border-radius:3px;padding:1px 4px;}
+          blockquote{border-left:3px solid #d0d0d0;margin:8px 0;padding-left:14px;color:#555;}
+          hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0;}
         </style>
       </head><body>${e.htmlBody}</body></html>`);
       doc.close();
@@ -1007,96 +1142,107 @@ function renderDetail(e){
 }
 
 function autoResizeIframe(iframe){
-  const resize=()=>{
+  const r = () => {
     try{
-      const h=iframe.contentDocument.body.scrollHeight;
-      iframe.style.height=Math.min(Math.max(h+32,150),6000)+'px';
+      const h = iframe.contentDocument.body.scrollHeight;
+      iframe.style.height = Math.min(Math.max(h + 32, 120), 8000) + 'px';
     }catch{}
   };
-  iframe.onload=resize;
-  setTimeout(resize,200);setTimeout(resize,800);
+  iframe.onload = r;
+  setTimeout(r, 150); setTimeout(r, 600); setTimeout(r, 1500);
 }
 
 function setView(mode){
-  if(!selectedEmail)return;
-  currentViewMode=mode;
+  if(!selectedEmail) return;
+  currentViewMode = mode;
   renderDetail(selectedEmail);
 }
 
-function toggleReceived(el){
+function toggleRoute(el){
   el.classList.toggle('open');
-  const list=document.getElementById('received-list');
-  if(list)list.classList.toggle('show');
+  const list = el.nextElementSibling;
+  if(list) list.classList.toggle('show');
 }
 
-// ─── ATTACHMENT DOWNLOAD ───────────────────────────────────────────────────────
-function downloadAtt(emailIdx,attIdx){
-  const email=allEmails[emailIdx];if(!email)return;
-  const att=email.attachments[attIdx];if(!att)return;
+// ═══════════════════════════════════════════════════════════════════
+// ATTACHMENT DOWNLOAD
+// ═══════════════════════════════════════════════════════════════════
+function downloadAttFromOpen(attIdx){
+  const e = window.__openEmail;
+  if(!e) return;
+  const att = e.attachments[attIdx];
+  if(!att) return;
   let blob;
   try{
-    if(att.encoding==='base64'||/^[A-Za-z0-9+/\s=]+$/.test(att.data.slice(0,100))){
-      blob=new Blob([decodeB64Bytes(att.data)],{type:att.mimeType||'application/octet-stream'});
-    }else{
-      blob=new Blob([att.data],{type:att.mimeType||'text/plain'});
+    if(att.encoding === 'base64' || /^[A-Za-z0-9+/\s=]{20,}$/.test(att.data.slice(0,200))){
+      blob = new Blob([decodeB64bytes(att.data)], {type: att.mimeType||'application/octet-stream'});
+    } else {
+      blob = new Blob([att.data], {type: att.mimeType||'text/plain'});
     }
-  }catch{blob=new Blob([att.data],{type:'application/octet-stream'});}
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download=att.name||'attachment';
-  document.body.appendChild(a);a.click();
-  document.body.removeChild(a);
-  setTimeout(()=>URL.revokeObjectURL(url),2000);
+  } catch{ blob = new Blob([att.data||''], {type:'application/octet-stream'}); }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = att.name||'attachment';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  showToast(`Downloading "${att.name||'attachment'}"`);
 }
 
-function attIcon(mime){
-  if(mime.includes('pdf'))return{icon:`<svg viewBox="0 0 24 24" fill="#dc2626"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5z"/></svg>`,color:'#fef2f2'};
-  if(mime.includes('image'))return{icon:`<svg viewBox="0 0 24 24" fill="#7c3aed"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`,color:'#f5f3ff'};
-  if(mime.includes('word')||mime.includes('document'))return{icon:`<svg viewBox="0 0 24 24" fill="#2563eb"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,color:'#eff6ff'};
-  if(mime.includes('sheet')||mime.includes('excel')||mime.includes('csv'))return{icon:`<svg viewBox="0 0 24 24" fill="#059669"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,color:'#ecfdf5'};
-  if(mime.includes('zip')||mime.includes('archive'))return{icon:`<svg viewBox="0 0 24 24" fill="#d97706"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.54 15.46 0 12.36 0h-.36C9.38 0 7 2.38 7 5v1H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>`,color:'#fffbeb'};
-  if(mime.includes('text'))return{icon:`<svg viewBox="0 0 24 24" fill="#6b7280"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,color:'#f9fafb'};
-  return{icon:`<svg viewBox="0 0 24 24" fill="#6b7280"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`,color:'#f9fafb'};
+function attIconData(mime){
+  if(mime.includes('pdf'))      return{icon:`<svg viewBox="0 0 24 24" fill="#d42b2b" width="17" height="17"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5z"/></svg>`,bg:'#fff1f1'};
+  if(mime.includes('image'))    return{icon:`<svg viewBox="0 0 24 24" fill="#6d35d9" width="17" height="17"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`,bg:'#f4eeff'};
+  if(mime.includes('word')||mime.includes('document'))
+                                return{icon:`<svg viewBox="0 0 24 24" fill="#3b6ef5" width="17" height="17"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,bg:'#eef3ff'};
+  if(mime.includes('sheet')||mime.includes('excel')||mime.includes('csv'))
+                                return{icon:`<svg viewBox="0 0 24 24" fill="#0d9e6e" width="17" height="17"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,bg:'#edfaf5'};
+  if(mime.includes('zip')||mime.includes('archive')||mime.includes('compress'))
+                                return{icon:`<svg viewBox="0 0 24 24" fill="#c97a10" width="17" height="17"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.54 15.46 0 12.36 0h-.36C9.38 0 7 2.38 7 5v1H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>`,bg:'#fff8eb'};
+  return{icon:`<svg viewBox="0 0 24 24" fill="#64748b" width="17" height="17"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`,bg:'#f7f8fc'};
 }
 
 function clearDetail(){
-  document.getElementById('dp').innerHTML=`<div id="db"><div class="empty" id="ed">
+  document.getElementById('dp').innerHTML = `<div id="db"><div class="empty">
     <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
     <p>Select an email to read it</p>
   </div></div>`;
 }
 
-// ─── PROGRESS ──────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════════════════════
 function setProgress(pct){
   const pb=document.getElementById('pb'),pf=document.getElementById('pf');
   if(pct<0){pb.style.display='none';pf.style.width='0%';}
   else{pb.style.display='block';pf.style.width=pct+'%';}
 }
 
-// ─── DRAG & DROP ───────────────────────────────────────────────────────────────
-let dragCtr=0;
-document.body.addEventListener('dragenter',e=>{e.preventDefault();dragCtr++;document.getElementById('drag-overlay').classList.add('show');});
-document.body.addEventListener('dragleave',e=>{e.preventDefault();dragCtr--;if(dragCtr<=0){dragCtr=0;document.getElementById('drag-overlay').classList.remove('show');}});
-document.body.addEventListener('dragover',e=>e.preventDefault());
-document.body.addEventListener('drop',async e=>{
-  e.preventDefault();dragCtr=0;document.getElementById('drag-overlay').classList.remove('show');
-  const files=[];
-  async function readEntry(entry,path){
+// ═══════════════════════════════════════════════════════════════════
+// DRAG & DROP
+// ═══════════════════════════════════════════════════════════════════
+let dragCtr = 0;
+document.body.addEventListener('dragenter', e => { e.preventDefault(); dragCtr++; document.getElementById('drag-overlay').classList.add('show'); });
+document.body.addEventListener('dragleave', e => { e.preventDefault(); dragCtr--; if(dragCtr<=0){dragCtr=0;document.getElementById('drag-overlay').classList.remove('show');} });
+document.body.addEventListener('dragover', e => e.preventDefault());
+document.body.addEventListener('drop', async e => {
+  e.preventDefault(); dragCtr=0; document.getElementById('drag-overlay').classList.remove('show');
+  if(accounts.length >= MAX_ACCOUNTS){ document.getElementById('limit-modal').classList.add('show'); return; }
+  const files = [];
+  async function readEntry(entry, path){
     if(entry.isFile){
-      await new Promise(res=>entry.file(f=>{
-        try{Object.defineProperty(f,'webkitRelativePath',{value:path+f.name,writable:false,configurable:true});}catch{}
-        files.push(f);res();
+      await new Promise(res => entry.file(f => {
+        try{ Object.defineProperty(f,'webkitRelativePath',{value:path+f.name,writable:false,configurable:true}); }catch{}
+        files.push(f); res();
       }));
-    }else if(entry.isDirectory){
-      const reader=entry.createReader();let allE=[];
-      await new Promise(res=>{
-        function rb(){reader.readEntries(async entries=>{if(!entries.length){res();}else{allE=allE.concat(Array.from(entries));rb();}});}
+    } else if(entry.isDirectory){
+      const reader = entry.createReader(); let all = [];
+      await new Promise(res => {
+        function rb(){ reader.readEntries(async entries => { if(!entries.length){res();}else{all=all.concat(Array.from(entries));rb();} }); }
         rb();
       });
-      for(const en of allE)await readEntry(en,path+entry.name+'/');
+      for(const en of all) await readEntry(en, path+entry.name+'/');
     }
   }
-  for(const item of Array.from(e.dataTransfer.items)){const en=item.webkitGetAsEntry();if(en)await readEntry(en,'');}
-  if(files.length>0)await loadFiles(files);
+  for(const item of Array.from(e.dataTransfer.items)){ const en=item.webkitGetAsEntry(); if(en) await readEntry(en,''); }
+  if(files.length > 0) await loadAccount(files);
 });
 </script>
 </body>
