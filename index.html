@@ -6,588 +6,496 @@
 <title>Mail Backup Viewer</title>
 <style>
   :root {
-    --bg: #f5f5f0;
-    --surface: #ffffff;
-    --sidebar-bg: #1e1e2e;
-    --sidebar-text: #cdd6f4;
-    --sidebar-muted: #9399b2;
-    --sidebar-active: #313244;
-    --sidebar-accent: #89b4fa;
-    --border: #e0ddd6;
-    --text: #1a1a2e;
-    --text2: #555566;
-    --text3: #9393a8;
-    --accent: #4f72ff;
-    --accent-bg: #eef1ff;
-    --unread: #4f72ff;
-    --hover: #f0eff8;
-    --active-item: #eef1ff;
-    --active-item-border: #4f72ff;
-    --tag-inbox: #d1fae5; --tag-inbox-t: #065f46;
-    --tag-sent: #dbeafe; --tag-sent-t: #1e40af;
-    --tag-spam: #fee2e2; --tag-spam-t: #991b1b;
-    --tag-archive: #fef3c7; --tag-archive-t: #92400e;
-    --tag-trash: #f3f4f6; --tag-trash-t: #374151;
-    --tag-draft: #ede9fe; --tag-draft-t: #5b21b6;
-    --tag-default: #e0e7ff; --tag-default-t: #3730a3;
-    font-size: 14px;
+    --bg:#f5f5f0;--surface:#fff;--sb:#1e1e2e;--sb-text:#cdd6f4;
+    --sb-muted:#9399b2;--sb-active:#313244;--sb-accent:#89b4fa;
+    --border:#e0ddd6;--text:#1a1a2e;--text2:#555566;--text3:#9393a8;
+    --accent:#4f72ff;--accent-bg:#eef1ff;--hover:#f0eff8;
+    --ai:#eef1ff;--aib:#4f72ff;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
 
-  /* TOP BAR */
-  #topbar {
-    display: flex; align-items: center; gap: 12px;
-    background: var(--sidebar-bg); color: var(--sidebar-text);
-    padding: 0 20px; height: 52px; flex-shrink: 0;
-    border-bottom: 1px solid #313244;
-  }
-  #topbar .logo { font-size: 15px; font-weight: 600; letter-spacing: 0.3px; color: #cdd6f4; display: flex; align-items: center; gap: 8px; }
-  #topbar .logo svg { width: 20px; height: 20px; fill: var(--sidebar-accent); }
-  #topbar .divider { width: 1px; height: 20px; background: #313244; margin: 0 4px; }
-  #upload-btn {
-    display: flex; align-items: center; gap: 7px;
-    background: var(--sidebar-accent); color: #1e1e2e;
-    border: none; border-radius: 7px; padding: 6px 14px;
-    font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.15s;
-  }
-  #upload-btn:hover { opacity: 0.88; }
-  #upload-btn svg { width: 15px; height: 15px; }
-  #file-input { display: none; }
-  #topbar-info { margin-left: auto; font-size: 12px; color: var(--sidebar-muted); }
-  #topbar-search {
-    display: flex; align-items: center; gap: 7px;
-    background: #313244; border: 1px solid #45475a; border-radius: 7px;
-    padding: 6px 12px; flex: 1; max-width: 340px;
-  }
-  #topbar-search svg { width: 14px; height: 14px; fill: var(--sidebar-muted); flex-shrink: 0; }
-  #topbar-search input {
-    background: transparent; border: none; outline: none;
-    color: var(--sidebar-text); font-size: 13px; width: 100%;
-  }
-  #topbar-search input::placeholder { color: var(--sidebar-muted); }
+  #topbar{display:flex;align-items:center;gap:10px;background:var(--sb);color:var(--sb-text);padding:0 16px;height:52px;flex-shrink:0;border-bottom:1px solid #313244;}
+  .logo{font-size:15px;font-weight:600;color:#cdd6f4;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+  .logo svg{width:20px;height:20px;fill:var(--sb-accent);}
+  .div{width:1px;height:20px;background:#313244;margin:0 2px;}
+  #upload-btn{display:flex;align-items:center;gap:6px;background:var(--sb-accent);color:#1e1e2e;border:none;border-radius:7px;padding:6px 13px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+  #upload-btn:hover{opacity:.88;}
+  #upload-btn svg{width:14px;height:14px;}
+  #file-input{display:none;}
+  #tsearch{display:flex;align-items:center;gap:7px;background:#313244;border:1px solid #45475a;border-radius:7px;padding:5px 11px;flex:1;max-width:320px;}
+  #tsearch svg{width:13px;height:13px;fill:var(--sb-muted);flex-shrink:0;}
+  #tsearch input{background:transparent;border:none;outline:none;color:var(--sb-text);font-size:13px;width:100%;}
+  #tsearch input::placeholder{color:var(--sb-muted);}
+  #tinfo{margin-left:auto;font-size:12px;color:var(--sb-muted);white-space:nowrap;}
 
-  /* MAIN LAYOUT */
-  #main { display: flex; flex: 1; overflow: hidden; }
+  #main{display:flex;flex:1;overflow:hidden;}
 
-  /* SIDEBAR */
-  #sidebar {
-    width: 210px; min-width: 210px; background: var(--sidebar-bg);
-    display: flex; flex-direction: column; overflow-y: auto;
-    border-right: 1px solid #313244;
-  }
-  .sidebar-section { padding: 16px 12px 6px; font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--sidebar-muted); text-transform: uppercase; }
-  .folder-item {
-    display: flex; align-items: center; gap: 9px;
-    padding: 8px 14px; cursor: pointer; border-radius: 7px;
-    margin: 1px 6px; color: var(--sidebar-muted); font-size: 13px;
-    transition: background 0.1s, color 0.1s;
-  }
-  .folder-item:hover { background: var(--sidebar-active); color: var(--sidebar-text); }
-  .folder-item.active { background: var(--sidebar-active); color: var(--sidebar-accent); font-weight: 500; }
-  .folder-item svg { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
-  .folder-item .count { margin-left: auto; background: #313244; color: var(--sidebar-muted); font-size: 11px; padding: 1px 7px; border-radius: 99px; }
-  .folder-item.active .count { background: #4f72ff22; color: var(--sidebar-accent); }
+  #sidebar{width:205px;min-width:205px;background:var(--sb);display:flex;flex-direction:column;overflow-y:auto;border-right:1px solid #313244;}
+  .ss{padding:14px 12px 5px;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--sb-muted);text-transform:uppercase;}
+  .fi{display:flex;align-items:center;gap:8px;padding:7px 13px;cursor:pointer;border-radius:7px;margin:1px 5px;color:var(--sb-muted);font-size:13px;transition:background .1s,color .1s;}
+  .fi:hover{background:var(--sb-active);color:var(--sb-text);}
+  .fi.active{background:var(--sb-active);color:var(--sb-accent);font-weight:500;}
+  .fi svg{width:14px;height:14px;fill:currentColor;flex-shrink:0;}
+  .fi .ct{margin-left:auto;background:#313244;color:var(--sb-muted);font-size:11px;padding:1px 6px;border-radius:99px;}
+  .fi.active .ct{background:#4f72ff22;color:var(--sb-accent);}
 
-  /* EMAIL LIST */
-  #list-panel {
-    width: 300px; min-width: 300px; display: flex; flex-direction: column;
-    border-right: 1px solid var(--border); background: var(--surface);
-  }
-  #list-header {
-    padding: 12px 14px 10px; border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  #list-header h3 { font-size: 14px; font-weight: 600; color: var(--text); }
-  #list-header span { font-size: 11px; color: var(--text3); background: var(--bg); padding: 2px 8px; border-radius: 99px; }
-  #email-list { flex: 1; overflow-y: auto; }
+  #lp{width:295px;min-width:295px;display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--surface);}
+  #lh{padding:11px 13px 9px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  #lh h3{font-size:14px;font-weight:600;color:var(--text);}
+  #lh span{font-size:11px;color:var(--text3);background:var(--bg);padding:2px 8px;border-radius:99px;}
+  #el{flex:1;overflow-y:auto;}
 
-  .email-row {
-    padding: 11px 14px; border-bottom: 1px solid var(--border);
-    cursor: pointer; transition: background 0.1s;
-    border-left: 3px solid transparent;
-  }
-  .email-row:hover { background: var(--hover); }
-  .email-row.active { background: var(--active-item); border-left-color: var(--active-item-border); }
-  .email-row.unread .er-from { font-weight: 700; color: var(--text); }
-  .er-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
-  .er-from { font-size: 13px; color: var(--text); font-weight: 500; max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .er-date { font-size: 11px; color: var(--text3); white-space: nowrap; }
-  .er-subject { font-size: 12px; color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 2px; }
-  .er-preview { font-size: 11px; color: var(--text3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .unread-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--unread); flex-shrink: 0; }
+  .er{padding:10px 13px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;border-left:3px solid transparent;}
+  .er:hover{background:var(--hover);}
+  .er.active{background:var(--ai);border-left-color:var(--aib);}
+  .er-t{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
+  .ef{font-size:13px;color:var(--text);font-weight:500;max-width:185px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .ed{font-size:11px;color:var(--text3);white-space:nowrap;}
+  .es{font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px;}
+  .ep{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-  /* DETAIL */
-  #detail { flex: 1; display: flex; flex-direction: column; background: var(--surface); overflow: hidden; }
-  #detail-body { flex: 1; overflow-y: auto; padding: 28px 32px; }
-  #detail-subject { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 16px; line-height: 1.4; }
-  #detail-meta {
-    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
-    padding: 14px 18px; margin-bottom: 20px;
-  }
-  .meta-row { display: flex; gap: 10px; font-size: 13px; padding: 4px 0; }
-  .meta-label { color: var(--text3); min-width: 50px; font-weight: 500; }
-  .meta-value { color: var(--text); word-break: break-all; }
-  .folder-tag {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 99px;
-  }
-  #detail-content { font-size: 14px; line-height: 1.8; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+  #dp{flex:1;display:flex;flex-direction:column;background:var(--surface);overflow:hidden;}
+  #db{flex:1;overflow-y:auto;padding:26px 30px;}
+  #ds{font-size:19px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.4;}
+  #dm{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-bottom:18px;}
+  .mr{display:flex;gap:10px;font-size:13px;padding:3px 0;}
+  .ml{color:var(--text3);min-width:48px;font-weight:500;}
+  .mv{color:var(--text);word-break:break-all;}
+  .ftag{display:inline-flex;font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;}
+  #dc{font-size:13px;line-height:1.85;color:var(--text);white-space:pre-wrap;word-break:break-word;}
 
-  /* EMPTY / WELCOME SCREENS */
-  #welcome-screen, #empty-detail, #no-emails {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    height: 100%; gap: 14px; padding: 40px; text-align: center;
-  }
-  #welcome-screen svg { width: 56px; height: 56px; fill: #c8c8d8; }
-  #welcome-screen h2 { font-size: 18px; font-weight: 600; color: var(--text2); }
-  #welcome-screen p { font-size: 13px; color: var(--text3); line-height: 1.7; max-width: 260px; }
-  #welcome-screen .formats { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
-  #welcome-screen .fmt-tag { background: var(--accent-bg); color: var(--accent); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
-  #empty-detail svg, #no-emails svg { width: 36px; height: 36px; fill: #c8c8d8; }
-  #empty-detail span, #no-emails span { font-size: 13px; color: var(--text3); }
+  .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:13px;padding:30px;text-align:center;}
+  .empty svg{width:48px;height:48px;fill:#c8c8d8;}
+  .empty h2{font-size:17px;font-weight:600;color:var(--text2);}
+  .empty p{font-size:13px;color:var(--text3);line-height:1.7;max-width:250px;}
+  .ftags{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:4px;}
+  .ftag2{background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;}
 
-  /* PROGRESS */
-  #progress-bar { display: none; position: fixed; top: 52px; left: 0; right: 0; height: 3px; background: #e0ddd6; z-index: 99; }
-  #progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.2s; border-radius: 0 3px 3px 0; }
+  /* debug panel */
+  #debug{position:fixed;bottom:0;left:0;right:0;background:#1e1e2e;color:#cdd6f4;font-size:12px;font-family:monospace;padding:6px 14px;max-height:120px;overflow-y:auto;display:none;border-top:1px solid #313244;}
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #d0cfc8; border-radius: 99px; }
+  #pb{display:none;position:fixed;top:52px;left:0;right:0;height:3px;background:#e0ddd6;z-index:99;}
+  #pf{height:100%;background:var(--accent);width:0%;transition:width .2s;border-radius:0 3px 3px 0;}
+  ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#d0cfc8;border-radius:99px;}
 </style>
 </head>
 <body>
+<div id="pb"><div id="pf"></div></div>
 
-<div id="progress-bar"><div id="progress-fill"></div></div>
-
-<!-- TOP BAR -->
 <div id="topbar">
   <div class="logo">
     <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
     Mail Backup Viewer
   </div>
-  <div class="divider"></div>
+  <div class="div"></div>
   <button id="upload-btn" onclick="document.getElementById('file-input').click()">
     <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
     Upload Backup Folder
   </button>
   <input type="file" id="file-input" webkitdirectory multiple />
-  <div class="divider"></div>
-  <div id="topbar-search">
+  <div class="div"></div>
+  <div id="tsearch">
     <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-    <input type="text" id="search-input" placeholder="Search emails..." oninput="doSearch()" />
+    <input type="text" id="si" placeholder="Search emails..." oninput="doSearch()"/>
   </div>
-  <div id="topbar-info">No backup loaded</div>
+  <div id="tinfo">No backup loaded</div>
 </div>
 
-<!-- MAIN -->
 <div id="main">
-
-  <!-- SIDEBAR -->
   <div id="sidebar">
-    <div class="sidebar-section">Folders</div>
-    <div class="folder-item active" data-folder="__all__" onclick="switchFolder('__all__', this)">
+    <div class="ss">Folders</div>
+    <div class="fi active" data-folder="__all__" onclick="switchFolder('__all__',this)">
       <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
-      All Mail <span class="count" id="count-all">0</span>
+      All Mail <span class="ct" id="ca">0</span>
     </div>
-    <div id="dynamic-folders"></div>
+    <div id="df"></div>
   </div>
 
-  <!-- EMAIL LIST -->
-  <div id="list-panel">
-    <div id="list-header">
-      <h3 id="list-title">All Mail</h3>
-      <span id="list-count">0 emails</span>
-    </div>
-    <div id="email-list">
-      <div id="welcome-screen">
+  <div id="lp">
+    <div id="lh"><h3 id="lt">All Mail</h3><span id="lc">0 emails</span></div>
+    <div id="el">
+      <div class="empty" id="ws">
         <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         <h2>No backup loaded</h2>
-        <p>Click <strong>Upload Backup Folder</strong> above and select your webmail backup folder</p>
-        <div class="formats">
-          <span class="fmt-tag">.mbox</span>
-          <span class="fmt-tag">.eml</span>
-          <span class="fmt-tag">.txt</span>
-          <span class="fmt-tag">.msg</span>
-          <span class="fmt-tag">any folder</span>
+        <p>Click Upload Backup Folder above and select your webmail backup folder</p>
+        <div class="ftags">
+          <span class="ftag2">.mbox</span><span class="ftag2">.eml</span>
+          <span class="ftag2">.msg</span><span class="ftag2">no extension</span>
+          <span class="ftag2">any format</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- DETAIL -->
-  <div id="detail">
-    <div id="detail-body">
-      <div id="empty-detail">
+  <div id="dp">
+    <div id="db">
+      <div class="empty" id="ed">
         <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-        <span>Select an email to read it</span>
+        <p>Select an email to read it</p>
       </div>
     </div>
   </div>
-
 </div>
 
+<div id="debug"></div>
+
 <script>
-const FOLDER_ICONS = {
-  inbox: `<svg viewBox="0 0 24 24"><path d="M19 3H4.99C3.89 3 3 3.9 3 5L2.99 19c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.34 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/></svg>`,
-  sent:  `<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`,
-  spam:  `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
-  trash: `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`,
+// ── globals ──────────────────────────────────────────────────────────────────
+let allEmails=[], foldersMap={}, currentFolder='__all__', searchQuery='', selectedEmail=null;
+const logs=[];
+function log(...a){const m=a.join(' ');logs.push(m);console.log(m);}
+
+// ── folder icons & colors ────────────────────────────────────────────────────
+const FICONS={
+  inbox :`<svg viewBox="0 0 24 24"><path d="M19 3H4.99C3.89 3 3 3.9 3 5L2.99 19c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12h-4c0 1.66-1.34 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/></svg>`,
+  sent  :`<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`,
+  spam  :`<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
+  trash :`<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`,
   archive:`<svg viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5z"/></svg>`,
-  draft: `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`,
-  junk:  `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
+  drafts:`<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`,
   default:`<svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>`
 };
+const FCOLORS={inbox:['#d1fae5','#065f46'],sent:['#dbeafe','#1e40af'],spam:['#fee2e2','#991b1b'],trash:['#f3f4f6','#374151'],archive:['#fef3c7','#92400e'],drafts:['#ede9fe','#5b21b6'],default:['#e0e7ff','#3730a3']};
+function ficon(n){const k=n.toLowerCase();for(const[kw,v]of Object.entries(FICONS))if(k.includes(kw))return v;return FICONS.default;}
+function fcolor(n){const k=n.toLowerCase();for(const[kw,v]of Object.entries(FCOLORS))if(k.includes(kw))return v;return FCOLORS.default;}
 
-const FOLDER_COLORS = {
-  inbox:   ['#d1fae5','#065f46'],
-  sent:    ['#dbeafe','#1e40af'],
-  spam:    ['#fee2e2','#991b1b'],
-  trash:   ['#f3f4f6','#374151'],
-  archive: ['#fef3c7','#92400e'],
-  draft:   ['#ede9fe','#5b21b6'],
-  junk:    ['#fee2e2','#991b1b'],
-  default: ['#e0e7ff','#3730a3']
-};
-
-function folderIcon(name) {
-  const n = name.toLowerCase();
-  for (const k of Object.keys(FOLDER_ICONS)) if (n.includes(k)) return FOLDER_ICONS[k];
-  return FOLDER_ICONS.default;
-}
-function folderColor(name) {
-  const n = name.toLowerCase();
-  for (const k of Object.keys(FOLDER_COLORS)) if (n.includes(k)) return FOLDER_COLORS[k];
-  return FOLDER_COLORS.default;
+// ── folder name normalization ────────────────────────────────────────────────
+function normFolder(raw){
+  const n=(raw||'').toLowerCase().trim();
+  if(n.includes('inbox')||n==='cur'||n==='new'||n==='tmp')return 'Inbox';
+  if(n.includes('sent'))return 'Sent';
+  if(n.includes('spam')||n.includes('junk'))return 'Spam';
+  if(n.includes('trash')||n.includes('delet'))return 'Trash';
+  if(n.includes('archive'))return 'Archive';
+  if(n.includes('draft'))return 'Drafts';
+  if(!raw||raw.trim()==='')return 'Inbox';
+  // Capitalize first letter
+  return raw.charAt(0).toUpperCase()+raw.slice(1);
 }
 
-let allEmails = [];
-let foldersMap = {};
-let currentFolder = '__all__';
-let searchQuery = '';
-let selectedEmail = null;
+// ── text helpers ─────────────────────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function decodeQP(s){
+  return s.replace(/=\r?\n/g,'').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));
+}
+function decodeB64(s){try{return atob(s.replace(/\s+/g,''));}catch{return s;}}
+function decodeRFC2047(s){
+  if(!s)return '';
+  return s.replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g,(_,cs,enc,data)=>{
+    try{
+      if(enc.toUpperCase()==='B'){const b=decodeB64(data);return decodeURIComponent(escape(b));}
+      if(enc.toUpperCase()==='Q'){const q=data.replace(/_/g,' ').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));return decodeURIComponent(escape(q));}
+    }catch{}return data;
+  });
+}
+function stripHtml(s){
+  return s.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'')
+    .replace(/<br\s*\/?>/gi,'\n').replace(/<\/p>/gi,'\n\n').replace(/<\/div>/gi,'\n')
+    .replace(/<[^>]+>/g,'')
+    .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'")
+    .replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+}
+function extractName(from){
+  if(!from)return 'Unknown';
+  const m=from.match(/^"?([^"<]+?)"?\s*</);if(m)return m[1].trim();
+  const m2=from.match(/([^@<\s]+)@/);return m2?m2[1]:from;
+}
+function fmtDate(d){
+  if(!d)return '';
+  try{const dt=new Date(d);if(isNaN(dt))return d.slice(0,16);return dt.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}catch{return String(d).slice(0,16);}
+}
 
-// ---- PARSE ----
-function parseMbox(text, folder) {
-  const emails = [];
-  // Split on mbox "From " envelope lines
-  const chunks = text.split(/\nFrom [^\n]*\n/);
-  for (const chunk of chunks) {
-    if (chunk.trim().length < 10) continue;
-    const e = parseHeaders(chunk, folder);
-    if (e) emails.push(e);
+// ── core email parser ─────────────────────────────────────────────────────────
+// Parses a raw RFC-2822 message block. Returns an object or null.
+function parseRFC2822(raw, folder){
+  if(!raw||raw.length<10)return null;
+  const lines=raw.split(/\r?\n/);
+  const headers={};
+  let bi=0;
+  let i=0;
+  // Skip leading "From " envelope line (mbox)
+  if(lines[0]&&lines[0].startsWith('From '))i=1;
+  while(i<lines.length){
+    const line=lines[i];
+    if(line.trim()===''){bi=i+1;break;}
+    // header field
+    const m=line.match(/^([\w-]+)\s*:\s*(.*)$/);
+    if(m){
+      let key=m[1].toLowerCase();
+      let val=m[2];
+      i++;
+      while(i<lines.length&&lines[i]&&/^[ \t]/.test(lines[i])){val+=' '+lines[i].trim();i++;}
+      if(!headers[key])headers[key]=val;
+    }else{i++;}
   }
-  if (emails.length === 0) {
-    const e = parseHeaders(text, folder);
-    if (e) emails.push(e);
+
+  const from    = headers['from']||'';
+  const to      = headers['to']||'';
+  const cc      = headers['cc']||'';
+  const subject = decodeRFC2047(headers['subject']||'(No subject)');
+  const date    = headers['date']||headers['delivery-date']||'';
+  const ct      = (headers['content-type']||'').toLowerCase();
+  const cte     = (headers['content-transfer-encoding']||'').toLowerCase();
+
+  // We need at least one of these to be a real email
+  if(!from&&subject==='(No subject)'&&!date)return null;
+
+  // body
+  let body=lines.slice(bi).join('\n');
+
+  // decode transfer encoding
+  if(cte==='quoted-printable') body=decodeQP(body);
+  else if(cte==='base64'){try{body=decodeURIComponent(escape(decodeB64(body)));}catch{}}
+
+  // strip html if needed
+  if(ct.includes('html'))body=stripHtml(body);
+  else body=body.replace(/\r/g,'').replace(/\n{3,}/g,'\n\n');
+
+  body=body.trim().slice(0,8000);
+
+  return {from,to,cc,subject,date,body,folder};
+}
+
+// ── mbox splitter ─────────────────────────────────────────────────────────────
+// Split on "From <anything> <weekday> <month> ..." envelope lines
+// Works for all common mbox variants
+function splitMbox(text){
+  // mbox "From " line regex — very permissive
+  const re=/^From\s+\S+.*$/m;
+  // Split keeping the delimiter
+  const parts=text.split(/(?=^From\s+\S)/m);
+  return parts;
+}
+
+// ── detect & parse a single file ──────────────────────────────────────────────
+function parseFile(text, filename, folder){
+  const emails=[];
+  if(!text||text.length<5)return emails;
+
+  const trimmed=text.trimStart();
+
+  // ── Strategy 1: classic mbox (multiple "From " envelope lines)
+  if(trimmed.startsWith('From ')&&text.includes('\nFrom ')){
+    const parts=splitMbox(text);
+    log(`MBOX detected: ${filename} → ${parts.length} chunks`);
+    for(const part of parts){
+      const e=parseRFC2822(part,folder);
+      if(e)emails.push(e);
+    }
+    if(emails.length>0)return emails;
   }
+
+  // ── Strategy 2: single RFC-2822 email (has "From:" header near top)
+  if(/^(From|To|Subject|Date|MIME-Version|Content-Type)\s*:/im.test(trimmed.slice(0,2000))){
+    log(`EML detected: ${filename}`);
+    const e=parseRFC2822(text,folder);
+    if(e)emails.push(e);
+    if(emails.length>0)return emails;
+  }
+
+  // ── Strategy 3: Maildir format — file itself is one email (no From: header up top but has Date:)
+  if(/^Date\s*:/im.test(trimmed.slice(0,500))){
+    log(`Maildir detected: ${filename}`);
+    const e=parseRFC2822('From: unknown\n'+text,folder);
+    if(e)emails.push(e);
+    if(emails.length>0)return emails;
+  }
+
+  // ── Strategy 4: last resort — treat entire file as body with filename as subject
+  // Only if file looks text-like (not binary)
+  if(text.length>20&&!/[\x00-\x08\x0e-\x1f]/.test(text.slice(0,200))){
+    log(`Fallback plain text: ${filename}`);
+    emails.push({from:'',to:'',cc:'',subject:filename,date:'',body:text.slice(0,8000).trim(),folder});
+  }
+
   return emails;
 }
 
-function parseHeaders(raw, folder) {
-  const lines = raw.split('\n');
-  const headers = {};
-  let bodyIdx = 0;
-  let i = 0;
-  while (i < lines.length) {
-    const line = lines[i];
-    if (line.trim() === '') { bodyIdx = i + 1; break; }
-    const m = line.match(/^([\w-]+)\s*:\s*(.*)$/i);
-    if (m) {
-      let key = m[1].toLowerCase();
-      let val = m[2];
-      i++;
-      while (i < lines.length && /^\s+/.test(lines[i])) { val += ' ' + lines[i].trim(); i++; }
-      headers[key] = headers[key] ? headers[key] : val;
-    } else { i++; }
-  }
-  const from = headers['from'] || '';
-  const subject = decodeRFC2047(headers['subject'] || '(No subject)');
-  const date = headers['date'] || '';
-  const to = headers['to'] || '';
-  const cc = headers['cc'] || '';
-  const bodyRaw = lines.slice(bodyIdx).join('\n');
-  const encoding = (headers['content-transfer-encoding'] || '').toLowerCase();
-  let body = bodyRaw;
-  if (encoding === 'quoted-printable') body = decodeQP(bodyRaw);
-  else if (encoding === 'base64') { try { body = atob(bodyRaw.replace(/\s/g,'')); } catch(e) {} }
-  const contentType = (headers['content-type'] || '').toLowerCase();
-  body = contentType.includes('html') ? stripHtml(body) : body;
-  body = body.replace(/\r/g, '').replace(/\n{3,}/g, '\n\n').trim().slice(0, 5000);
-  return { from, subject, date, to, cc, body, folder };
-}
-
-function decodeRFC2047(s) {
-  return s.replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g, (_, charset, enc, data) => {
-    try {
-      if (enc.toUpperCase() === 'B') return decodeURIComponent(escape(atob(data)));
-      if (enc.toUpperCase() === 'Q') return decodeURIComponent(escape(data.replace(/_/g,' ').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)))));
-    } catch(e) {}
-    return data;
-  });
-}
-
-function decodeQP(s) {
-  return s.replace(/=\r?\n/g,'').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));
-}
-
-function stripHtml(s) {
-  return s
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'')
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'')
-    .replace(/<br\s*\/?>/gi,'\n')
-    .replace(/<\/p>/gi,'\n\n')
-    .replace(/<\/div>/gi,'\n')
-    .replace(/<[^>]+>/g,'')
-    .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&')
-    .replace(/&lt;/g,'<').replace(/&gt;/g,'>')
-    .replace(/&quot;/g,'"').replace(/&#39;/g,"'")
-    .replace(/[ \t]+/g,' ')
-    .replace(/\n{3,}/g,'\n\n').trim();
-}
-
-function extractName(from) {
-  const m = from.match(/^"?([^"<]+?)"?\s*</);
-  if (m) return m[1].trim();
-  const m2 = from.match(/([^@<\s]+)@/);
-  return m2 ? m2[1] : (from || 'Unknown');
-}
-
-function fmtDate(d) {
-  if (!d) return '';
-  try {
-    const dt = new Date(d);
-    if (isNaN(dt)) return d.slice(0, 16);
-    return dt.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
-  } catch { return d.slice(0, 16); }
-}
-
-function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ---- LOAD FILES ----
-document.getElementById('file-input').addEventListener('change', async ev => {
+// ── file loading ──────────────────────────────────────────────────────────────
+document.getElementById('file-input').addEventListener('change', async ev=>{
   await loadFiles(Array.from(ev.target.files));
-  ev.target.value = '';
+  ev.target.value='';
 });
 
-async function loadFiles(files) {
-  allEmails = [];
-  foldersMap = {};
-  showProgress(10);
+async function loadFiles(files){
+  allEmails=[];foldersMap={};logs.length=0;
 
-  const validExts = ['mbox','eml','txt','msg','emlx'];
-  const toProcess = files.filter(f => {
-    const ext = f.name.split('.').pop().toLowerCase();
-    return validExts.includes(ext) || f.size < 10 * 1024 * 1024;
+  // Filter: skip obvious binaries by extension
+  const SKIP_EXT=/\.(jpg|jpeg|png|gif|bmp|webp|pdf|zip|gz|tar|rar|7z|exe|dll|so|db|sqlite|bin|dat)$/i;
+  const toProcess=files.filter(f=>{
+    const n=f.name.toLowerCase();
+    if(SKIP_EXT.test(n))return false;
+    if(f.size===0)return false;
+    if(f.size>20*1024*1024)return false; // skip files >20MB
+    return true;
   });
 
-  let done = 0;
-  for (const f of toProcess) {
-    const relPath = f.webkitRelativePath || f.name;
-    const parts = relPath.split('/');
-    // Folder name = parent folder of the file (skip root backup folder)
-    let folderName = 'Inbox';
-    if (parts.length === 3) folderName = parts[1];       // root/FolderName/file
-    else if (parts.length === 2) folderName = parts[0];  // FolderName/file
-    else if (parts.length > 3) folderName = parts[parts.length - 2]; // nested
+  log(`Total files: ${files.length}, processing: ${toProcess.length}`);
+  setProgress(5);
 
-    // Normalize common names
-    const fn = folderName.toLowerCase();
-    if (fn.includes('sent')) folderName = 'Sent';
-    else if (fn.includes('inbox')) folderName = 'Inbox';
-    else if (fn.includes('spam') || fn.includes('junk')) folderName = 'Spam';
-    else if (fn.includes('trash') || fn.includes('delete')) folderName = 'Trash';
-    else if (fn.includes('archive')) folderName = 'Archive';
-    else if (fn.includes('draft')) folderName = 'Drafts';
-
-    try {
-      const text = await f.text();
-      if (!text || text.trim().length < 5) { done++; continue; }
-      const ext = f.name.split('.').pop().toLowerCase();
-      let parsed = [];
-      if (ext === 'mbox' || (text.startsWith('From ') && text.includes('\nFrom '))) {
-        parsed = parseMbox(text, folderName);
-      } else {
-        const e = parseHeaders(text, folderName);
-        if (e && (e.from || e.subject !== '(No subject)')) parsed = [e];
+  let done=0;
+  for(const f of toProcess){
+    // Determine folder from path
+    const relPath=f.webkitRelativePath||f.name;
+    const parts=relPath.replace(/\\/g,'/').split('/');
+    // Path structure: root/FolderName/[cur|new/]filename  OR  root/filename
+    let rawFolder='Inbox';
+    if(parts.length>=3){
+      // parts[0]=backup root, parts[1]=folder, rest=file (possibly with maildir cur/new/tmp)
+      const candidate=parts[parts.length-2];
+      // skip maildir special dirs
+      if(['cur','new','tmp'].includes(candidate.toLowerCase())&&parts.length>=4){
+        rawFolder=parts[parts.length-3];
+      }else{
+        rawFolder=candidate;
       }
-      for (const e of parsed) {
-        if (!foldersMap[folderName]) foldersMap[folderName] = [];
-        foldersMap[folderName].push(e);
+    }else if(parts.length===2){
+      rawFolder=parts[0];
+    }
+    const folder=normFolder(rawFolder);
+
+    try{
+      const text=await f.text();
+      const parsed=parseFile(text,f.name,folder);
+      log(`  ${relPath} → ${parsed.length} emails (folder: ${folder})`);
+      for(const e of parsed){
+        if(!foldersMap[folder])foldersMap[folder]=[];
+        foldersMap[folder].push(e);
         allEmails.push(e);
       }
-    } catch(err) { console.warn('Could not read', f.name, err); }
+    }catch(err){log(`  ERROR reading ${f.name}: ${err.message}`);}
 
     done++;
-    showProgress(10 + Math.floor((done / toProcess.length) * 80));
+    setProgress(5+Math.floor(done/toProcess.length*88));
   }
 
-  allEmails.sort((a, b) => new Date(b.date) - new Date(a.date));
-  for (const k of Object.keys(foldersMap)) {
-    foldersMap[k].sort((a, b) => new Date(b.date) - new Date(a.date));
-  }
+  // sort by date descending
+  const sortFn=(a,b)=>new Date(b.date||0)-new Date(a.date||0);
+  allEmails.sort(sortFn);
+  for(const k of Object.keys(foldersMap))foldersMap[k].sort(sortFn);
 
-  showProgress(100);
-  setTimeout(() => hideProgress(), 400);
+  setProgress(100);
+  setTimeout(()=>setProgress(-1),500);
 
-  document.getElementById('topbar-info').textContent =
-    allEmails.length + ' emails · ' + Object.keys(foldersMap).length + ' folders';
+  log(`DONE — ${allEmails.length} emails, ${Object.keys(foldersMap).length} folders`);
 
+  document.getElementById('tinfo').textContent=`${allEmails.length} emails · ${Object.keys(foldersMap).length} folders`;
   buildSidebar();
-  currentFolder = '__all__';
-  selectedEmail = null;
-  document.querySelectorAll('.folder-item').forEach(f => f.classList.remove('active'));
-  document.querySelector('.folder-item[data-folder="__all__"]').classList.add('active');
-  document.getElementById('list-title').textContent = 'All Mail';
-  searchQuery = '';
-  document.getElementById('search-input').value = '';
-  renderList();
-  clearDetail();
+  currentFolder='__all__';selectedEmail=null;
+  document.querySelectorAll('.fi').forEach(f=>f.classList.remove('active'));
+  document.querySelector('.fi[data-folder="__all__"]').classList.add('active');
+  document.getElementById('lt').textContent='All Mail';
+  searchQuery='';document.getElementById('si').value='';
+  renderList();clearDetail();
 }
 
-// ---- SIDEBAR ----
-function buildSidebar() {
-  document.getElementById('count-all').textContent = allEmails.length;
-  const df = document.getElementById('dynamic-folders');
-  df.innerHTML = '';
-
-  const order = ['Inbox','Sent','Drafts','Archive','Spam','Trash'];
-  const sorted = [
-    ...order.filter(o => foldersMap[o]),
-    ...Object.keys(foldersMap).filter(k => !order.includes(k)).sort()
-  ];
-
-  if (sorted.length > 0) {
-    const sec = document.createElement('div');
-    sec.className = 'sidebar-section';
-    sec.textContent = 'By Folder';
-    df.appendChild(sec);
-  }
-
-  for (const name of sorted) {
-    const div = document.createElement('div');
-    div.className = 'folder-item';
-    div.dataset.folder = name;
-    div.innerHTML = folderIcon(name) + ` ${esc(name)} <span class="count">${foldersMap[name].length}</span>`;
-    div.addEventListener('click', () => switchFolder(name, div));
-    df.appendChild(div);
+// ── sidebar ───────────────────────────────────────────────────────────────────
+function buildSidebar(){
+  document.getElementById('ca').textContent=allEmails.length;
+  const df=document.getElementById('df');df.innerHTML='';
+  const order=['Inbox','Sent','Drafts','Archive','Spam','Trash'];
+  const sorted=[...order.filter(o=>foldersMap[o]),...Object.keys(foldersMap).filter(k=>!order.includes(k)).sort()];
+  if(sorted.length){const s=document.createElement('div');s.className='ss';s.textContent='By Folder';df.appendChild(s);}
+  for(const name of sorted){
+    const d=document.createElement('div');d.className='fi';d.dataset.folder=name;
+    d.innerHTML=ficon(name)+` ${esc(name)} <span class="ct">${foldersMap[name].length}</span>`;
+    d.addEventListener('click',()=>switchFolder(name,d));df.appendChild(d);
   }
 }
 
-function switchFolder(folder, el) {
-  currentFolder = folder;
-  selectedEmail = null;
-  searchQuery = document.getElementById('search-input').value;
-  document.querySelectorAll('.folder-item').forEach(f => f.classList.remove('active'));
+function switchFolder(folder,el){
+  currentFolder=folder;selectedEmail=null;
+  document.querySelectorAll('.fi').forEach(f=>f.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('list-title').textContent = folder === '__all__' ? 'All Mail' : folder;
-  clearDetail();
-  renderList();
+  document.getElementById('lt').textContent=folder==='__all__'?'All Mail':folder;
+  clearDetail();renderList();
 }
 
-// ---- LIST ----
-function getEmails() {
-  const base = currentFolder === '__all__' ? allEmails : (foldersMap[currentFolder] || []);
-  if (!searchQuery) return base;
-  const q = searchQuery.toLowerCase();
-  return base.filter(e => (e.from + e.subject + e.body + e.to).toLowerCase().includes(q));
+// ── list ──────────────────────────────────────────────────────────────────────
+function getEmails(){
+  const base=currentFolder==='__all__'?allEmails:(foldersMap[currentFolder]||[]);
+  if(!searchQuery)return base;
+  const q=searchQuery.toLowerCase();
+  return base.filter(e=>(e.from+e.subject+e.body+e.to).toLowerCase().includes(q));
 }
 
-function renderList() {
-  const emails = getEmails();
-  const el = document.getElementById('email-list');
-  document.getElementById('list-count').textContent = emails.length + ' email' + (emails.length !== 1 ? 's' : '');
-
-  if (emails.length === 0) {
-    el.innerHTML = '<div id="no-emails"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><span>No emails found</span></div>';
+function renderList(){
+  const emails=getEmails();
+  const el=document.getElementById('el');
+  document.getElementById('lc').textContent=emails.length+' email'+(emails.length!==1?'s':'');
+  if(emails.length===0){
+    el.innerHTML='<div class="empty"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><p>No emails found</p></div>';
     return;
   }
-
-  el.innerHTML = emails.map((e, i) => `
-    <div class="email-row${e === selectedEmail ? ' active' : ''}" data-i="${i}">
-      <div class="er-top">
-        <span class="er-from">${esc(extractName(e.from))}</span>
-        <span class="er-date">${fmtDate(e.date)}</span>
-      </div>
-      <div class="er-subject">${esc(e.subject)}</div>
-      <div class="er-preview">${esc((e.body || '').slice(0, 70))}…</div>
+  el.innerHTML=emails.map((e,i)=>`
+    <div class="er${e===selectedEmail?' active':''}" data-i="${i}">
+      <div class="er-t"><span class="ef">${esc(extractName(e.from)||'(Unknown)')}</span><span class="ed">${fmtDate(e.date)}</span></div>
+      <div class="es">${esc(e.subject)}</div>
+      <div class="ep">${esc((e.body||'').replace(/\n/g,' ').slice(0,75))}…</div>
     </div>`).join('');
-
-  el.querySelectorAll('.email-row').forEach((row, i) => {
-    row.addEventListener('click', () => openEmail(emails[i], row));
-  });
+  el.querySelectorAll('.er').forEach((row,i)=>{row.addEventListener('click',()=>openEmail(emails[i],row));});
 }
 
-function doSearch() {
-  searchQuery = document.getElementById('search-input').value;
-  selectedEmail = null;
-  clearDetail();
-  renderList();
+function doSearch(){
+  searchQuery=document.getElementById('si').value;
+  selectedEmail=null;clearDetail();renderList();
 }
 
-// ---- DETAIL ----
-function openEmail(e, row) {
-  selectedEmail = e;
-  document.querySelectorAll('.email-row').forEach(r => r.classList.remove('active'));
+// ── detail ────────────────────────────────────────────────────────────────────
+function openEmail(e,row){
+  selectedEmail=e;
+  document.querySelectorAll('.er').forEach(r=>r.classList.remove('active'));
   row.classList.add('active');
-
-  const [tagBg, tagText] = folderColor(e.folder);
-  const db = document.getElementById('detail-body');
-  db.innerHTML = `
-    <div id="detail-subject">${esc(e.subject)}</div>
-    <div id="detail-meta">
-      <div class="meta-row"><span class="meta-label">From</span><span class="meta-value">${esc(e.from)}</span></div>
-      <div class="meta-row"><span class="meta-label">To</span><span class="meta-value">${esc(e.to || '—')}</span></div>
-      ${e.cc ? `<div class="meta-row"><span class="meta-label">CC</span><span class="meta-value">${esc(e.cc)}</span></div>` : ''}
-      <div class="meta-row"><span class="meta-label">Date</span><span class="meta-value">${esc(e.date)}</span></div>
-      <div class="meta-row"><span class="meta-label">Folder</span><span class="meta-value"><span class="folder-tag" style="background:${tagBg};color:${tagText}">${esc(e.folder)}</span></span></div>
+  const[bg,tc]=fcolor(e.folder);
+  document.getElementById('db').innerHTML=`
+    <div id="ds">${esc(e.subject)}</div>
+    <div id="dm">
+      <div class="mr"><span class="ml">From</span><span class="mv">${esc(e.from||'—')}</span></div>
+      <div class="mr"><span class="ml">To</span><span class="mv">${esc(e.to||'—')}</span></div>
+      ${e.cc?`<div class="mr"><span class="ml">CC</span><span class="mv">${esc(e.cc)}</span></div>`:''}
+      <div class="mr"><span class="ml">Date</span><span class="mv">${esc(e.date||'—')}</span></div>
+      <div class="mr"><span class="ml">Folder</span><span class="mv"><span class="ftag" style="background:${bg};color:${tc}">${esc(e.folder)}</span></span></div>
     </div>
-    <div id="detail-content">${esc(e.body || '(No message body found)')}</div>`;
+    <div id="dc">${esc(e.body||'(No message body)')}</div>`;
 }
 
-function clearDetail() {
-  document.getElementById('detail-body').innerHTML = '<div id="empty-detail"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><span>Select an email to read it</span></div>';
+function clearDetail(){
+  document.getElementById('db').innerHTML='<div class="empty" id="ed"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><p>Select an email to read it</p></div>';
 }
 
-// ---- PROGRESS ----
-function showProgress(pct) {
-  document.getElementById('progress-bar').style.display = 'block';
-  document.getElementById('progress-fill').style.width = pct + '%';
-}
-function hideProgress() {
-  document.getElementById('progress-bar').style.display = 'none';
-  document.getElementById('progress-fill').style.width = '0%';
+// ── progress ──────────────────────────────────────────────────────────────────
+function setProgress(pct){
+  const pb=document.getElementById('pb'),pf=document.getElementById('pf');
+  if(pct<0){pb.style.display='none';pf.style.width='0%';}
+  else{pb.style.display='block';pf.style.width=pct+'%';}
 }
 
-// ---- DRAG & DROP onto page ----
-document.body.addEventListener('dragover', e => e.preventDefault());
-document.body.addEventListener('drop', async e => {
+// ── drag & drop ───────────────────────────────────────────────────────────────
+document.body.addEventListener('dragover',e=>e.preventDefault());
+document.body.addEventListener('drop',async e=>{
   e.preventDefault();
-  const files = [];
-  async function readEntry(entry, path) {
-    if (entry.isFile) {
-      await new Promise(res => entry.file(f => {
-        Object.defineProperty(f, 'webkitRelativePath', { value: path + f.name, writable: false });
-        files.push(f); res();
+  const files=[];
+  async function readEntry(entry,path){
+    if(entry.isFile){
+      await new Promise(res=>entry.file(f=>{
+        try{Object.defineProperty(f,'webkitRelativePath',{value:path+f.name,writable:false,configurable:true});}catch{}
+        files.push(f);res();
       }));
-    } else if (entry.isDirectory) {
-      const reader = entry.createReader();
-      await new Promise(res => {
-        reader.readEntries(async entries => {
-          for (const en of entries) await readEntry(en, path + entry.name + '/');
-          res();
-        });
+    }else if(entry.isDirectory){
+      const reader=entry.createReader();
+      let allEntries=[];
+      // createReader only returns up to 100 at a time — loop
+      await new Promise(res=>{
+        function readBatch(){reader.readEntries(async entries=>{if(!entries.length){res();}else{allEntries=allEntries.concat(Array.from(entries));readBatch();}});}
+        readBatch();
       });
+      for(const en of allEntries)await readEntry(en,path+entry.name+'/');
     }
   }
-  for (const item of Array.from(e.dataTransfer.items)) {
-    const entry = item.webkitGetAsEntry();
-    if (entry) await readEntry(entry, '');
-  }
-  if (files.length > 0) await loadFiles(files);
+  for(const item of Array.from(e.dataTransfer.items)){const en=item.webkitGetAsEntry();if(en)await readEntry(en,'');}
+  if(files.length>0)await loadFiles(files);
 });
 </script>
 </body>
