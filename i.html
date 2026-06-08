@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HeavyMail — Large Archive Viewer</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f1117;--surface:#181c27;--s2:#1e2233;--s3:#252a3a;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --text:#e8eaf0;--t2:#b0b8cc;--t3:#6e7a94;--t4:#3d4560;
+  --acc:#4f8ef7;--acc2:#6366f1;--acc-bg:rgba(79,142,247,.12);
+  --green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+  --r:8px;--rs:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:13px;}
+
+/* TOP BAR */
+#topbar{display:flex;align-items:center;gap:12px;background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;height:50px;flex-shrink:0;z-index:30;}
+.logo{font-size:15px;font-weight:600;color:#fff;letter-spacing:-.3px;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc);}
+.divider{width:1px;height:20px;background:var(--border);flex-shrink:0;}
+#search-wrap{flex:1;max-width:360px;position:relative;}
+#search-wrap i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px;pointer-events:none;}
+#si{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:6px 10px 6px 32px;color:var(--text);font-size:12px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color .15s;}
+#si:focus{border-color:var(--acc);}
+#si::placeholder{color:var(--t4);}
+#stats-pill{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--t3);background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:3px 10px;white-space:nowrap;margin-left:auto;}
+#add-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;background:var(--acc);color:#fff;border:none;border-radius:var(--r);cursor:pointer;font-size:12px;font-weight:600;font-family:'IBM Plex Sans',sans-serif;transition:opacity .15s;white-space:nowrap;flex-shrink:0;}
+#add-btn:hover{opacity:.85;}
+#add-btn:disabled{opacity:.35;cursor:not-allowed;}
+#file-input{display:none;}
+
+/* STATUS BAR */
+#status-bar{display:none;background:var(--s2);border-bottom:1px solid var(--border);padding:6px 16px;flex-shrink:0;}
+#status-bar.show{display:block;}
+.progress-label{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--t2);margin-bottom:5px;}
+.progress-track{background:var(--s3);border-radius:99px;height:4px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:0%;transition:width .2s;border-radius:99px;}
+
+/* LAYOUT */
+#main{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+#sidebar{width:200px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;}
+#sidebar::-webkit-scrollbar{width:3px;}
+#sidebar::-webkit-scrollbar-thumb{background:var(--s3);}
+.sb-section{border-bottom:1px solid var(--border);padding:8px 0;}
+.sb-label{font-size:9.5px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t4);padding:4px 14px 6px;}
+.sb-item{display:flex;align-items:center;gap:8px;padding:6px 14px;cursor:pointer;color:var(--t3);border-radius:0;transition:background .1s,color .1s;border-left:2px solid transparent;}
+.sb-item:hover{background:var(--s2);color:var(--t2);}
+.sb-item.active{background:var(--acc-bg);color:var(--acc);border-left-color:var(--acc);}
+.sb-item i{font-size:14px;flex-shrink:0;}
+.sb-item .sb-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;}
+.sb-item .sb-ct{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--t4);}
+.sb-item.active .sb-ct{color:var(--acc);}
+.acct-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+/* LIST PANEL */
+#lp{width:300px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--surface);}
+#lh{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#lh-title{font-size:13px;font-weight:600;color:var(--text);}
+#lh-ct{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--t4);background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:2px 8px;}
+#list-container{flex:1;overflow-y:auto;position:relative;}
+#list-container::-webkit-scrollbar{width:3px;}
+#list-container::-webkit-scrollbar-thumb{background:var(--s3);}
+#virtual-spacer{pointer-events:none;}
+#virtual-rows{position:absolute;top:0;left:0;right:0;}
+.er{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;border-left:2px solid transparent;transition:background .08s;}
+.er:hover{background:var(--s2);}
+.er.sel{background:var(--acc-bg);border-left-color:var(--acc);}
+.er-top{display:flex;justify-content:space-between;gap:6px;margin-bottom:2px;}
+.er-from{font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.er-date{font-size:10px;color:var(--t4);white-space:nowrap;font-family:'IBM Plex Mono',monospace;flex-shrink:0;}
+.er-subj{font-size:11px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px;}
+.er-prev{font-size:11px;color:var(--t4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.er-badges{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;}
+.badge{font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;font-family:'IBM Plex Mono',monospace;}
+.b-html{background:rgba(99,102,241,.15);color:#818cf8;border:1px solid rgba(99,102,241,.25);}
+.b-att{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.2);}
+.b-acct{font-size:9px;}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:8px;padding:20px;text-align:center;}
+.empty-state i{font-size:32px;color:var(--t4);}
+.empty-state p{font-size:12px;color:var(--t3);}
+
+/* DETAIL */
+#dp{flex:1;display:flex;flex-direction:column;background:var(--bg);overflow:hidden;min-width:0;}
+#dh{flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px;}
+#ds{font-size:16px;font-weight:600;color:var(--text);margin-bottom:12px;line-height:1.4;}
+.meta-grid{display:grid;grid-template-columns:auto 1fr;gap:0;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.mk{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--t4);padding:7px 10px;background:var(--s2);white-space:nowrap;border-bottom:1px solid var(--border);}
+.mv{font-size:12px;color:var(--t2);padding:7px 12px;background:var(--surface);border-bottom:1px solid var(--border);word-break:break-word;}
+.mk:last-of-type,.mv:last-child{border-bottom:none;}
+.addr-name{color:var(--text);font-weight:500;}
+.addr-email{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t3);margin-left:4px;}
+#dtb{display:flex;gap:6px;padding:8px 20px;border-bottom:1px solid var(--border);background:var(--s2);flex-shrink:0;}
+.vbtn{display:flex;align-items:center;gap:5px;padding:5px 10px;font-size:11px;font-weight:500;border-radius:var(--rs);cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--t3);font-family:'IBM Plex Sans',sans-serif;transition:all .12s;}
+.vbtn:hover{background:var(--s3);color:var(--text);}
+.vbtn.on{background:var(--acc-bg);color:var(--acc);border-color:rgba(79,142,247,.3);}
+.vbtn i{font-size:13px;}
+#db{flex:1;overflow-y:auto;padding:16px 20px;}
+#db::-webkit-scrollbar{width:4px;}
+#db::-webkit-scrollbar-thumb{background:var(--s3);}
+#ifw{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:#fff;}
+#ifw iframe{width:100%;border:none;display:block;}
+#ptxt{font-size:12px;line-height:1.8;color:var(--t2);white-space:pre-wrap;word-break:break-word;font-family:'IBM Plex Mono',monospace;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;}
+#atts{margin-top:14px;}
+.att-hdr{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:8px;}
+#att-list{display:flex;flex-wrap:wrap;gap:6px;}
+.att-card{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:8px 10px;cursor:pointer;transition:border-color .12s;min-width:140px;max-width:220px;}
+.att-card:hover{border-color:var(--acc);}
+.att-name{font-size:11px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.att-meta{font-size:10px;color:var(--t4);font-family:'IBM Plex Mono',monospace;}
+
+/* TOAST */
+#toast{position:fixed;bottom:18px;right:18px;z-index:9999;background:#1e2233;color:var(--t2);padding:9px 14px;border-radius:var(--r);font-size:12px;font-weight:500;box-shadow:0 4px 24px rgba(0,0,0,.4);opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s;border-left:3px solid var(--acc);max-width:300px;}
+#toast.show{opacity:1;transform:translateY(0);}
+#toast.warn{border-left-color:var(--amber);}
+#toast.err{border-left-color:var(--red);}
+
+/* DROP OVERLAY */
+#dov{display:none;position:fixed;inset:0;background:rgba(15,17,23,.85);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+#dov.show{display:flex;}
+.dbox{border:1.5px dashed var(--acc);border-radius:16px;padding:48px 64px;text-align:center;}
+.dbox i{font-size:40px;color:var(--acc);display:block;margin-bottom:12px;}
+.dbox h2{font-size:18px;font-weight:600;color:#fff;margin-bottom:4px;}
+.dbox p{font-size:12px;color:var(--t3);}
+
+/* WARN BAR */
+#warn-bar{display:none;background:rgba(245,158,11,.1);border-bottom:1px solid rgba(245,158,11,.2);padding:5px 16px;font-size:11px;color:var(--amber);flex-shrink:0;}
+#warn-bar.show{display:flex;align-items:center;gap:8px;}
+
+/* TABLER ICONS */
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css');
+</style>
+</head>
+<body>
+
+<div id="dov">
+  <div class="dbox">
+    <i class="ti ti-upload"></i>
+    <h2>Drop your mail folder</h2>
+    <p>Supports .eml · .mbox · .emlx · maildir</p>
+  </div>
+</div>
+
+<div id="topbar">
+  <div class="logo"><div class="logo-dot"></div>HeavyMail</div>
+  <div class="divider"></div>
+  <div id="search-wrap">
+    <i class="ti ti-search"></i>
+    <input type="text" id="si" placeholder="Search sender, subject, body…" oninput="onSearch()"/>
+  </div>
+  <div id="stats-pill" id="stats">No data</div>
+  <button id="add-btn" onclick="triggerUpload()">
+    <i class="ti ti-plus"></i> Add Account
+  </button>
+  <input type="file" id="file-input" webkitdirectory multiple/>
+</div>
+
+<div id="warn-bar"><i class="ti ti-alert-triangle"></i><span id="warn-text"></span></div>
+
+<div id="status-bar">
+  <div class="progress-label" id="prog-label">Preparing…</div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<div id="main">
+  <div id="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">Views</div>
+      <div class="sb-item active" id="sb-all" onclick="selectScope({type:'global'})">
+        <i class="ti ti-inbox"></i>
+        <span class="sb-name">All Mail</span>
+        <span class="sb-ct" id="sb-all-ct">0</span>
+      </div>
+    </div>
+    <div class="sb-section" id="acct-section" style="display:none">
+      <div class="sb-label">Accounts</div>
+      <div id="acct-list"></div>
+    </div>
+  </div>
+
+  <div id="lp">
+    <div id="lh">
+      <span id="lh-title">All Mail</span>
+      <span id="lh-ct">0</span>
+    </div>
+    <div id="list-container" onscroll="onListScroll()">
+      <div id="virtual-spacer"></div>
+      <div id="virtual-rows"></div>
+    </div>
+  </div>
+
+  <div id="dp">
+    <div id="db">
+      <div class="empty-state">
+        <i class="ti ti-mail-opened"></i>
+        <p>Select an email to read it</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+// ═══════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════
+const MAX_ACCTS   = 5;
+const FILE_MAX_MB = 100;
+const BATCH_SIZE  = 30;
+const ROW_H       = 74;
+const PAGE_ROWS   = 40;
+const DB_NAME     = 'heavymail_v1';
+const DB_VER      = 1;
+const ACCT_COLORS = ['#4f8ef7','#22c55e','#f59e0b','#a78bfa','#ec4899'];
+const SKIP_EXT    = /\.(jpg|jpeg|png|gif|bmp|webp|zip|gz|tar|rar|7z|exe|dll|so|db|sqlite|bin|ico|woff|woff2|ttf|otf|mp3|mp4|avi|mov|mkv|pst|ost|nsf|tbb)$/i;
+const TEXT_EXT    = /\.(eml|msg|mbox|mbx|txt|mime|mail|emlx|rfc822)$/i;
+
+// ═══════════════════════════════════════════════
+// STATE  (tiny — list items only, no bodies)
+// ═══════════════════════════════════════════════
+let db           = null;
+let accounts     = [];           // {id,name,color,count,folders:{name:count}}
+let currentScope = {type:'global'};
+let currentKeys  = [];           // array of IDB keys for current view
+let selectedKey  = null;
+let currentView  = 'html';
+let searchTerm   = '';
+let isLoading    = false;
+let _toTimer     = null;
+
+// Virtual scroll state
+let vsOffset     = 0;
+let vsTotal      = 0;
+
+// ═══════════════════════════════════════════════
+// INDEXEDDB
+// ═══════════════════════════════════════════════
+function openDB(){
+  return new Promise((res,rej)=>{
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = e=>{
+      const d = e.target.result;
+      if(!d.objectStoreNames.contains('emails')){
+        const store = d.createObjectStore('emails',{keyPath:'_key',autoIncrement:true});
+        store.createIndex('acctId','acctId',{unique:false});
+        store.createIndex('folder_acct',['folder','acctId'],{unique:false});
+        store.createIndex('date','date',{unique:false});
+      }
+      if(!d.objectStoreNames.contains('meta')){
+        d.createObjectStore('meta',{keyPath:'k'});
+      }
+    };
+    req.onsuccess = e=>{ db=e.target.result; res(db); };
+    req.onerror   = e=>rej(e.target.error);
+  });
+}
+
+function dbPut(storeName, obj){
+  return new Promise((res,rej)=>{
+    const tx = db.transaction(storeName,'readwrite');
+    const req = tx.objectStore(storeName).put(obj);
+    req.onsuccess = ()=>res(req.result);
+    req.onerror   = e=>rej(e.target.error);
+  });
+}
+
+function dbGet(storeName, key){
+  return new Promise((res,rej)=>{
+    const tx  = db.transaction(storeName,'readonly');
+    const req = tx.objectStore(storeName).get(key);
+    req.onsuccess = ()=>res(req.result);
+    req.onerror   = e=>rej(e.target.error);
+  });
+}
+
+// Bulk insert array of records, returns count inserted
+function dbBulkInsert(records){
+  return new Promise((res,rej)=>{
+    const tx = db.transaction('emails','readwrite');
+    const store = tx.objectStore('emails');
+    let done = 0;
+    function next(){
+      if(done >= records.length){ return; }
+      const req = store.add(records[done]);
+      req.onsuccess = ()=>{ done++; next(); };
+      req.onerror   = e=>{ done++; next(); }; // skip dupes
+    }
+    // kick off parallel inserts (safe with IDB)
+    const PARALLEL = 8;
+    for(let i=0;i<Math.min(PARALLEL,records.length);i++) next();
+    tx.oncomplete = ()=>res(done);
+    tx.onerror    = e=>rej(e.target.error);
+  });
+}
+
+// Get all keys + minimal fields for list rendering
+function dbQueryKeys(acctId, folder){
+  return new Promise((res,rej)=>{
+    const tx    = db.transaction('emails','readonly');
+    const store = tx.objectStore('emails');
+    const results = [];
+    let req;
+    if(!acctId){
+      req = store.openCursor();
+    } else if(folder){
+      req = store.index('folder_acct').openCursor(IDBKeyRange.only([folder,acctId]));
+    } else {
+      req = store.index('acctId').openCursor(IDBKeyRange.only(acctId));
+    }
+    req.onsuccess = e=>{
+      const cur = e.target.result;
+      if(!cur){ res(results); return; }
+      // store only the tiny preview object, not full html/text
+      results.push({
+        _key:    cur.value._key,
+        from:    cur.value.from,
+        subject: cur.value.subject,
+        date:    cur.value.date,
+        preview: cur.value.preview,
+        hasHtml: cur.value.hasHtml,
+        hasAtts: cur.value.hasAtts,
+        acctId:  cur.value.acctId,
+        folder:  cur.value.folder
+      });
+      cur.continue();
+    };
+    req.onerror = e=>rej(e.target.error);
+  });
+}
+
+// Search: filter keys by term across from+subject+preview
+function dbSearch(acctId, folder, term){
+  return new Promise((res,rej)=>{
+    const tx    = db.transaction('emails','readonly');
+    const store = tx.objectStore('emails');
+    const q     = term.toLowerCase();
+    const results = [];
+    let req;
+    if(!acctId){
+      req = store.openCursor();
+    } else if(folder){
+      req = store.index('folder_acct').openCursor(IDBKeyRange.only([folder,acctId]));
+    } else {
+      req = store.index('acctId').openCursor(IDBKeyRange.only(acctId));
+    }
+    req.onsuccess = e=>{
+      const cur = e.target.result;
+      if(!cur){ res(results); return; }
+      const v = cur.value;
+      const haystack = ((v.from||'')+(v.subject||'')+(v.preview||'')).toLowerCase();
+      if(haystack.includes(q)){
+        results.push({_key:v._key,from:v.from,subject:v.subject,date:v.date,preview:v.preview,hasHtml:v.hasHtml,hasAtts:v.hasAtts,acctId:v.acctId,folder:v.folder});
+      }
+      cur.continue();
+    };
+    req.onerror = e=>rej(e.target.error);
+  });
+}
+
+// Delete all emails for an account
+function dbDeleteAcct(acctId){
+  return new Promise((res,rej)=>{
+    const tx    = db.transaction('emails','readwrite');
+    const store = tx.objectStore('emails');
+    const req   = store.index('acctId').openCursor(IDBKeyRange.only(acctId));
+    req.onsuccess = e=>{
+      const cur = e.target.result;
+      if(!cur){ res(); return; }
+      cur.delete();
+      cur.continue();
+    };
+    req.onerror = e=>rej(e.target.error);
+    tx.oncomplete = ()=>res();
+  });
+}
+
+// Save/load accounts meta
+async function saveMeta(){
+  await dbPut('meta',{k:'accounts', v: accounts});
+}
+async function loadMeta(){
+  const rec = await dbGet('meta','accounts');
+  if(rec) accounts = rec.v || [];
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function yield_(){ return new Promise(r=>setTimeout(r,0)); }
+
+let _tt;
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='show'+(type?' '+type:'');
+  clearTimeout(_tt); _tt=setTimeout(()=>t.className='',4500);
+}
+function warn(msg){
+  const b=document.getElementById('warn-bar');
+  b.classList.add('show');
+  document.getElementById('warn-text').textContent=msg;
+}
+
+function xName(from){
+  if(!from) return 'Unknown';
+  const m=from.match(/^"?([^"<]+?)"?\s*</); if(m) return m[1].trim();
+  const m2=from.match(/([^\s<>,]+@[^\s<>,>]+)/); if(m2) return m2[1];
+  return from.trim().slice(0,40)||'Unknown';
+}
+function xEmail(from){
+  const m=(from||'').match(/<([^>]+)>/); if(m) return m[1];
+  const m2=(from||'').match(/([^\s<>,]+@[^\s<>,>]+)/); if(m2) return m2[1];
+  return '';
+}
+function fmtD(d){
+  if(!d) return '';
+  try{ const dt=new Date(d); if(isNaN(dt)) return String(d).slice(0,10);
+    const now=new Date();
+    if(dt.toDateString()===now.toDateString()) return dt.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+    return dt.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+  }catch{ return String(d).slice(0,10); }
+}
+function fmtDFull(d){
+  if(!d) return '—';
+  try{ const dt=new Date(d); if(isNaN(dt)) return d;
+    return dt.toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  }catch{ return String(d); }
+}
+function fmtSz(b){
+  if(!b||b<=0) return '';
+  if(b<1024) return b+'B';
+  if(b<1048576) return (b/1024).toFixed(1)+'KB';
+  return (b/1048576).toFixed(1)+'MB';
+}
+function normF(raw){
+  const n=(raw||'').toLowerCase().trim();
+  if(['cur','new','tmp'].includes(n)) return 'Inbox';
+  if(n.includes('inbox')) return 'Inbox';
+  if(n.includes('sent')) return 'Sent';
+  if(n.includes('spam')||n.includes('junk')) return 'Spam';
+  if(n.includes('trash')||n.includes('delet')) return 'Trash';
+  if(n.includes('archive')) return 'Archive';
+  if(n.includes('draft')) return 'Drafts';
+  if(!raw||!raw.trim()) return 'Inbox';
+  return raw.charAt(0).toUpperCase()+raw.slice(1);
+}
+function folderFromPath(file){
+  const rel=(file.webkitRelativePath||file.name).replace(/\\/g,'/');
+  const parts=rel.split('/');
+  if(parts.length>=3){
+    const leaf=parts[parts.length-2].toLowerCase();
+    if(['cur','new','tmp'].includes(leaf)&&parts.length>=4) return normF(parts[parts.length-3]);
+    return normF(parts[parts.length-2]);
+  }
+  if(parts.length===2) return normF(parts[0]);
+  return 'Inbox';
+}
+
+// ═══════════════════════════════════════════════
+// MIME / EMAIL PARSER (unchanged logic, trimmed)
+// ═══════════════════════════════════════════════
+function dQP(s){ return s.replace(/=\r?\n/g,'').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16))); }
+function dB64Str(s){ const c=s.replace(/\s+/g,''); if(!c) return ''; try{ const b=atob(c); try{ return decodeURIComponent(escape(b)); }catch{ return b; } }catch{ return ''; } }
+function dB64Bytes(s){ const c=s.replace(/\s+/g,''); try{ const b=atob(c); const a=new Uint8Array(b.length); for(let i=0;i<b.length;i++) a[i]=b.charCodeAt(i); return a; }catch{ return new Uint8Array(0); } }
+function dRFC2047(s){ if(!s) return ''; return s.replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g,(_,cs,enc,data)=>{ try{ if(enc.toUpperCase()==='B'){ const b=atob(data.replace(/\s/g,'')); if(/^utf-?8$/i.test(cs)){ try{ return decodeURIComponent(escape(b)); }catch{} } return b; } if(enc.toUpperCase()==='Q'){ const q=data.replace(/_/g,' ').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16))); if(/^utf-?8$/i.test(cs)){ try{ return decodeURIComponent(escape(q)); }catch{} } return q; } }catch{} return data; }); }
+function stripHtml(s){ return s.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'').replace(/<br\s*\/?>/gi,'\n').replace(/<\/(?:p|div|tr|li|blockquote|h[1-6])>/gi,'\n').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim(); }
+
+function parseHdrs(raw){
+  const hdrs={};
+  let i=0;
+  if(raw.startsWith('From ')){ const nl=raw.indexOf('\n'); i=nl<0?raw.length:nl+1; }
+  while(i<raw.length){
+    const ch=raw[i];
+    if(ch==='\r'&&raw[i+1]==='\n'){i+=2;break;}
+    if(ch==='\n'){i+=1;break;}
+    let lineEnd=i;
+    while(lineEnd<raw.length){
+      const nl=raw.indexOf('\n',lineEnd);
+      if(nl<0){lineEnd=raw.length;break;}
+      lineEnd=nl+1;
+      if(lineEnd<raw.length&&(raw[lineEnd]===' '||raw[lineEnd]==='\t')) continue;
+      break;
+    }
+    const line=raw.slice(i,lineEnd).replace(/\r?\n[ \t]+/g,' ').replace(/\r?\n$/,'');
+    i=lineEnd;
+    const colon=line.indexOf(':');
+    if(colon<1) continue;
+    const key=line.slice(0,colon).toLowerCase().trim();
+    const val=line.slice(colon+1).trim();
+    if(key==='received'){ if(!hdrs['_rcv']) hdrs['_rcv']=[]; hdrs['_rcv'].push(val); }
+    else if(!hdrs[key]) hdrs[key]=val;
+  }
+  return {hdrs,bodyOffset:i};
+}
+
+function mparam(hv,pn){ if(!hv) return null; const re=new RegExp(pn+'\\*?(?:\\d+)?\\*?\\s*=\\s*(?:utf-8\'\')?(?:"([^"]*)"|([^;\\s]+))','gi'); let r=null,m; while((m=re.exec(hv))!==null){ const v=(m[1]!==undefined?m[1]:m[2]||'').trim(); if(v) r=(r||'')+v; } if(r){ try{ r=decodeURIComponent(r); }catch{} } return r; }
+
+function splitMultipart(body,boundary){
+  const delim='--'+boundary; const term='--'+boundary+'--';
+  const parts=[]; let pos=0; const len=body.length;
+  while(pos<len){
+    const idx=body.indexOf(delim,pos);
+    if(idx<0) break;
+    if(idx>0&&body[idx-1]!=='\n'&&body[idx-1]!=='\r'){pos=idx+delim.length;continue;}
+    const lineEnd=body.indexOf('\n',idx);
+    if(lineEnd<0){pos=len;break;}
+    pos=lineEnd+1;
+    const dl=body.slice(idx,lineEnd).trim();
+    if(dl===term||dl.startsWith(term)) break;
+    let nextIdx=body.indexOf(delim,pos);
+    while(nextIdx>0&&body[nextIdx-1]!=='\n'&&body[nextIdx-1]!=='\r') nextIdx=body.indexOf(delim,nextIdx+1);
+    if(nextIdx<0){parts.push(body.slice(pos));break;}
+    let partEnd=nextIdx;
+    if(body[partEnd-1]==='\n') partEnd--;
+    if(body[partEnd-1]==='\r') partEnd--;
+    parts.push(body.slice(pos,partEnd));
+    pos=nextIdx;
+  }
+  return parts;
+}
+
+function walkMime(raw){
+  const{hdrs,bodyOffset}=parseHdrs(raw);
+  const body=raw.slice(bodyOffset);
+  const ct=hdrs['content-type']||'text/plain';
+  const cte=(hdrs['content-transfer-encoding']||'').toLowerCase().trim();
+  const cd=hdrs['content-disposition']||'';
+  const mime=ct.split(';')[0].toLowerCase().trim();
+  const bnd=mparam(ct,'boundary');
+  const fn=mparam(cd,'filename')||mparam(cd,'name')||mparam(ct,'name')||null;
+  const isAtt=/^attachment/i.test(cd.trim())||(!!fn&&!/^inline/i.test(cd.trim()));
+  if(mime.startsWith('multipart/')&&bnd){
+    const res={text:'',html:'',atts:[]};
+    for(const part of splitMultipart(body,bnd)){
+      if(!part.trim()) continue;
+      const s=walkMime(part);
+      if(!res.html&&s.html) res.html=s.html;
+      if(!res.text&&s.text) res.text=s.text;
+      res.atts.push(...s.atts);
+    }
+    return res;
+  }
+  let decoded=body;
+  if(cte==='quoted-printable') decoded=dQP(body);
+  else if(cte==='base64'){
+    const b64=body.replace(/\s+/g,'');
+    if(isAtt||!mime.startsWith('text/'))
+      return{text:'',html:'',atts:[{name:fn||'attachment',mime,data:b64,enc:'base64',size:Math.floor(b64.length*.75)}]};
+    decoded=dB64Str(b64);
+  }
+  if(isAtt&&fn) return{text:'',html:'',atts:[{name:fn,mime,data:decoded,enc:cte,size:decoded.length}]};
+  if(mime==='text/html') return{text:'',html:decoded,atts:[]};
+  return{text:decoded,html:'',atts:[]};
+}
+
+function parseEmail(raw,folder,acctId){
+  if(!raw||raw.length<15) return null;
+  const{hdrs}=parseHdrs(raw);
+  const from=dRFC2047(hdrs['from']||'');
+  const to=dRFC2047(hdrs['to']||'');
+  const cc=dRFC2047(hdrs['cc']||'');
+  const replyTo=dRFC2047(hdrs['reply-to']||'');
+  const subject=dRFC2047(hdrs['subject']||'(No subject)');
+  const date=hdrs['date']||hdrs['delivery-date']||'';
+  const msgId=hdrs['message-id']||'';
+  const rcv=hdrs['_rcv']||[];
+  if(!from&&!to&&!date&&subject==='(No subject)') return null;
+  const w=walkMime(raw);
+  let html=w.html||'',text=w.text||'';
+  if(!html&&!text){
+    const{hdrs:h2,bodyOffset}=parseHdrs(raw);
+    const rb=raw.slice(bodyOffset);
+    const cte2=(h2['content-transfer-encoding']||'').toLowerCase().trim();
+    const ct2=h2['content-type']||'text/plain';
+    let dec=rb;
+    if(cte2==='quoted-printable') dec=dQP(rb);
+    else if(cte2==='base64') dec=dB64Str(rb.replace(/\s+/g,''));
+    if(ct2.toLowerCase().includes('html')) html=dec; else text=dec;
+  }
+  let pt=(text||'').trim();
+  if(!pt&&html) pt=stripHtml(html);
+  if(pt.length>30000) pt=pt.slice(0,30000)+'\n…[truncated]';
+  // For IDB: store full data but preview is tiny
+  return{
+    from,to,cc,replyTo,subject,date,msgId,folder,acctId,
+    html:html.trim(),text:pt,
+    preview:pt.replace(/\s+/g,' ').slice(0,120),
+    atts:w.atts||[],rcv,
+    hasHtml:!!html.trim(),
+    hasAtts:(w.atts||[]).length>0
+  };
+}
+
+function splitMbox(text){
+  const msgs=[]; const idxs=[];
+  if(text.startsWith('From ')) idxs.push(0);
+  let p=text.indexOf('\nFrom ');
+  while(p>=0){ idxs.push(p+1); p=text.indexOf('\nFrom ',p+1); }
+  for(let i=0;i<idxs.length;i++){
+    const start=idxs[i];
+    const end=i+1<idxs.length?idxs[i+1]:text.length;
+    msgs.push(text.slice(start,end));
+  }
+  return msgs;
+}
+
+function looksLikeEmail(t){ if(!t||t.length<10) return false; return /^(From|To|Subject|Date|MIME-Version|Content-Type|Message-ID|Return-Path|Received)\s*:/im.test(t.slice(0,4000)); }
+function looksLikeMbox(t){ if(!t) return false; return t.startsWith('From ')&&(t.includes('\nFrom ')||t.length>2000); }
+
+function parseFile(text,filename,folder,acctId){
+  const out=[];
+  if(!text||text.length<10) return out;
+  const tr=text.trimStart();
+  if(looksLikeMbox(tr)){
+    const msgs=splitMbox(tr);
+    for(const msg of msgs){ try{ const e=parseEmail(msg,folder,acctId); if(e) out.push(e); }catch(err){} }
+    if(out.length) return out;
+  }
+  if(looksLikeEmail(tr)){ try{ const e=parseEmail(tr,folder,acctId); if(e){ out.push(e); return out; } }catch{} }
+  if(/\.emlx$/i.test(filename)){
+    const nl=text.indexOf('\n');
+    if(nl>0){ const inner=text.slice(nl+1); if(looksLikeEmail(inner)){ try{ const e=parseEmail(inner,folder,acctId); if(e){ out.push(e); return out; } }catch{} } }
+  }
+  return out;
+}
+
+function readFileText(file){
+  return new Promise(res=>{
+    const r=new FileReader();
+    r.onload=e=>{ const t=e.target.result; if(t&&!t.includes('\uFFFD')){ res(t); }else{ const r2=new FileReader(); r2.onload=e2=>res(e2.target.result||''); r2.onerror=()=>res(''); r2.readAsText(file,'iso-8859-1'); } };
+    r.onerror=()=>{ const r2=new FileReader(); r2.onload=e2=>res(e2.target.result||''); r2.onerror=()=>res(''); r2.readAsText(file,'iso-8859-1'); };
+    r.readAsText(file,'utf-8');
+  });
+}
+
+// ═══════════════════════════════════════════════
+// UPLOAD & LOADING
+// ═══════════════════════════════════════════════
+function triggerUpload(){
+  if(isLoading) return;
+  if(accounts.length>=MAX_ACCTS){ toast('Max '+MAX_ACCTS+' accounts. Remove one first.','warn'); return; }
+  document.getElementById('file-input').click();
+}
+
+document.getElementById('file-input').addEventListener('change',async ev=>{
+  const files=Array.from(ev.target.files);
+  ev.target.value='';
+  if(files.length) await loadAccount(files);
+});
+
+async function loadAccount(files){
+  if(isLoading||accounts.length>=MAX_ACCTS) return;
+  isLoading=true;
+
+  const toProcess=files.filter(f=>{
+    const nm=f.name.toLowerCase();
+    if(SKIP_EXT.test(nm)) return false;
+    if(f.size===0||f.size>FILE_MAX_MB*1024*1024) return false;
+    return true;
+  });
+
+  if(toProcess.length===0){ isLoading=false; toast('No supported files found.','warn'); return; }
+
+  const acctId='a'+Date.now();
+  const ci=accounts.length;
+  const color=ACCT_COLORS[ci%ACCT_COLORS.length];
+  const firstRel=(files[0]?.webkitRelativePath||files[0]?.name||'');
+  const rootName=(firstRel.split('/')[0]||'Account '+(ci+1)).slice(0,28);
+
+  // Show progress
+  const sb=document.getElementById('status-bar');
+  const pl=document.getElementById('prog-label');
+  const pf=document.getElementById('prog-fill');
+  sb.classList.add('show');
+  pl.textContent=`Loading "${rootName}"… 0 / ${toProcess.length.toLocaleString()} files`;
+  pf.style.width='0%';
+
+  document.getElementById('add-btn').disabled=true;
+
+  let done=0; let totalParsed=0;
+  const folderCounts={};
+  const BULK_FLUSH=200; // write to IDB every N records
+  let pendingRecords=[];
+
+  async function flush(){
+    if(!pendingRecords.length) return;
+    await dbBulkInsert(pendingRecords);
+    pendingRecords=[];
+  }
+
+  for(let b=0;b<toProcess.length;b+=BATCH_SIZE){
+    const batch=toProcess.slice(b,b+BATCH_SIZE);
+    for(const f of batch){
+      try{
+        const text=await readFileText(f);
+        if(!text||text.trim().length<5){done++;continue;}
+        const folder=folderFromPath(f);
+        const parsed=parseFile(text,f.name,folder,acctId);
+        for(const e of parsed){
+          folderCounts[folder]=(folderCounts[folder]||0)+1;
+          pendingRecords.push(e);
+          totalParsed++;
+          if(pendingRecords.length>=BULK_FLUSH) await flush();
+        }
+      }catch(err){ console.warn('skip',f.name,err); }
+      done++;
+    }
+    const pct=Math.round(done/toProcess.length*100);
+    pf.style.width=pct+'%';
+    pl.textContent=`"${rootName}" — ${done.toLocaleString()} / ${toProcess.length.toLocaleString()} files · ${totalParsed.toLocaleString()} emails`;
+    await yield_();
+  }
+  await flush(); // final flush
+
+  sb.classList.remove('show');
+  isLoading=false;
+  document.getElementById('add-btn').disabled=accounts.length>=MAX_ACCTS;
+
+  if(totalParsed===0){ toast(`"${rootName}": no emails parsed.`,'warn'); return; }
+
+  const acct={id:acctId,name:rootName,color,count:totalParsed,folders:folderCounts};
+  accounts.push(acct);
+  await saveMeta();
+
+  currentScope={type:'acct',acctId};
+  buildSidebar();
+  await refreshList();
+  updateStats();
+  toast(`"${rootName}" — ${totalParsed.toLocaleString()} emails loaded`);
+}
+
+// ═══════════════════════════════════════════════
+// ACCOUNT REMOVAL
+// ═══════════════════════════════════════════════
+async function removeAccount(acctId,ev){
+  if(ev){ev.stopPropagation();ev.preventDefault();}
+  const idx=accounts.findIndex(a=>a.id===acctId);
+  if(idx===-1) return;
+  const name=accounts[idx].name;
+  await dbDeleteAcct(acctId);
+  accounts.splice(idx,1);
+  accounts.forEach((a,i)=>{ a.color=ACCT_COLORS[i%ACCT_COLORS.length]; });
+  await saveMeta();
+  if(currentScope.type!=='global'&&currentScope.acctId===acctId)
+    currentScope=accounts.length?{type:'acct',acctId:accounts[0].id}:{type:'global'};
+  selectedKey=null;
+  buildSidebar();
+  await refreshList();
+  clearDetail();
+  updateStats();
+  document.getElementById('add-btn').disabled=accounts.length>=MAX_ACCTS;
+  toast(`"${name}" removed`,'warn');
+}
+
+// ═══════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════
+function buildSidebar(){
+  const total=accounts.reduce((s,a)=>s+a.count,0);
+  document.getElementById('sb-all-ct').textContent=total.toLocaleString();
+  document.getElementById('sb-all').className='sb-item'+(currentScope.type==='global'?' active':'');
+
+  const as=document.getElementById('acct-section');
+  const al=document.getElementById('acct-list');
+  if(accounts.length===0){as.style.display='none';return;}
+  as.style.display='block';
+  al.innerHTML='';
+  for(const a of accounts){
+    const isA=currentScope.acctId===a.id&&currentScope.type==='acct';
+    const item=document.createElement('div');
+    item.className='sb-item'+(isA?' active':'');
+    item.innerHTML=`<span class="acct-dot" style="background:${a.color}"></span><span class="sb-name">${esc(a.name)}</span><span class="sb-ct">${a.count.toLocaleString()}</span>`;
+    item.onclick=()=>selectScope({type:'acct',acctId:a.id});
+    // Remove button
+    const rb=document.createElement('span');
+    rb.innerHTML='<i class="ti ti-x" style="font-size:11px;color:var(--t4);cursor:pointer;margin-left:2px"></i>';
+    rb.onclick=e=>removeAccount(a.id,e);
+    item.appendChild(rb);
+    al.appendChild(item);
+
+    // Folder sub-items
+    if(isA){
+      const ORDER=['Inbox','Sent','Drafts','Archive','Spam','Trash'];
+      const folderNames=[...ORDER.filter(o=>a.folders[o]),...Object.keys(a.folders).filter(k=>!ORDER.includes(k)).sort()];
+      for(const fn of folderNames){
+        const fi=document.createElement('div');
+        const isF=currentScope.type==='folder'&&currentScope.acctId===a.id&&currentScope.folder===fn;
+        fi.className='sb-item'+(isF?' active':'');
+        fi.style.paddingLeft='28px';
+        fi.innerHTML=`<i class="ti ti-folder" style="font-size:12px"></i><span class="sb-name">${esc(fn)}</span><span class="sb-ct">${(a.folders[fn]||0).toLocaleString()}</span>`;
+        fi.onclick=()=>selectScope({type:'folder',acctId:a.id,folder:fn});
+        al.appendChild(fi);
+      }
+    }
+  }
+}
+
+function updateStats(){
+  const total=accounts.reduce((s,a)=>s+a.count,0);
+  const p=document.getElementById('stats-pill');
+  p.textContent=accounts.length===0?'No data':`${total.toLocaleString()} emails · ${accounts.length} acct${accounts.length!==1?'s':''}`;
+}
+
+// ═══════════════════════════════════════════════
+// SCOPE & LIST
+// ═══════════════════════════════════════════════
+async function selectScope(scope){
+  currentScope=scope;
+  selectedKey=null;
+  searchTerm=''; document.getElementById('si').value='';
+  buildSidebar();
+  await refreshList();
+  clearDetail();
+}
+
+async function onSearch(){
+  searchTerm=document.getElementById('si').value.trim();
+  selectedKey=null;
+  await refreshList();
+  clearDetail();
+}
+
+async function refreshList(){
+  const acctId=currentScope.type!=='global'?currentScope.acctId:null;
+  const folder=currentScope.type==='folder'?currentScope.folder:null;
+
+  let rows;
+  if(searchTerm){
+    rows=await dbSearch(acctId,folder,searchTerm);
+  } else {
+    rows=await dbQueryKeys(acctId,folder);
+  }
+  // Sort by date descending
+  rows.sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+  currentKeys=rows;
+
+  // Update header
+  const cnt=rows.length;
+  const titles={global:'All Mail',acct:(accounts.find(a=>a.id===currentScope.acctId)||{}).name||'Account',folder:currentScope.folder};
+  document.getElementById('lh-title').textContent=titles[currentScope.type]||'All Mail';
+  document.getElementById('lh-ct').textContent=cnt.toLocaleString()+' email'+(cnt!==1?'s':'');
+
+  // Virtual scroll setup
+  vsTotal=cnt;
+  vsOffset=0;
+  document.getElementById('virtual-spacer').style.height=(vsTotal*ROW_H)+'px';
+  document.getElementById('list-container').scrollTop=0;
+  renderVisibleRows();
+}
+
+// ═══════════════════════════════════════════════
+// VIRTUAL SCROLL
+// ═══════════════════════════════════════════════
+function onListScroll(){
+  const container=document.getElementById('list-container');
+  const scrollTop=container.scrollTop;
+  const newOffset=Math.floor(scrollTop/ROW_H);
+  if(Math.abs(newOffset-vsOffset)>5||newOffset===0){
+    vsOffset=newOffset;
+    renderVisibleRows();
+  }
+}
+
+function renderVisibleRows(){
+  const container=document.getElementById('list-container');
+  const viewH=container.clientHeight||600;
+  const visCount=Math.ceil(viewH/ROW_H)+10;
+  const start=Math.max(0,vsOffset-5);
+  const end=Math.min(currentKeys.length,start+visCount+5);
+
+  const wrap=document.getElementById('virtual-rows');
+  wrap.style.top=(start*ROW_H)+'px';
+  wrap.innerHTML='';
+
+  if(currentKeys.length===0){
+    wrap.innerHTML='<div class="empty-state"><i class="ti ti-mail-off"></i><p>No emails found</p></div>';
+    return;
+  }
+
+  const frag=document.createDocumentFragment();
+  for(let i=start;i<end;i++){
+    const e=currentKeys[i];
+    const acct=accounts.find(a=>a.id===e.acctId);
+    const div=document.createElement('div');
+    div.className='er'+(e._key===selectedKey?' sel':'');
+    div.style.height=ROW_H+'px';
+
+    const badges=[];
+    if(e.hasHtml) badges.push('<span class="badge b-html">HTML</span>');
+    if(e.hasAtts) badges.push('<span class="badge b-att">ATT</span>');
+    if(currentScope.type==='global'&&acct)
+      badges.push(`<span class="badge b-acct" style="background:${acct.color}18;color:${acct.color};border:1px solid ${acct.color}33">${esc(acct.name)}</span>`);
+
+    div.innerHTML=`
+      <div class="er-top">
+        <span class="er-from">${esc(xName(e.from))}</span>
+        <span class="er-date">${fmtD(e.date)}</span>
+      </div>
+      <div class="er-subj">${esc(e.subject)}</div>
+      <div class="er-prev">${esc((e.preview||'').slice(0,90))}</div>
+      ${badges.length?`<div class="er-badges">${badges.join('')}</div>`:''}`;
+
+    div.addEventListener('click',(function(key,row){ return ()=>openEmail(key,row); })(e._key,div));
+    frag.appendChild(div);
+  }
+  wrap.appendChild(frag);
+}
+
+// ═══════════════════════════════════════════════
+// DETAIL VIEW
+// ═══════════════════════════════════════════════
+async function openEmail(key,row){
+  selectedKey=key;
+  document.querySelectorAll('.er').forEach(r=>r.classList.remove('sel'));
+  row.classList.add('sel');
+
+  // Load full record from IDB (includes html/text/atts)
+  const e=await dbGet('emails',key);
+  if(!e) return;
+  window.__curEmail=e;
+  currentView=e.hasHtml?'html':'text';
+  renderDetail(e);
+}
+
+function fmtAddr(raw){
+  if(!raw) return '<span style="color:var(--t4)">—</span>';
+  const n=xName(raw),em=xEmail(raw);
+  if(em&&n&&n!==em&&!n.includes('@'))
+    return `<span class="addr-name">${esc(n)}</span><span class="addr-email">&lt;${esc(em)}&gt;</span>`;
+  return `<span class="addr-name">${esc(raw)}</span>`;
+}
+function fmtAddrList(raw){
+  if(!raw) return '<span style="color:var(--t4)">—</span>';
+  const parts=[];let d=0,cur='';
+  for(const ch of raw){ if(ch==='<')d++;else if(ch==='>')d--;if(ch===','&&d===0){parts.push(cur.trim());cur='';}else cur+=ch; }
+  if(cur.trim()) parts.push(cur.trim());
+  if(parts.length<=1) return fmtAddr(raw);
+  return parts.map(fmtAddr).join('<span style="color:var(--t4);margin:0 4px">·</span>');
+}
+
+function renderDetail(e){
+  const acct=accounts.find(a=>a.id===e.acctId);
+  const metaRows=[
+    ['From',fmtAddr(e.from)],
+    ['To',fmtAddrList(e.to)],
+    e.cc?['CC',fmtAddrList(e.cc)]:null,
+    (e.replyTo&&e.replyTo!==e.from)?['Reply-To',fmtAddr(e.replyTo)]:null,
+    ['Date',`<span style="font-family:'IBM Plex Mono',monospace;font-size:11px">${fmtDFull(e.date)}</span>`],
+    ['Folder',`<span style="font-size:11px;color:var(--acc)">${esc(e.folder)}</span>`+(acct?` <span style="font-size:10px;color:${acct.color}">· ${esc(acct.name)}</span>`:'')],
+  ].filter(Boolean);
+
+  let attsHtml='';
+  if(e.atts&&e.atts.length){
+    const items=e.atts.map((a,i)=>`
+      <div class="att-card" onclick="dlAtt(${i})">
+        <i class="ti ti-paperclip" style="font-size:16px;color:var(--t3)"></i>
+        <div>
+          <div class="att-name">${esc(a.name||'attachment')}</div>
+          <div class="att-meta">${esc((a.mime||'file').split('/').pop())}${a.size?' · '+fmtSz(a.size):''}</div>
+        </div>
+        <i class="ti ti-download" style="font-size:14px;color:var(--acc);margin-left:auto"></i>
+      </div>`).join('');
+    attsHtml=`<div id="atts"><div class="att-hdr">Attachments (${e.atts.length})</div><div id="att-list">${items}</div></div>`;
+  }
+
+  const htmlBtn=e.hasHtml?`<button class="vbtn${currentView==='html'?' on':''}" onclick="setView('html')"><i class="ti ti-code"></i> HTML</button>`:'';
+  const txtBtn=`<button class="vbtn${currentView==='text'?' on':''}" onclick="setView('text')"><i class="ti ti-typography"></i> Plain</button>`;
+
+  let bodyHtml='';
+  if(currentView==='html'&&e.hasHtml){
+    bodyHtml=`<div id="ifw"><iframe sandbox="allow-same-origin" frameborder="0" scrolling="auto"></iframe></div>`;
+  } else {
+    bodyHtml=`<div id="ptxt">${esc(e.text||'(No body)')}</div>`;
+  }
+
+  document.getElementById('dp').innerHTML=`
+    <div id="dh">
+      <div id="ds">${esc(e.subject)}</div>
+      <div class="meta-grid">
+        ${metaRows.map(([k,v])=>`<div class="mk">${k}</div><div class="mv">${v}</div>`).join('')}
+      </div>
+    </div>
+    <div id="dtb">${htmlBtn}${txtBtn}</div>
+    <div id="db">${bodyHtml}${attsHtml}</div>`;
+
+  if(currentView==='html'&&e.hasHtml){
+    requestAnimationFrame(()=>{
+      const iframe=document.querySelector('#ifw iframe');
+      if(!iframe) return;
+      try{
+        const doc=iframe.contentDocument||iframe.contentWindow.document;
+        doc.open();
+        doc.write(`<!DOCTYPE html><html><head><meta charset="utf-8"/>
+          <style>*{box-sizing:border-box;}html,body{margin:0;padding:0;}
+          body{font-family:Arial,sans-serif;font-size:14px;line-height:1.65;color:#1a1a1a;padding:16px 20px;word-break:break-word;background:#fff;}
+          img{max-width:100%!important;height:auto!important;}a{color:#1d4ed8;}
+          table{border-collapse:collapse;max-width:100%!important;}td,th{padding:4px 8px;}
+          pre{font-size:12px;background:#f5f5f5;border-radius:4px;padding:10px;white-space:pre-wrap;}
+          blockquote{border-left:3px solid #d0d0d0;margin:8px 0;padding-left:14px;color:#555;}
+          </style></head><body>${e.html}</body></html>`);
+        doc.close();
+        const resize=()=>{ try{ const h=iframe.contentDocument.body.scrollHeight; iframe.style.height=Math.min(Math.max(h+32,120),14000)+'px'; }catch{} };
+        iframe.onload=resize;
+        setTimeout(resize,200);setTimeout(resize,800);setTimeout(resize,2500);
+      }catch(err){}
+    });
+  }
+}
+
+function setView(mode){
+  currentView=mode;
+  if(window.__curEmail) renderDetail(window.__curEmail);
+}
+
+function dlAtt(i){
+  const e=window.__curEmail; if(!e) return;
+  const a=e.atts[i]; if(!a) return;
+  let blob;
+  try{
+    blob=a.enc==='base64'
+      ?new Blob([dB64Bytes(a.data)],{type:a.mime||'application/octet-stream'})
+      :new Blob([a.data],{type:a.mime||'text/plain'});
+  }catch{ blob=new Blob([a.data||''],{type:'application/octet-stream'}); }
+  const url=URL.createObjectURL(blob);
+  const el=document.createElement('a');el.href=url;el.download=a.name||'attachment';
+  document.body.appendChild(el);el.click();document.body.removeChild(el);
+  setTimeout(()=>URL.revokeObjectURL(url),3000);
+  toast(`Downloading "${a.name}"`);
+}
+
+function clearDetail(){
+  window.__curEmail=null;
+  document.getElementById('dp').innerHTML=`<div id="db"><div class="empty-state"><i class="ti ti-mail-opened"></i><p>Select an email to read it</p></div></div>`;
+}
+
+// ═══════════════════════════════════════════════
+// DRAG & DROP
+// ═══════════════════════════════════════════════
+let dc=0;
+document.body.addEventListener('dragenter',e=>{e.preventDefault();dc++;document.getElementById('dov').classList.add('show');});
+document.body.addEventListener('dragleave',e=>{e.preventDefault();dc--;if(dc<=0){dc=0;document.getElementById('dov').classList.remove('show');}});
+document.body.addEventListener('dragover',e=>e.preventDefault());
+document.body.addEventListener('drop',async e=>{
+  e.preventDefault();dc=0;document.getElementById('dov').classList.remove('show');
+  if(accounts.length>=MAX_ACCTS){toast('Max accounts reached','warn');return;}
+  const files=[];
+  async function readEntry(entry,path){
+    if(entry.isFile){
+      await new Promise(res=>entry.file(f=>{
+        try{Object.defineProperty(f,'webkitRelativePath',{value:path+f.name,writable:false,configurable:true});}catch{}
+        files.push(f);res();
+      }));
+    }else if(entry.isDirectory){
+      const reader=entry.createReader();let all=[];
+      await new Promise(res=>{ function rb(){ reader.readEntries(async ents=>{ if(!ents.length){res();}else{all=all.concat(Array.from(ents));rb();} }); }rb(); });
+      for(const en of all) await readEntry(en,path+entry.name+'/');
+    }
+  }
+  for(const item of Array.from(e.dataTransfer.items)){
+    const en=item.webkitGetAsEntry();if(en) await readEntry(en,'');
+  }
+  if(files.length) await loadAccount(files);
+});
+
+// ═══════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════
+(async()=>{
+  try{
+    await openDB();
+    await loadMeta();
+    buildSidebar();
+    updateStats();
+    if(accounts.length>0){
+      currentScope={type:'acct',acctId:accounts[0].id};
+      buildSidebar();
+      await refreshList();
+    }
+  }catch(err){
+    toast('IndexedDB error: '+err.message,'err');
+  }
+})();
+</script>
+</body>
+</html>
